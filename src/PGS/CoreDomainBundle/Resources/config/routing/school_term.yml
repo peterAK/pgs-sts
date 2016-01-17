@@ -1,0 +1,45 @@
+pgs_core_school_term_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:list, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_term_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_school_term_new:
+    pattern:  /new
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:new }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_term_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_term_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_term_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:viewSchoolTermByStatus, status: all }
+
+pgs_core_school_term_activate:
+    pattern:  /activate/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:activate, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_term_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTerm:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST

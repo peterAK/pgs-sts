@@ -1,0 +1,7 @@
+parameters:
+#    pgs_public.example.class: PGS\PublicBundle\Example
+
+services:
+#    pgs_public.example:
+#        class: %pgs_public.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

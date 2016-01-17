@@ -1,0 +1,148 @@
+{% extends 'PGSAdminBundle::list.html.twig' %}
+{#{% form_theme form 'PGSAdminBundle:Form:form.html.twig' %}#}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {#<a href="{{ url('pgs_core_school_class_student_list') }}">#}
+            {#{{ model|title }}#}
+            {#</a>#}
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {#{% if schoolClassStudents.id %}Edit{% else %}New{% endif %} {{ model }}#}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    {#<div class="col-md-2">#}
+    {#<ul class="status-nav margin-bottom-10">#}
+    {#<li class="compose-btn">#}
+    {#<a href="{{ url('pgs_core_score_select_by_class') }}" data-title="Compose" class="btn green">#}
+    {#<i class="fa fa-edit"></i> Add {{ model }}#}
+    {#</a>#}
+    {#</li>#}
+    {#</ul>#}
+    {#{{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'score.list'})) }}#}
+    {#</div>#}
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title }} </h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover" id="myRaport">
+                <thead>
+                    <tr>
+
+                        <h4>
+                            Name    : <br>
+                            {{ schoolClassStudent.student.firstName|capitalize }} {{ schoolClassStudent.student.lastName|capitalize }}<br>
+                            Class   :
+                            <br>{{ schoolClassStudent.SchoolClass.name|capitalize }}<br>
+                            Status  :
+                            {% if studentHistory == "promote" %}
+                                {{ studentHistory }}
+                            {% else %}
+                                <ul class="list-unstyled list-inline">
+                                    <li class="selectors-block">
+
+                                        <a href="javascript:void(0);" class="current">
+                                            {{ studentHistory }}  <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <div class="selectors-block-others-wrapper">
+                                            <div class="selectors-block-others">
+                                                {% for status in statuses %}
+                                                    {% if status != studentHistory %}
+                                                    <a href="{{ path('pgs_core_student_report_approve_status', { 'studentId': schoolClassStudent.student.id, 'status':status }) }}">
+                                                        <i class="fa fa-circle"></i>{{ status }}</br>
+                                                    </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                            <br>
+                        </h4>
+                        <th>Students </th>
+                        <th>School Class </th>
+                        <th>Course </th>
+                        {#<th>Formula </th>#}
+                        <th>Homework </th>
+                        <th>Daily Exam </th>
+                        <th>Mid Exam </th>
+                        <th>Final Exam </th>
+                        {#<th>Homework Point</th>#}
+                        {#<th>Daily Exam Point</th>#}
+                        {#<th>Mid Exam Point</th>#}
+                        {#<th>Final Exam Point</th>#}
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for score in scores %}
+                    <tr>
+                        {#<td>#}
+                        {#<img width="20px" height="20px" src="/uploads/application/#}
+                        {#{{ schoolClassStudent.student.application.id }}/{{ schoolClassStudent.student.picture }}">#}
+                        {#</td>#}
+                        <td>{{ score.schoolClassStudent.student.firstName|capitalize }} {{ score.schoolClassStudent.student.lastName|capitalize }}</td>
+                        <td>{{ score.schoolClassStudent.schoolClass.name|capitalize }}</td>
+                        <td>{{ score.schoolClassCourse.name|capitalize }}</td>
+                        {#<td>{{ score.schoolClassCourse.formula.activityPoint }}</td>#}
+                        <td>{{ score.homework }}</td>
+                        <td>{{ score.dailyExam }}</td>
+                        <td>{{ score.midExam }}</td>
+                        <td>{{ score.finalExam }}</td>
+                        {#<td>{{ score.homework*(score.schoolClassCourse.formula.activityPoint/100) }}</td>#}
+                        {#<td>{{ score.dailyExam*(score.schoolClassCourse.formula.dailyExamPoint/100) }}</td>#}
+                        {#<td>{{ score.midExam*(score.schoolClassCourse.formula.midExamPoint/100) }}</td>#}
+                        {#<td>{{ score.finalExam*(score.schoolClassCourse.formula.finalExamPoint/100) }}</td>#}
+                        <td>
+                            {{ (score.homework*(score.schoolClassCourse.formula.activityPoint/100))+
+                            (score.dailyExam*(score.schoolClassCourse.formula.dailyExamPoint/100))+
+                            (score.midExam*(score.schoolClassCourse.formula.midExamPoint/100))+
+                            (score.finalExam*(score.schoolClassCourse.formula.finalExamPoint/100)) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+{% endblock list %}
+{% block stylepage %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/TableTools/css/dataTables.tableTools.min.css">
+{% endblock stylepage %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+
+    {% set url = url('pgs_core_application_by_status') %}
+    {% include("PGSCoreDomainBundle:Widget:status.html.twig") with {'url': url('pgs_core_application_by_status') } %}
+    <script type="text/javascript" language="javascript" src="/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#myRaport').DataTable( {
+                "dom": '<"H"TCfr>t<"F"ip>',
+                tableTools: {
+                    "sSwfPath": "/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+
+                }
+            } );
+        } );
+    </script>
+    <!-- END CURRENT SCRIPTS -->
+{% endblock scriptcurrent %}

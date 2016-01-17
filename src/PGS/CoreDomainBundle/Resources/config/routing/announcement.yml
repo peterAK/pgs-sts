@@ -1,0 +1,35 @@
+pgs_core_announcement_list:
+    pattern:  /announcement-list
+    defaults: { _controller: PGSCoreDomainBundle:Announcement:list}
+    requirements:
+        _method: GET
+
+pgs_core_announcement_new:
+    pattern:  /new-announcement
+    defaults: { _controller: PGSCoreDomainBundle:Announcement:new}
+    requirements:
+        _method: GET|POST
+
+pgs_core_announcement_upload:
+    pattern:  /upload/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Announcement:upload, id: null}
+    requirements:
+        _method: GET|POST
+
+pgs_core_announcement_view:
+    pattern:  /view
+    defaults: { _controller: PGSCoreDomainBundle:Announcement:view}
+    requirements:
+        _method: GET
+
+pgs_core_announcement_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Announcement:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_announcement_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Announcement:delete, id: null }
+    requirements:
+        _method: GET

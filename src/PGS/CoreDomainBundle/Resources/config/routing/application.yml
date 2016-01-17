@@ -1,0 +1,93 @@
+pgs_core_application_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Application:list }
+    requirements:
+        _method: GET
+
+pgs_core_application_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_application_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Application:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_picture:
+    pattern:  /picture/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:Application:picture, applicationId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_approve:
+    pattern:  /approve/{id}/{status}
+    defaults: { _controller: PGSCoreDomainBundle:Application:approve, id: null , status: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:Application:viewApplicationByStatus, status: all }
+
+pgs_core_application_activate:
+    pattern:  /activate/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:activate, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_upload:
+    pattern: /upload/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:upload, id: null }
+
+pgs_core_application_home_files:
+    pattern: /home-files/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:Application:homeFiles, id: null }
+
+pgs_core_application_view_home_files:
+    pattern: /view-home-files/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:Application:viewHomeFiles, id: null }
+
+pgs_core_application_birth_certificate:
+    pattern:  /birth-certificate/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:Application:birthCertificate, applicationId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_upload_birth_certificate:
+    pattern: /upload-birth-certificate/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:uploadBirthCertificate, id: null }
+
+pgs_core_application_family_card:
+    pattern:  /family-card/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:Application:familyCard, applicationId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_upload_family_card:
+    pattern: /upload-family-card/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:uploadFamilyCard, id: null }
+
+pgs_core_application_graduation_certificate:
+    pattern:  /graduation-certificate/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:Application:graduationCertificate, applicationId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_application_upload_graduation_certificate:
+    pattern: /upload-graduation-certificat/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Application:uploadGraduationCertificate, id: null }

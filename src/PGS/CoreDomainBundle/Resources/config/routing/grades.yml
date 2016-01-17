@@ -1,0 +1,29 @@
+pgs_core_grades_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Grade:list }
+    requirements:
+        _method: GET
+
+pgs_core_grades_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Grade:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_grades_new:
+    pattern:  /new
+    defaults: { _controller: PGSCoreDomainBundle:Grade:new }
+    requirements:
+        _method: GET|POST
+
+pgs_core_grades_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Grade:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_grades_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Grade:delete, id: null }
+    requirements:
+        _method: GET|POST

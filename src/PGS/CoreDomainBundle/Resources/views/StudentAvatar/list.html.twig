@@ -1,0 +1,93 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href= "{{ home}}" >
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_student_avatar_list') }}">
+                {% trans %}Avatar Book{% endtrans %}
+            </a>
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="col-md-10">
+        <div class="status-content" style="overflow-y: scroll; width: 100%; height: 400px;">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <tr>
+                    <thead><td style="text-align: center;" colspan="3">{% trans %}Avatar Book{% endtrans %}</td></thead>
+                </tr>
+                <tr>
+                    <td>
+                    {% for avatar in avatars %}
+                        {% set check=false %}
+                        {% for studentAvatar in studentAvatars %}
+                            {% if(avatar.id==studentAvatar.avatarId and studentAvatar.selected==true) %} {# punya, dipilih #}
+                                {% set check=true %}
+                                <div style="float: left; border: 1px solid #000000; width: 205px; height: 240px;">
+                                    <img width="200px" height="200px" src="/uploads/avatar/{{ avatar.id }}/{{ avatar.picFile }}"></br>
+                                    <p style="text-align: center;">{% trans %}SELECTED{% endtrans %}</p>
+                                </div>
+                            {% elseif(avatar.id==studentAvatar.avatarId and studentAvatar.selected==false) %} {# punya, ga dipilih #}
+                                {% set check=true %}
+                                <div style="float: left; border: 1px solid #000000; width: 205px; height: 240px;">
+                                    <img width="200px" height="200px" src="/uploads/avatar/{{ avatar.id }}/{{ avatar.picFile }}"></br>
+                                    <a href="{{ path('pgs_core_student_avatar_select', { 'id': studentAvatar.id }) }}">
+                                    <button type="button" style="margin-left: 30%;" class="btn red">{% trans %}SELECT{% endtrans %}</button>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if(check==false) %} {# ga punya #}
+                            {% if(avatar.type=='normal') %} {#Ga Punya, normal #}
+                                <div style="float: left; border: 1px solid #000000; width: 205px; height: 240px;">
+                                    <img width="200px" height="200px" src="/uploads/avatar/{{ avatar.id }}/{{ avatar.picFile }}"></br>
+                                    <p style="text-align: center;">{% trans %}Need{% endtrans %} {{ avatar.minPoint }} {% trans %}Total Point{% endtrans %}!</p>
+                                </div>
+                            {% elseif(avatar.type=='special') %} {#Ga Punya, special #}
+                                <div style="float: left; border: 1px solid #000000; width: 205px; height: 240px;">
+                                    <img width="200px" height="200px" src="/uploads/avatar/{{ avatar.id }}/{{ avatar.picFile }}"></br>
+                                    <p style="color: red; text-align: center;">{% trans %}Special Avatar Need{% endtrans %} {{ avatar.minPoint }} {% trans %}Total Point{% endtrans %}!</p>
+                                </div>
+                            {% elseif(avatar.type=='secret') %} {#Ga Punya, secret #}
+                                <div style="float: left; border: 1px solid #000000; width: 205px; height: 240px;">
+                                    <img width="200px" height="200px" src="/uploads/default.jpg"></br>
+                                    <p style="text-align: center; color: #0000ff;">{% trans %}Secret Avatar{% endtrans %}</p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    </td>
+                </tr>
+            </table>
+            <div class="navigation">
+                {#{{ knp_pagination_render(studentAvatar) }}#}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

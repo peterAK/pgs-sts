@@ -1,0 +1,106 @@
+{
+    "name": "pgs/STS",
+    "license": "proprietary",
+    "type": "project",
+    "description": "Sales Tracking Systems",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.5.3",
+        "symfony/symfony": "~2.4",
+        "symfony/intl": "2.6.*@dev",
+
+        "twig/extensions": "~1.0",
+
+        "symfony/assetic-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.4",
+        "symfony/icu": "1.1.*",
+
+        "sensio/distribution-bundle": "~2.3",
+        "sensio/framework-extra-bundle": "~3.0",
+        "sensio/generator-bundle": "~2.3",
+
+        "incenteev/composer-parameter-handler": "~2.0",
+
+        "propel/propel-bundle": "1.4.*@dev",
+        "glorpen/propel-bundle": "*",
+        "willdurand/propel-typehintable-behavior": "*",
+
+        "friendsofsymfony/jsrouting-bundle": "~1.5",
+        "friendsofsymfony/rest-bundle": "dev-master",
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "hwi/oauth-bundle": "0.4.*@dev",
+
+        "jms/di-extra-bundle": "~1.4",
+        "jms/security-extra-bundle": "dev-master",
+        "jms/serializer-bundle": "dev-master",
+        "jms/i18n-routing-bundle": "dev-master",
+
+        "sonata-project/admin-bundle": "dev-master",
+        "sonata-project/propel-admin-bundle": "dev-master",
+
+        "fabpot/goutte": "~2.0",
+        "nesbot/carbon": "~1.8",
+        "nicmart/string-template": "0.1.*",
+        "danielstjules/stringy": "1.4.*",
+
+        "egulias/listeners-debug-command-bundle": "1.9.*",
+        "ircmaxell/random-lib": "1.0.*@dev",
+        "knplabs/knp-paginator-bundle": "2.4.0",
+
+        "genemu/form-bundle": "2.2.*",
+        "craue/formflow-bundle": "3.0.*@dev",
+        "psliwa/pdf-bundle": "dev-master",
+        "liuggio/excelbundle": ">=1.0.4",
+        "Trsteel/ckeditor-bundle": "1.3.*@dev",
+        "exercise/htmlpurifier-bundle": "1.0.*@dev",
+        "punkave/symfony2-file-uploader-bundle": "1.0.*@dev",
+        "afarkas/html5shiv": "dev-master",
+        "Trsteel/ckeditor-bundle": "1.3.*@dev",
+
+        "nelmio/api-doc-bundle": "2.5.2",
+        "elao/web-profiler-extra-bundle": "2.3.*@dev",
+        "raulfraile/ladybug-bundle": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.3",
+        "phpunit/php-code-coverage": "2.0.1",
+        "eso/ireflection": "~0.1",
+        "mockery/mockery": "0.9.*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "checkbundles-ignore": [
+            "Sensio\\Bundle\\DistributionBundle\\SensioDistributionBundle"
+        ],
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "public_html",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

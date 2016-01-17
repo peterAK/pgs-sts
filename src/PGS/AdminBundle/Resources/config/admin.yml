@@ -1,0 +1,47 @@
+services:
+
+    sonata.admin.user:
+        class: PGS\AdminBundle\Admin\UserAdmin
+        tags:
+            - name: sonata.admin
+              manager_type: propel
+              group: "User"
+              label: "User"
+        arguments:
+            - ~
+            - PGS\CoreDomainBundle\Model\User
+            - ~
+    sonata.admin.country:
+        class: PGS\AdminBundle\Admin\CountryAdmin
+        tags:
+            - name: sonata.admin
+              manager_type: propel
+              group: "Settings"
+              label: "Country"
+        arguments:
+            - ~
+            - PGS\CoreDomainBundle\Model\Country
+            - ~
+    sonata.admin.state:
+        class: PGS\AdminBundle\Admin\StateAdmin
+        tags:
+            - name: sonata.admin
+              manager_type: propel
+              group: "Settings"
+              label: "State"
+        arguments:
+            - ~
+            - PGS\CoreDomainBundle\Model\State
+            - ~
+
+    sonata.admin.site:
+        class: PGS\AdminBundle\Admin\SiteAdmin
+        tags:
+            - name: sonata.admin
+              manager_type: propel
+              group: "Settings"
+              label: "Site"
+        arguments:
+            - ~
+            - PGS\CoreDomainBundle\Model\Site
+            - ~

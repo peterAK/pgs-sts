@@ -1,0 +1,108 @@
+{% extends 'layout.html.twig' %}
+
+
+{% block title %}<title>ClassGizmo</title>{% endblock %}
+
+{% block headmeta %}
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+{% endblock headmeta %}
+
+{% block seo %}
+    <meta content="Meta Description" name="Teachers and Parents, try ClassGizmo to help in raising and teaching your kids.">
+    <meta content="Meta Keywords" name="class, rewards, teachers, parents, behavior, classgizmo">
+    <meta content="Protouch Global Solutions" name="author">
+    <!-- Facebook Meta -->
+    {#<meta property="og:image" content="https://www.classgizmo.com/protouch.png"/>#}
+    <meta property="og:title" content="Class Gizmo | School and Home Behavior Management"/>
+    <meta property="og:name" content="Class Gizmo | School and Home Behavior Management"/>
+    <meta property="og:description" content="Teachers and Parents, try ClassGizmo to help in raising and teaching your kids."/>
+{% endblock seo %}
+
+{% block font %}{% endblock font %}
+
+{% block styleglobal %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/font-awesome/css/font-awesome.min.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets output='/fonts/fontawesome-webfont.woff' '@PGSPublicBundle/Resources/public/fonts/fontawesome-webfont.woff'%}{% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/bootstrap/css/bootstrap.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets output='/css/bootstrap.css.map' '@PGSPublicBundle/Resources/public/plugins/bootstrap/css/bootstrap.css.map'%}{% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleglobal %}
+
+{% block stylepage %}
+{% endblock stylepage %}
+
+{% block styleapplication %}
+{% endblock styleapplication%}
+
+{% block favicon %}
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+{% endblock favicon %}
+
+{% block bodystart %}<body class="page-header-fixed">::Base.html.twig{% endblock bodystart %}
+{% block body %}
+    {% block header %}
+        {% include('PGSPublicBundle:Widget:topheader.html.twig') %}
+    {% endblock header %}
+
+    {% block splash %} {% endblock splash %}
+
+    {% block container %}
+        <!-- BEGIN CONTAINER -->
+        <div class="container">
+            {% block sidebar %} {% endblock sidebar %}
+        </div>
+        <!-- END CONTAINER -->
+    {% endblock container %}
+
+    {% block footer %}
+        {% include "footer.html.twig" %}
+    {% endblock footer %}
+
+    {% block javascripts %}
+        <!-- BEGIN JAVASCRIPTS -->
+        {%- block scriptglobal -%}
+            <!-- BEGIN GLOBAL SCRIPTS -->
+            <!--[if lt IE 9]>
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/respond.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/excanvas.min.js' filter='?yui_js'%}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <![endif]-->
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-1.10.2.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-migrate-1.2.1.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            <!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/bootstrap/js/bootstrap.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/back-to-top.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <!-- END GLOBAL SCRIPTS -->
+        {% endblock scriptglobal %}
+
+        {% block scriptpage %} {% endblock scriptpage %}
+
+        {% block scriptcurrent %} {% endblock scriptcurrent %}
+        <!-- END JAVASCRIPTS -->
+    {% endblock javascripts %}
+{% endblock body %}
+{% block bodyend %}</body>{% endblock bodyend %}

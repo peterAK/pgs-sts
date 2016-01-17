@@ -1,0 +1,30 @@
+pgs_core_school_health_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:SchoolHealth:list, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_health_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolHealth:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_school_health_new:
+    pattern:  /new/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolHealth:new, applicationId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_health_edit:
+    pattern:  /edit/{applicationId}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolHealth:edit, applicationId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_health_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolHealth:delete, id: null }
+    requirements:
+        _method: GET|POST
+

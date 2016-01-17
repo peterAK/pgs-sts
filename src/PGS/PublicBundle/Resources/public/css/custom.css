@@ -1,0 +1,465 @@
+/* here you can put your own css to customize and override the theme */
+/********************
+ GENERAL LAYOUT
+*********************/
+/***
+Pre-Header and pre-header elements
+***/
+.pre-header {
+    color: #616b76;
+    border-bottom: 1px solid #eee;
+    padding-top: 10px;
+    line-height: 1.2;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    background: #fff;
+}
+.pre-header a {
+    color: #616b76;
+}
+.pre-header a:hover {
+    color: #E02222;
+}
+.pre-header a:focus {
+    text-decoration: none;
+}
+.pre-header li {
+    padding-left: 11px;
+    padding-right: 15px;
+    border-right: solid 1px #d8d8d8;
+}
+.pre-header li:last-child {
+    border: none;
+}
+.additional-shop-info li:first-child {
+    padding-left: 0;
+}
+.additional-nav li:last-child {
+    padding-right: 0;
+}
+.pre-header .fa {
+    margin-right: 4px;
+}
+.site-currencies a {
+    margin-right: 6px;
+}
+.site-currencies a:last-child {
+    margin-right: 0;
+}
+.site-currencies a.current {
+    color: #E02222;
+}
+
+/*Languange Selector Block*/
+.langs-block {
+    position: relative;
+}
+.langs-block .fa {
+    margin-right: 0;
+}
+.langs-block-others-wrapper {
+    position: absolute;
+    left: 0;
+    top: 95%;
+    z-index: 99999;
+}
+.langs-block-others {
+    padding: 10px 10px 2px;
+    background: #F9F9F9;
+    z-index: 9999;
+    display: none;
+    margin-top: 12px;
+    border-top: solid 2px #0095d4;
+    box-shadow: 5px 5px rgba(91, 91, 91, 0.2);
+    position: relative;
+    transition: opacity .3s ease-in-out;
+    -moz-transition: opacity .3s ease-in-out;
+    -webkit-transition: opacity .3s ease-in-out;
+}
+.langs-block-others:after {
+    top: -8px;
+    width: 0;
+    height: 0;
+    left: 8px;
+    z-index: 2;
+    content: " ";
+    display: block;
+    position: absolute;
+    border-bottom: 8px solid #0095d4;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+}
+.langs-block:hover .langs-block-others {
+    display: block;
+}
+.langs-block-others a {
+    display: block;
+    margin-bottom: 8px;
+}
+
+/*Organization Selector Block*/
+
+/*School Selector Block*/
+.selectors-block {
+    position: relative;
+}
+.selectors-block.fa {
+    margin-right: 0;
+}
+.selectors-block-others-wrapper {
+    position: absolute;
+    left: 0;
+    top: 95%;
+    z-index: 99999;
+    white-space: nowrap;
+}
+.selectors-block-others {
+    padding: 10px 10px 2px;
+    background: #F9F9F9;
+    z-index: 9999;
+    display: none;
+    margin-top: 12px;
+    border-top: solid 2px #0095d4;
+    box-shadow: 5px 5px rgba(91, 91, 91, 0.2);
+    position: relative;
+    transition: opacity .3s ease-in-out;
+    -moz-transition: opacity .3s ease-in-out;
+    -webkit-transition: opacity .3s ease-in-out;
+}
+.selectors-block-others:after {
+    top: -8px;
+    width: 0;
+    height: 0;
+    left: 8px;
+    z-index: 2;
+    content: " ";
+    display: block;
+    position: absolute;
+    border-bottom: 8px solid #0095d4;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+}
+.selectors-block:hover .selectors-block-others {
+    display: block;
+}
+.selectors-block-others a:hover {
+    display: block;
+    text-decoration: none;
+    color: #d4721c
+}
+
+.col-centered{
+    margin: 0 auto;
+    text-align: center ;
+}
+
+.fileUpload {
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    width: 140px;
+}
+
+.fileUpload input.upload {
+    cursor: pointer;
+    font-size: 20px;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.level-0 { margin-left: 0px;}
+.level-1 { margin-left: 15px;}
+.level-2 { margin-left: 30px;}
+.level-3 { margin-left: 45px;}
+.level-5 { margin-left: 60px;}
+
+.nowrap { white-space: nowrap;}
+
+
+/***
+Buttons & Dropdown Buttons
+***/
+
+.btn {
+    border-width: 0;
+    padding: 7px 14px;
+    font-size: 14px;
+    outline: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    text-shadow: none;
+}
+
+/* fix jumping group buttons */
+.btn-group.btn-group-solid .btn + .btn,
+.btn-group.btn-group-solid .btn + .btn-group.btn-group-solid,
+.btn-group.btn-group-solid .btn-group.btn-group-solid + .btn,
+.btn-group.btn-group-solid .btn-group.btn-group-solid + .btn-group.btn-group-solid {
+    margin-left: 0px;
+}
+
+.btn-group-vertical.btn-group-solid > .btn + .btn,
+.btn-group-vertical.btn-group-solid > .btn + .btn-group,
+.btn-group-vertical.btn-group-solid > .btn-group + .btn,
+.btn-group-vertical.btn-group-solid > .btn-group + .btn-group {
+    margin-top: 0px;
+    margin-left: 0;
+}
+
+.btn-default {
+    border-width: 1px;
+    padding: 6px 13px;
+}
+
+.btn.red-stripe {
+    border-left: 3px solid #d84a38;
+}
+
+.btn.blue-stripe {
+    border-left: 3px solid #4d90fe;
+}
+
+.btn.purple-stripe {
+    border-left: 3px solid #852b99;
+}
+
+.btn.green-stripe {
+    border-left: 3px solid #35aa47;
+}
+
+.btn.yellow-stripe {
+    border-left: 3px solid #ffb848;
+}
+
+.btn.dark-stripe {
+    border-left: 3px solid #555555;
+}
+
+.btn.default {
+    color: #333333;
+    text-shadow: none;
+    background-color: #e5e5e5;
+}
+.btn.default:hover,
+.btn.default:focus,
+.btn.default:active,
+.btn.default.active,
+.btn.default[disabled],
+.btn.default.disabled {
+    color: #333333;
+    background-color: #d8d8d8 !important;
+    outline: none !important;
+}
+
+/*  Red */
+.btn.red {
+    color: white;
+    text-shadow: none;
+    background-color: #d84a38;
+}
+.btn.red:hover,
+.btn.red:focus,
+.btn.red:active,
+.btn.red.active,
+.btn.red[disabled],
+.btn.red.disabled {
+    background-color: #bb2413 !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+/*  Blue */
+
+.btn.blue {
+    color: white;
+    text-shadow: none;
+    background-color: #4d90fe;
+}
+.btn.blue:hover,
+.btn.blue:focus,
+.btn.blue:active,
+.btn.blue.active,
+.btn.blue[disabled],
+.btn.blue.disabled {
+    background-color: #0362fd !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.btn-group .btn.blue.dropdown-toggle {
+    background-color: #4d90fe !important;
+}
+.btn-group .btn.blue:hover,
+.btn-group .btn.blue:focus,
+.btn-group .btn.blue:active,
+.btn-group .btn.blue.active,
+.btn-group .btn.blue.disabled,
+.btn-group .btn.blue[disabled] {
+    background-color: #0362fd !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+/*  Green */
+.btn.green {
+    color: white;
+    text-shadow: none;
+    background-color: #35aa47;
+}
+.btn.green:hover,
+.btn.green:focus,
+.btn.green:active,
+.btn.green.active,
+.btn.green.disabled,
+.btn.green[disabled]{
+    background-color: #1d943b !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+/*  Purple */
+.btn.purple {
+    color: white;
+    text-shadow: none;
+    background-color: #852b99;
+}
+.btn.purple:hover,
+.btn.purple:focus,
+.btn.purple:active,
+.btn.purple.active,
+.btn.purple.disabled,
+.btn.purple[disabled] {
+    background-color: #6d1b81 !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.btn-group .btn.purple.dropdown-toggle {
+    background-color: #852b99 !important;
+}
+.btn-group .btn.purple:hover,
+.btn-group .btn.purple:focus,
+.btn-group .btn.purple:active,
+.btn-group .btn.purple.active,
+.btn-group .btn.purple.disabled,
+.btn-group .btn.purple[disabled] {
+    background-color: #6d1b81 !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+/*  Yellow */
+.btn.yellow {
+    color: white;
+    text-shadow: none;
+    background-color: #ffb848;
+}
+.btn.yellow:hover,
+.btn.yellow:focus,
+.btn.yellow:active,
+.btn.yellow.active,
+.btn.yellow.disabled,
+.btn.yellow[disabled] {
+    background-color: #eca22e !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.btn-group .btn.yellow.dropdown-toggle {
+    background-color: #ffb848 !important;
+}
+.btn-group .btn.yellow:hover,
+.btn-group .btn.yellow:focus,
+.btn-group .btn.yellow:active,
+.btn-group .btn.yellow.active,
+.btn-group .btn.yellow.disabled,
+.btn-group .btn.yellow[disabled] {
+    background-color: #eca22e !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+/*  Black */
+.btn.dark {
+    color: white;
+    text-shadow: none;
+    background-color: #555555;
+}
+.btn.dark:hover,
+.btn.dark:focus,
+.btn.dark:active,
+.btn.dark.active,
+.btn.dark.disabled,
+.btn.dark[disabled] {
+    background-color: #222222 !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.btn-group .btn.dark.dropdown-toggle {
+    background-color: #555555 !important;
+}
+.btn-group .btn.dark:hover,
+.btn-group .btn.dark:focus,
+.btn-group .btn.dark:active,
+.btn-group .btn.dark.active,
+.btn-group .btn.dark.disabled,
+.btn-group .btn.dark[disabled] {
+    background-color: #222222 !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.btn-lg {
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    vertical-align: middle;
+}
+
+.btn-lg > i {
+    font-size: 18px;
+}
+
+.btn > i {
+    font-size: 14px;
+}
+
+.btn-sm,
+.btn-xs {
+    padding: 4px 10px 5px 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.btn-sm > i,
+.btn-xs > i {
+    font-size: 13px;
+}
+
+.btn-xs {
+    padding: 1px 5px;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+input[type=text] { max-width: 100%; box-sizing: border-box; }
+
+.form-control { max-width: 80% !important; box-sizing: border-box; }
+
+
+
+

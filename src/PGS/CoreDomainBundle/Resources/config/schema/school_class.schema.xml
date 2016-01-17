@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.SchoolClass" namespace="PGS\CoreDomainBundle\Model\SchoolClass">
+    <table name="school_class" phpName="SchoolClass">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="name" type="VARCHAR" size="100" required="true" />
+        <column name="grade_level_id" type="INTEGER" required="true"/>
+
+
+        <!-- Relations -->
+        <foreign-key foreignTable="grade_level" onDelete="CASCADE" onUpdate="CASCADE">
+        <reference local="grade_level_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior -->
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="name" />
+        </behavior>
+        <behavior name="timestampable" />
+    </table>
+</database>

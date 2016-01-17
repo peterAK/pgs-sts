@@ -1,0 +1,43 @@
+pgs_core_school_year_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:list, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_year_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_school_year_new:
+    pattern:  /new/{organization}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:new, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_year_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_year_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_year_activate:
+    pattern:  /activate/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:activate, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_year_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST
+
+

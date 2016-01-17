@@ -1,0 +1,32 @@
+<div class="help-tile double triple-down selected bg-blue">
+    <div class="corner">
+    </div>
+    <div class="check">
+    </div>
+    <div class="tile-body">
+        <h4>
+            {% if app.request.locale == 'en' %}
+                <td>{{ help.title}}</td>
+            {% else %}
+                <td>{{ help.translation('id_ID').title}}</td>
+            {% endif %}
+        </h4>
+        {{ help.content|raw }}
+    </div>
+
+    <div class="tile-object">
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="name">
+                {% if notFound %}
+                    <a href="{{ url('pgs_core_help_new', { 'key': key }) }}">Add Help</a>
+                {% else %}
+                    <a href="{{ url('pgs_core_help_edit', { 'id': help.id}) }}">Edit Help</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="number">
+            <i class="fa fa-life-bouy"></i>
+        </div>
+    </div>
+</div>

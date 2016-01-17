@@ -1,0 +1,23 @@
+pgs_core_message_list:
+    pattern:  /message-list
+    defaults: { _controller: PGSCoreDomainBundle:Message:list}
+    requirements:
+        _method: GET
+
+pgs_core_message_new:
+    pattern:  /new-message
+    defaults: { _controller: PGSCoreDomainBundle:Message:new}
+    requirements:
+        _method: GET|POST
+
+pgs_core_message_delete:
+    pattern:  /delete-message/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Message:delete, id: null}
+    requirements:
+        _method: GET
+
+pgs_core_message_view:
+    pattern:  /view-message/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Message:view, id: null}
+    requirements:
+        _method: GET|POST

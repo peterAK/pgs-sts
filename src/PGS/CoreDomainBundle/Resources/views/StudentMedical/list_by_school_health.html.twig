@@ -1,0 +1,162 @@
+{% extends 'PGSAdminBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+{#<ul class="page-breadcrumb breadcrumb">#}
+    {#<li>#}
+        {#<a href="/">#}
+            {#<i class="fa fa-home"></i>#}
+        {#</a>#}
+        {#<i class="fa fa-angle-right"></i>#}
+    {#</li>#}
+    {#<li>#}
+        {#<a href="{{ url('pgs_core_school_health_list') }}">#}
+            {#{{ model|title }}#}
+        {#</a>#}
+    {#</li>#}
+{#</ul>#}
+{% endblock breadcrumb %}
+
+{% block list %}
+    <div class="row">
+        <div class="col-md-10">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="portlet-title">
+                        <div class ="caption">
+                            Edit {{ model }}
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <label>{% trans %}medicine{% endtrans %}</label>
+                    <div style="border:1px solid #ddd;border-radius: 5px;">
+                        <table id='mainTable' cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
+                            <thead>
+                            <tr>
+                                <th>SchoolHealthId</th>
+                                <th>MedicalId</th>
+                                <th>Available</th>
+                                <th>Medical</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    </br>
+                    </br>
+                    <div class="col-md-offset-3 col-md-9">
+                        <a href={{ path('pgs_core_student_condition_view',{'schoolHealthId' : schoolHealth})}}> <button class="btn blue" name="save">Next</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock list %}
+
+{% block stylepage %}
+    <link rel="stylesheet" type="text/css" href="/plugins/datatables/media/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css">
+    <link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/TableTools/css/dataTables.tableTools.min.css">
+    <link rel="stylesheet" type="text/css" href="/plugins/datatables/extensions/Editor-1.3.3/css/dataTables.editor.min.css">
+
+{% endblock stylepage %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+    <script type="text/javascript" src="/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+    <script type="text/javascript" src="/plugins/datatables/extensions/Editor-1.3.3/js/dataTables.editor.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var editor = new $.fn.dataTable.Editor( {
+                "ajax": "{{ path('pgs_core_student_medical_fetch', {'random' : random(), 'schoolHealthId' : schoolHealth}) }}",
+                "table": "#mainTable",
+                "fields": [
+                    {
+                        "label" : "school health",
+                        "name"  : "school_health_id",
+                        "type"  : "hidden"
+                    },
+                    {
+                        "label" : "medical",
+                        "name"  : "medical_id",
+                        "type"  : "hidden"
+                    },
+                    {
+                        "type"  : "checkbox",
+                        "label" : "Available",
+                        "name"  : "available",
+                        "ipOpts": [
+                            {
+                                "label": "",
+                                "value": 1
+                            }
+                        ],
+                        "separator": "|"
+                    },
+                    {
+                        "label" : "Medical",
+                        "name"  : "medical",
+                        "type"  : "readonly"
+                    }
+                ]
+            } );
+
+            $('#mainTable').on( 'change', 'input.editor-available', function () {
+                editor
+                        .edit( $(this).closest('tr'), false )
+                        .set( 'available', $(this).prop( 'checked' ) ? 1 : 0 )
+                        .submit()
+                ;
+            } );
+
+            $('#mainTable').dataTable( {
+                "dom": "Trtip",
+                "ajax": "{{ path('pgs_core_student_medical_fetch', {'random' : random(), 'schoolHealthId' : schoolHealth }) }}",
+                "serverSide": true,
+                "paging": false,
+                "columns": [
+                    {
+                        "data": "school_health_id"
+                    },
+                    {
+                        "data": "medical_id"
+                    },
+                    {
+                        "data": "available",
+                        render: function ( data, type, row ) {
+                            if ( type === 'display' ) {
+                                return '<input type="checkbox" class="editor-available">';
+                            }
+                            return data;
+                        },
+                        className: "dt-body-center"
+                    },
+                    {
+                        "data": "medical"
+                    }
+                ],
+                "tableTools": {
+                    "sRowSelect": "os",
+                    "aButtons"  : [
+
+                    ],
+                    sRowSelector: 'td:not(:last-child)' // no row selection on last column
+                },
+                "columnDefs": [
+                    {
+                        "visible": false,
+                        "targets": [0,1]
+                    }
+                ],
+                rowCallback: function ( row, data ) {
+                    // Set the checked state of the checkbox in the table
+                    $('input.editor-available', row).prop( 'checked', data.available == 1 );
+                }
+            } );
+        } );
+    </script>
+{% endblock scriptcurrent %}

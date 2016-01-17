@@ -1,0 +1,12 @@
+# Twig Configuration
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+
+    form:
+        resources:
+            - 'PGSCoreDomainBundle:Form:form.html.twig'
+
+    globals:
+        title: %site_name%
+        scope: %site_scope%

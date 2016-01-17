@@ -1,0 +1,5 @@
+PGS\CoreDomainBundle\Model\User:
+    constraints:
+        - Propel\PropelBundle\Validator\Constraints\UniqueObject:
+            fields: username
+            message: Please choose another username.

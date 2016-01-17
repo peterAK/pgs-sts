@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html {% block ngApp %}ng-app="PGS.app" ng-controller="PGSAppController"{% endblock ngApp %}>
+<!-- BEGIN HEAD -->
+<head>
+    {% block head %}
+        {% block title %}<title> Protouch Global Solutions | Layout </title>{% endblock %}
+        {% block headmeta %}
+            <meta charset="UTF-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        {% endblock headmeta %}
+
+        {% block seo %}
+        {% endblock seo %}
+
+        {% block font %}
+        {% endblock font %}
+
+        {% block styleglobal %}
+        {% endblock %}
+
+        {% block stylepage %}
+        {% endblock %}
+
+        {% block styleapplication %}
+        {%  endblock %}
+
+        {% block favicon %}
+            <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+            <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+        {% endblock favicon %}
+    {%  endblock head %}
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+{% block bodystart %}
+<body>
+{% endblock bodystart %}
+{% block body %}
+    BODY
+{% endblock body %}
+{% block bodyend %}
+</body>
+{% endblock bodyend %}
+<!-- END BODY -->
+</html>

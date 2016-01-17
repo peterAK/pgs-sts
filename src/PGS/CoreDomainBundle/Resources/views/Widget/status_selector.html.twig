@@ -1,0 +1,11 @@
+<li class="all active-tab">
+    <a class="btn" data-title="all" href="javascript:;" >
+        All
+    </a>
+    <b></b>
+</li>
+{% for status in statuses %}
+    <li class="{{ status }}">
+        <a class="btn" href="javascript:;" data-title="{{ status }}">{{ status|capitalize }}</a>
+    </li>
+{%  endfor %}

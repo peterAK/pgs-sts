@@ -1,0 +1,33 @@
+pgs_admin_test_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Test:list }
+    requirements:
+        _method: GET
+
+pgs_admin_test_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Test:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_test_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSAdminBundle:Test:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_test_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Test:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_test_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Test:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_test_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSAdminBundle:Test:viewTestByStatus, status: all }

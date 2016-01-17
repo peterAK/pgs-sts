@@ -1,0 +1,12 @@
+<ul class="blog-info">
+    {% for studentMedical in studentMedicals %}
+        <li style="display: inline;">
+            {#<span class="color-green">{{ studentMedical.medical.style|raw }}</span>#}
+            {% if app.request.locale == 'en' %}
+                {{ studentMedical.medical.name|capitalize }}
+            {% else %}
+                {{ studentMedical.medical.translation('id_ID').name|capitalize }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <body>
+    {% block font %}
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=all" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow&subset=all" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&subset=all" rel="stylesheet" type="text/css"><!--- fonts for slider on the index page -->
+    {% endblock font %}
+
+    {#{% block styleglobal %}#}
+        {#{{ parent() }}#}
+    {#{% endblock styleglobal %}#}
+
+    {% block stylepage %}
+        {#{{ parent() }}#}
+        {% stylesheets '@PGSPublicBundle/Resources/public/css/style-corporate.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+        {% stylesheets '@PGSPublicBundle/Resources/public/css/style.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+        {% stylesheets '@PGSPublicBundle/Resources/public/css/themes/blue.css' filter='?yui_css' %}
+        <link id="style_color" rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {% stylesheets '@PGSPublicBundle/Resources/public/css/style-responsive.css' filter='?yui_css' %}
+        <link id="style_color" rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {% stylesheets '@PGSPublicBundle/Resources/public/css/custom.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock stylepage %}
+
+        <div class="container">
+            &nbsp;<br/>
+            <div class="invoice">
+                <div class="row invoice-logo">
+                    <div class="col-xs-6 invoice-logo-space">
+                        <a href="{{ url('homepage') }}"><img id="logoimg" style="height:100px; width:100px;" src="/images/gizmo-large.png" alt=""></a>
+                    </div>
+                    <div class="col-xs-6">
+                        <p>{{ "now"|date("d M Y") }} <br/>
+                        </p>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row" style="border-bottom:1px solid #eee">
+                    <div class="col-xs-4">
+                        <h4>{% trans %}registration{% endtrans %} :</h4>
+
+                        {#History : {{ history.status }}#}
+                        <ul class="list-unstyled">
+                                Student
+                            <li>
+                                 Username = {{ student.username }}
+                            </li>
+                            <li>
+                                 role = {{ studentProfile.activePreferences }}
+                            </li>
+                            <li>
+                                Password = {{ studentPass }}
+                            </li>
+                        </ul>
+                        {% if father is not null %}
+                        <ul class="list-unstyled">
+                                Father
+                            <li>
+                                 Username = {{ father.username }}
+                            </li>
+                            <li>
+                                Password = {{ fatherPass }}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if mother is not null %}
+                        <ul class="list-unstyled">
+                                Mother
+                            <li>
+                                 Username = {{ mother.username }}
+                            </li>
+                            <li>
+                                Password = {{ motherPass }}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if guardian is not null %}
+                        <ul class="list-unstyled">
+                                Legal Guardian
+                            <li>
+                                 Username = {{ guardian.username }}
+                            </li>
+                            <li>
+                                Password = {{ guardianPass }}
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-offset-3 col-md-9">
+                        <a href={{ path('pgs_core_application_list')}}> <button class="btn blue" name="save">Next</button></a>
+                    </div>
+                    <div class="col-xs-4">
+                    </div>
+
+                {#<div class="row">#}
+                    {#<div class="col-xs-12">#}
+                        {#<table class="table table-striped table-hover">#}
+                            {#<thead>#}
+                            {#<tr>#}
+                                {#<th>#}
+                                    {#No#}
+                                {#</th>#}
+                                {#<th>#}
+                                    {#Item#}
+                                {#</th>#}
+                                {#<th class="hidden-480">#}
+                                    {#{% trans %}description{% endtrans %}#}
+                                {#</th>#}
+                                {#<th align="right" style="text-align: right">#}
+                                    {#{% trans %}quantity{% endtrans %}#}
+                                {#</th>#}
+                                {#<th class="hidden-480" align="right" style="text-align: right">#}
+                                    {#{% trans %}unit.price{% endtrans %}#}
+                                {#</th>#}
+                                {#<th align="right" style="text-align: right">#}
+                                    {#Subtotal#}
+                                {#</th>#}
+                            {#</tr>#}
+                            {#</thead>#}
+                            {#<tbody>#}
+                            {#{% set refundPolicy = '' %}#}
+                            {#{% for detail in transaction.transactionDetails %}#}
+                                {#<tr>#}
+                                    {#<td>#}
+                                        {#{{ loop.index }}#}
+                                    {#</td>#}
+                                    {#<td>#}
+                                        {#{{ detail.category.categoryType|capitalize }}#}
+                                    {#</td>#}
+                                    {#<td>#}
+                                        {#{{ detail.description }}#}
+                                        {#{% if detail.roomId is not null %}#}
+                                            {#{% if app.request.locale == 'en' %}#}
+                                                {#{% set refundPolicy = '<br/><strong class="text-danger">'~detail.room.policy.description~'</strong>' %}#}
+                                            {#{% else %}#}
+                                                {#{% set refundPolicy = '<br/><strong class="text-danger">'~detail.room.policy.translation('id_ID').description~'</strong>' %}#}
+                                            {#{% endif %}#}
+                                        {#{% endif %}#}
+                                    {#</td>#}
+                                    {#<td class="hidden-480" align="right">#}
+                                        {#{{ detail.quantity }}#}
+                                    {#</td>#}
+                                    {#<td class="hidden-480" align="right">#}
+                                        {#{{ detail.price|thousand }}#}
+                                    {#</td>#}
+                                    {#<td class="hidden-480" align="right">#}
+                                        {#{{ detail.lineTotal|thousand }}#}
+                                    {#</td>#}
+                                {#</tr>#}
+                            {#{% endfor %}#}
+                            {#<tr>#}
+                                {#<td colspan="4">&nbsp;</td>#}
+                                {#<td class="hidden-480" align="right"><strong>Subtotal</strong></td>#}
+                                {#<td class="hidden-480" align="right">{{ transaction.subtotal|thousand }}</td>#}
+                            {#</tr>#}
+                            {#<tr>#}
+                                {#<td colspan="4" style="border: none">&nbsp;</td>#}
+                                {#<td class="hidden-480" align="right">Service Charge</td>#}
+                                {#<td class="hidden-480" align="right">{{ transaction.service|thousand }}</td>#}
+                            {#</tr>#}
+                            {#<tr>#}
+                                {#<td colspan="4" style="border: none">&nbsp;</td>#}
+                                {#<td class="hidden-480" align="right">Taxes</td>#}
+                                {#<td class="hidden-480" align="right">{{ transaction.tax|thousand }}</td>#}
+                            {#</tr>#}
+                            {#<tr>#}
+                                {#<td colspan="4" style="border: none">&nbsp;</td>#}
+                                {#<td class="hidden-480" align="right"><strong>Total</strong></td>#}
+                                {#<td class="hidden-480" align="right">{{ transaction.total|toRp }}</td>#}
+                            {#</tr>#}
+                            {#</tbody>#}
+                        {#</table>#}
+                    {#</div>#}
+                {#</div>#}
+
+                {#<div class="row">#}
+                    {#<div class="col-xs-12">#}
+                        {#<div class="portlet yellow box">#}
+                            {#<div class="portlet-title">#}
+                                {#<div class="caption">#}
+                                    {#{% trans %}Bank Information{% endtrans %}#}
+                                {#</div>#}
+                                {#<div id="topRoomTotal" class="pull-right"></div>#}
+                                {#<input id="input-topRoomTotal" type="hidden" value="0">#}
+                            {#</div>#}
+                            {#<div class="portlet-body">#}
+                                {#<strong>Transfer Payment To / Kirim Pembayaran Ke:</strong><br/>&nbsp;<br/>#}
+                                {#&#123;&#35;{{ transaction.business.organization.note|raw }}<br/>&#35;&#125;#}
+                                {#<address>#}
+                                    {#Payment must be made within 24 hours, put in the first 4 (four) characters of the booking code in the transfer message: <b></b><br/>#}
+                                    {#Pembayaran harus dilakukan dalam 24 jam, tuliskan 4 (empat) karakter pertama dari kode booking pada pesan transfer: <b></b><br/>#}
+                                {#</address>#}
+
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
+
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

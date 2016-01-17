@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.AcademicYear" namespace="PGS\CoreDomainBundle\Model\AcademicYear">
+    <table name="academic_year" phpName="AcademicYear">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="year_start" type="INTEGER" required="true" defaultValue="2010"/>
+        <column name="year_end" type="INTEGER" required="true" defaultValue="2011"/>
+        <column name="description" type="VARCHAR" size="100" required="true"/>
+        <column name="active" type="boolean" defaultValue="false" />
+    </table>
+
+    <!-- Behavior -->
+    <behavior name="timestampable" />
+</database>

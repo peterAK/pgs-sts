@@ -1,0 +1,11 @@
+pgs_core_setup_profile_create:
+    pattern:  /profile
+    defaults: { _controller: PGSCoreDomainBundle:Setup:profile }
+
+pgs_core_setup_organization_create:
+    pattern:  /organization
+    defaults: { _controller: PGSCoreDomainBundle:Setup:organization }
+
+pgs_core_setup_school_create:
+    pattern:  /school
+    defaults: { _controller: PGSCoreDomainBundle:Setup:school }

@@ -1,0 +1,108 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% form_theme form 'PGSAdminBundle:Form:form.html.twig' %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="{{ home }}">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_behavior_list') }}">
+                {% trans %}Behavior{% endtrans %}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {% if behavior.id %}{% trans %}Edit{% endtrans %}{% else %}{% trans %}New{% endtrans %}{% endif %} {% trans %}Behavior{% endtrans %}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {% if behavior.id %}{% trans %}Edit{% endtrans %}{% else %}{% trans %}New{% endtrans %}{% endif %} {% trans %}Behavior{% endtrans %}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" {{ form_enctype(form) }}>
+                        <div class="form-body">
+                            {{ form_widget(form) }}
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">Save</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            {% if behavior.id %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'behavior.edit'})) }}
+            {% else %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'behavior.add'})) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock content %}
+
+{#{% block scriptcurrent %}#}
+    {#{{ parent() }}#}
+    {#<!-- BEGIN CURRENT SCRIPTS -->#}
+    {#{% javascripts '@PGSPublicBundle/Resources/public/scripts/app-admin.js' filter='?yui_js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#<!-- BEGIN CURRENT SCRIPTS -->#}
+    {#{% javascripts '@PGSPublicBundle/Resources/public/scripts/jquery-1.3.2.min.js' filter='?yui_js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#<!-- BEGIN CURRENT SCRIPTS -->#}
+    {#{% javascripts '@PGSPublicBundle/Resources/public/scripts/dd-min.js' filter='?yui_js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {#<script language="javascript">#}
+        {#$(document).ready(function() {#}
+                {#$("body select").dropdown();#}
+        {#});#}
+    {#</script>#}
+
+    {#<script type="text/javascript">#}
+        {#jQuery(document).ready(function() {#}
+            {#App.init();#}
+        {#});#}
+    {#</script>#}
+    {#<!-- END CURRENT SCRIPTS -->#}
+{#{% endblock scriptcurrent %}#}

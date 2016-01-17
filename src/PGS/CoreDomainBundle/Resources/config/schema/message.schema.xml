@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Message" namespace="PGS\CoreDomainBundle\Model\Message">
+    <table name="message" phpName="Message">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="subject" type="VARCHAR" size="50" required="false"/>
+        <column name="description" type="LONGVARCHAR" required="true"/>
+        <column name="original_id" type="INTEGER" required="false" />
+        <column name="read" type="BOOLEAN" required="true" />
+        <column name="from_id" type="INTEGER" required="true" />
+        <column name="to_id" type="INTEGER" required="true" />
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="from_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="fos_user" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="to_id" foreign="id"/>
+        </foreign-key>
+
+    </table>
+</database>

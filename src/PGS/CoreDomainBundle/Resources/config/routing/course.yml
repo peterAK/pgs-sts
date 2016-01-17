@@ -1,0 +1,30 @@
+pgs_core_course_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Course:list }
+    requirements:
+        _method: GET
+
+pgs_core_course_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Course:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_course_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Course:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_course_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Course:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_course_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Course:delete, id: null }
+    requirements:
+        _method: GET|POST
+

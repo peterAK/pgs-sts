@@ -1,0 +1,43 @@
+pgs_core_organization_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Organization:list }
+    requirements:
+        _method: GET
+
+pgs_core_organization_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_organization_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_organization_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_organization_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_organization_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:viewOrganizationByStatus, status: all }
+
+pgs_core_organization_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_organization_upload:
+    pattern: /upload/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Organization:upload, id: null }

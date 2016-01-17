@@ -1,0 +1,35 @@
+pgs_core_academic_year_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:AcademicYear:list }
+    requirements:
+        _method: GET
+
+pgs_core_academic_year_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:AcademicYear:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_academic_year_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:AcademicYear:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_academic_year_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:AcademicYear:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_academic_year_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:AcademicYear:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_academic_year_activate:
+    pattern:  /activate/{id}
+    defaults: { _controller: PGSCoreDomainBundle:AcademicYear:activate, id: null }
+    requirements:
+        _method: GET|POST

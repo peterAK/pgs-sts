@@ -1,0 +1,59 @@
+{% set currentPath = app.request.attributes.get('_route') %}
+{% set vars = { 'dashboard': 'pgs_admin_dashboard' in currentPath } %}
+{% set vars = vars|merge({ 'user_admin': 'pgs_admin_user_list_admin' in currentPath }) %}
+{% set vars = vars|merge({ 'user_principal': 'pgs_admin_user_list_principal' in currentPath }) %}
+{% set vars = vars|merge({ 'academic_year': 'pgs_core_academic_year' in currentPath }) %}
+{% set vars = vars|merge({ 'avatar': 'pgs_core_avatar_list' in currentPath }) %}
+{% set vars = vars|merge({ 'application': 'pgs_core_application' in currentPath }) %}
+{% set vars = vars|merge({ 'behavior': 'pgs_core_behavior' in currentPath }) %}
+{% set vars = vars|merge({ 'course': 'pgs_core_course' in currentPath }) %}
+{% set vars = vars|merge({ 'condition': 'pgs_core_condition' in currentPath }) %}
+{% set vars = vars|merge({ 'ethnicity': 'pgs_core_ethnicity' in currentPath }) %}
+{% set vars = vars|merge({ 'formula': 'pgs_core_formula' in currentPath }) %}
+{% set vars = vars|merge({ 'grade_level': 'pgs_core_grade_level' in currentPath }) %}
+{% set vars = vars|merge({ 'grades': 'pgs_core_grades' in currentPath }) %}
+{% set vars = vars|merge({ 'help': 'pgs_core_help' in currentPath }) %}
+{% set vars = vars|merge({ 'icon': 'pgs_core_icon' in currentPath }) %}
+{% set vars = vars|merge({ 'level': 'pgs_core_level' in currentPath }) %}
+{% set vars = vars|merge({ 'medical': 'pgs_core_medical' in currentPath }) %}
+{% set vars = vars|merge({ 'organization': 'pgs_core_organization' in currentPath }) %}
+{% set vars = vars|merge({ 'parent': 'pgs_core_parent' in currentPath }) %}
+{% set vars = vars|merge({ 'page': 'pgs_core_page' in currentPath }) %}
+{% set vars = vars|merge({ 'school': 'pgs_core_schools' in currentPath }) %}
+{% set vars = vars|merge({ 'test': 'pgs_core_test' in currentPath }) %}
+{% set vars = vars|merge({ 'school_test': 'pgs_core_school_test' in currentPath }) %}
+{% set vars = vars|merge({ 'school_term': 'pgs_core_school_term' in currentPath }) %}
+{% set vars = vars|merge({ 'school_year': 'pgs_core_school_year' in currentPath }) %}
+{% set vars = vars|merge({ 'school_grade_level': 'pgs_core_school_grade_level' in currentPath }) %}
+{% set vars = vars|merge({ 'schools_classes': 'pgs_core_school_class' in currentPath }) %}
+{% set vars = vars|merge({ 'school_class_course': 'pgs_core_school_class_course' in currentPath }) %}
+{% set vars = vars|merge({ 'school_class_student': 'pgs_core_school_class_student' in currentPath }) %}
+{% set vars = vars|merge({ 'score': 'pgs_core_score' in currentPath }) %}
+{% set vars = vars|merge({ 'student': 'pgs_core_student' in currentPath }) %}
+{% set vars = vars|merge({ 'student_behavior': 'pgs_core_behavior_appraisal_review' in currentPath }) %}
+{% set vars = vars|merge({ 'subject': 'pgs_core_subject' in currentPath }) %}
+{% set vars = vars|merge({ 'test': 'pgs_core_test' in currentPath }) %}
+{% set vars = vars|merge({ 'term': 'pgs_core_term' in currentPath }) %}
+{% set vars = vars|merge({ 'topic': 'pgs_core_topic' in currentPath }) %}
+{% set vars = vars|merge({ 'teacher': 'pgs_core_teacher' in currentPath }) %}
+{% set vars = vars|merge({ 'student_report': 'pgs_core_student_report' in currentPath }) %}
+{% set vars = vars|merge({ 'announcement': 'pgs_core_announcement_list' in currentPath }) %}
+
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse">
+        <!-- add "navbar-no-scroll" class to disable the scrolling of the sidebar menu -->
+        <!-- BEGIN SIDEBAR MENU -->
+        <ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
+            <li {{ vars['dashboard'] ? " class='active'" }}>
+                <a href="{{ path('pgs_admin_dashboard') }}">
+                    <i class="fa fa-home"></i>
+                    <span class="title">{% trans %}Dashboard{% endtrans %}</span>
+                </a>
+            </li>
+            {%- include 'PGSCoreDomainBundle:Sidebar:sidemenu.html.twig' with vars -%}
+        </ul>
+        <!-- END SIDEBAR MENU -->
+    </div>
+</div>
+<!-- END SIDEBAR -->

@@ -1,0 +1,18 @@
+<?php
+
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Composer\Autoload\ClassLoader;
+
+/**
+ * @var $loader ClassLoader
+ */
+$loader = require __DIR__.'/../vendor/autoload.php';
+
+AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
+return $loader;
+
+
+
+//    'Knp\Bundle' => __DIR__.'/../vendor/bundles',
+//    'Knp\Menu'   => __DIR__.'/../vendor/KnpMenu/src',

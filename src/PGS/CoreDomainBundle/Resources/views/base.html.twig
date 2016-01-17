@@ -1,0 +1,112 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}<title>ClassGizmo | Your Classroom Partner</title>{% endblock %}
+
+{% block font %}
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow&subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&subset=all" rel="stylesheet" type="text/css"><!--- fonts for slider on the index page -->
+{% endblock font %}
+
+{% block styleglobal %}
+    {{ parent() }}
+{% endblock styleglobal %}
+
+{% block stylepage %}
+    {{ parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style-corporate.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/themes/blue.css' filter='?yui_css' %}
+        <link id="style_color" rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style-responsive.css' filter='?yui_css' %}
+        <link id="style_color" rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/custom.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock stylepage %}
+
+{% block bodystart %}
+    <body class="page-header-fixed">
+{% endblock bodystart %}
+
+{% block body %}
+    {% block header %}
+        {% if app.user %}
+            {% include('PGSCoreDomainBundle:Widget:topheader.html.twig') %}
+        {% else %}
+            {% include('PGSPublicBundle:Widget:topheader.html.twig') %}
+        {% endif %}
+    {% endblock header %}
+
+    {% block container %}
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            {% block sidebar %}{% endblock sidebar %}
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+                    {% block help %}
+                        {#{% include "widget/help.html.twig" %}#}
+                    {% endblock help %}
+                    {% block configuration %}
+                        {#{% include "widget/modal.html.twig" %}#}
+                    {% endblock configuration %}
+                    <!-- BEGIN PAGE HEADER-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% block pageTitle %}
+
+                            {% endblock pageTitle %}
+                            {% block breadcrumb %}
+
+                            {% endblock breadcrumb %}
+                        </div>
+                    </div>
+                    <!-- END PAGE HEADER-->
+
+                    <div class="clearfix"></div>
+                    {% block content %}
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                            </div>
+                        </div>
+                    {% endblock content %}
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END CONTAINER -->
+    {%  endblock container %}
+
+    {% block footer %}
+        {% if app.user %}
+            {% include('PGSCoreDomainBundle:Widget:footer.html.twig') %}
+        {% else %}
+            {% include('PGSPublicBundle:Widget:footer.html.twig') %}
+        {% endif %}
+    {% endblock footer %}
+
+    {% block javascripts %}
+        <!-- BEGIN JAVASCRIPTS -->
+        {% block scriptglobal %}
+            {{  parent() }}
+        {% endblock scriptglobal %}
+
+        {% block scriptpage %}
+            {{ parent() }}
+        {% endblock scriptpage %}
+
+        {% block scriptcurrent %}
+            <!-- BEGIN CURRENT SCRIPTS -->
+            <!-- END CURRENT SCRIPTS -->
+        {% endblock scriptcurrent %}
+
+        <!-- END JAVASCRIPTS -->
+    {% endblock javascripts %}
+{% endblock body %}

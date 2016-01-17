@@ -1,0 +1,123 @@
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-fixed-top">
+    <!-- BEGIN TOP NAVIGATION BAR -->
+    <div class="header-inner">
+        <div class="row">
+            <div class="col-md-4 col-sm-4">
+                <!-- BEGIN LOGO -->
+                <a class="navbar-brand" href="{{ url('pgs_admin_dashboard') }}">
+                    <img src="/images/logo-small.png" alt="logo" class="img-responsive"/>
+                </a>
+                <!-- END LOGO -->
+
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <img src="/images/menu-toggler.png" alt=""/>
+                </a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <ul class="list-unstyled list-inline" style="padding-top:12px;">
+                    <!-- BEGIN LANGUAGE -->
+                    <li class="langs-block">
+                        <a href="javascript:void(0);" class="current">{{ app.request.locale|language(app.request.locale) }}<i class="fa fa-angle-down"></i></a>
+                        <div class="langs-block-others-wrapper"><div class="langs-block-others">
+                                {% for locale in ['en', 'id'] %}
+                                    <a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale' : locale})) }}">{{ locale|language(locale) }}</a>
+                                {% endfor %}
+                            </div></div>
+                    </li>
+                    <!-- END LANGUAGE -->
+                </ul>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <!-- BEGIN TOP NAVIGATION MENU -->
+                    {% include "PGSCoreDomainBundle:Widget:organization_selector.html.twig" %}
+                    {% include "PGSCoreDomainBundle:Widget:school_selector.html.twig" %}
+                    {% include "PGSCoreDomainBundle:Widget:school_year_selector.html.twig" %}
+                {% else %}
+                    <h5 style="color: white">
+                        {{ active_organization_preference().name|title }} /
+                        {{ active_school_preference().name|title }}
+                    </h5>
+                {% endif %}
+            </div>
+            <div class="col-md-2 col-sm-2">
+                <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN NOTIFICATION DROPDOWN -->
+
+                    {#{% render(controller('PGSAdminBundle:Notification:notify')) %}#}
+                    <!-- END NOTIFICATION DROPDOWN -->
+                    <!-- BEGIN INBOX DROPDOWN -->
+                    <li class="dropdown" id="header_inbox_bar">
+                        <a href="{{ path('pgs_core_message_list')}}"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            {#<a href="{{ path('pgs_core_message_list')}}">#}
+                            <i class="fa fa-envelope"></i>
+                                <span class="badge">
+                                     5
+                                </span>
+                            </a>
+                        </a>
+                    </li>
+                    <!-- END INBOX DROPDOWN -->
+
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <img alt="" src="assets/images/avatar1_small.jpg"/>
+
+                            {{ app.user.username|capitalize }}
+
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {#<li>#}
+                                {#&#123;&#35;<a href="{{ url('pgs_admin_user_profile_edit', { 'id': app.user.id }) }}">&#35;&#125;#}
+                                {#<i class="fa fa-user"></i> My Profile#}
+                                {#&#123;&#35;</a>&#35;&#125;#}
+                            {#</li>#}
+                            {#<li>#}
+                                {#<a href="page_calendar.html">#}
+                                    {#<i class="fa fa-calendar"></i> My Calendar#}
+                                {#</a>#}
+                            {#</li>#}
+                            {#<li>#}
+                                {#<a href="inbox.html">#}
+                                    {#<i class="fa fa-envelope"></i> My Inbox#}
+                                                    {#<span class="badge badge-danger">#}
+                                                         {#3#}
+                                                    {#</span>#}
+                                {#</a>#}
+                            {#</li>#}
+                            {#<li>#}
+                                {#<a href="#">#}
+                                    {#<i class="fa fa-tasks"></i> My Tasks#}
+                                                    {#<span class="badge badge-success">#}
+                                                         {#7#}
+                                                    {#</span>#}
+                                {#</a>#}
+                            {#</li>#}
+                            {#<li class="divider">#}
+                            {#</li>#}
+                            <li>
+                                <a href="{{ path('pgs_user_change_password') }}">
+                                    <i class="fa fa-key"></i> {% trans %}Change Password{% endtrans %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('fos_user_security_logout') }}">
+                                    <i class="fa fa-close"></i> {% trans %}Log Out{% endtrans %}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+                <!-- END TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+    <!-- END TOP NAVIGATION BAR -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix"></div>

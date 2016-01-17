@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Course" namespace="PGS\CoreDomainBundle\Model\Course">
+    <table name="course" phpName="Course">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="code" type="VARCHAR" size="15" required="true" />
+        <column name="name" type="VARCHAR" size="100" required="true" />
+        <column name="description" type="LONGVARCHAR" required="false" />
+        <column name="school_id" type="INTEGER" required="false"/>
+        <column name="subject_id" type="INTEGER" required="false"/>
+        <column name="grade_level_id" type="INTEGER" required="false"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="school" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="school_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="subject" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="subject_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="grade_level" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="grade_level_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="sortable">
+            <parameter name="use_scope" value="true"/>
+            <parameter name="scope_column" value="school_id"/>
+        </behavior>
+    </table>
+</database>

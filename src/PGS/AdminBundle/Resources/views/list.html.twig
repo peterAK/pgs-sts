@@ -1,0 +1,25 @@
+{% extends 'PGSAdminBundle::base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">{% block pagetitle %}{{ model|title }} List{% endblock pagetitle %}</h3>
+            {% block breadcrumb %}{% endblock breadcrumb %}
+        </div>
+    </div>
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/status.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <div class="row status">
+        {% block list %} {% endblock list %}
+    </div>
+{% endblock content %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('.confirm-delete').click(function(){
+            return confirm("Are you sure you want to delete?");
+        });
+    </script>
+{% endblock scriptcurrent %}

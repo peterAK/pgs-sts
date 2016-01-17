@@ -1,0 +1,43 @@
+pgs_core_icon_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Icon:list }
+    requirements:
+        _method: GET
+
+pgs_core_icon_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_icon_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_icon_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_icon_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_icon_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:viewIconByStatus, status: all }
+
+pgs_core_icon_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_icon_upload:
+    pattern: /upload/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Icon:upload, id: null }

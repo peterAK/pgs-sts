@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.SchoolClassCourse" namespace="PGS\CoreDomainBundle\Model\SchoolClassCourse">
+    <table name="school_class_course" phpName="SchoolClassCourse">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="name" type="VARCHAR" size="100" required="true" />
+        <column name="school_class_id" type="INTEGER" required="true"/>
+        <column name="start_time" type="TIME" required="false"/>
+        <column name="end_time" type="TIME" required="false"/>
+        <column name="course_id" type="INTEGER" required="true"/>
+        <column name="school_term_id" type="INTEGER" required="true"/>
+        <column name="school_grade_level_id" type="INTEGER" required="true"/>
+        <column name="primary_teacher_id" type="INTEGER" required="false"/>
+        <column name="secondary_teacher_id" type="INTEGER" required="false"/>
+        <column name="formula_id" type="INTEGER" required="true"/>
+
+
+        <!-- Relations -->
+        <foreign-key foreignTable="course" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="course_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="school_class" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="school_class_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="school_term" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="school_term_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="school_grade_level" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="school_grade_level_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="fos_user" onDelete="SETNULL" onUpdate="CASCADE" phpName="PrimaryTeacher">
+            <reference local="primary_teacher_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="fos_user" onDelete="SETNULL" onUpdate="CASCADE" phpName="SecondaryTeacher">
+            <reference local="secondary_teacher_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="formula" onDelete="CASCADE" onUpdate="CASCADE" >
+            <reference local="formula_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <!--<behavior name="sortable">-->
+            <!--<parameter name="use_scope" value="true"/>-->
+            <!--<parameter name="scope_column" value="school_id"/>-->
+        <!--</behavior>-->
+    </table>
+</database>

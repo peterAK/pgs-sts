@@ -1,0 +1,29 @@
+pgs_admin_grade_level_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:GradeLevel:list }
+    requirements:
+        _method: GET
+
+pgs_admin_grade_level_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:GradeLevel:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_grade_level_new:
+    pattern:  /new
+    defaults: { _controller: PGSAdminBundle:GradeLevel:new }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_grade_level_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:GradeLevel:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_grade_level_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:GradeLevel:delete, id: null }
+    requirements:
+        _method: GET|POST

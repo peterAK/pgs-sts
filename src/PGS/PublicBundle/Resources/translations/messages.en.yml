@@ -1,0 +1,133 @@
+Academics : Academics
+Academic Years : Academics Years
+Action : Action
+Add : Add
+Address : Address
+Administration : Administration
+and : and
+Announcement : Announcement
+Attachment : Attachment
+All Class : All Class
+All Time : All Time
+Add : Add
+Avatar : Avatar
+Avatar Book : Avatar Book
+Behaviors : Behaviors
+Behavior : Behavior
+Behavior Name : Behavior Name
+Behavior Point : Behavior point
+Behavior List : Behavior List
+contact : Contact
+Class : Class
+Children Name : Children Name
+Created At : Created At
+Change Password : Change Password
+Change Avatar : Change Avatar
+Dashboard : Dashboard
+Description : Description
+Daily Review : Daily Review
+Edit : Ubah
+Friend List : Friend List
+Find By : Find By
+Weekly Review : Weekly Review
+Review All : Review All
+Ethnicities : Ethnicities
+Give Point : Give Point
+Grades : Grades
+Grade Levels : Grade Levels
+School Grades Levels : School Grades Levels
+home : Home
+Helps : Helps
+Icon : Icon
+Levels : Levels
+login : login
+log in : Log In
+logout : logout
+log out : log out
+Manage Behavior : Manage Behavior
+Manage Avatar : Manage Avatar
+Manage Announcement : Manage Announcement
+Message : Message
+Message List : Message List
+Message Room : Message Room
+My Avatars : My Avatars
+My Behavior : My Behavior
+My Behavior Point : My Behavior Point
+My Behavior Today : My Behavior Today
+My Behavior This Week : My Behavior This Week
+My Behavior Rank : My Behavior Rank
+My Children Behavior : My Children Behavior
+My Friends : My Friends
+My Point : My Point
+My Point Today : My Point Today
+My Point This Week : My Point This Week
+Name : Name
+Need : Need
+New : New
+New Message : New Message
+organization : Organization
+organizations : Organizations
+Pages : Pages
+parent : Parent
+parents : Parents
+Password Changed : Password Changed
+Phone : Phone
+Published By : Published By
+Point : Point
+Profile : Profile
+Rank : Rank
+Recipient : Recipient
+Reply here : Reply Here
+Reward Systems : Reward Systems
+Select Class : Select Class
+Search : Search
+Secret Avatar : Secret Avatar
+SELECT : SELECT
+Select : Select
+SELECTED : SELECTED
+Selected : Selected
+Send : Send
+school : School
+schools : Schools
+Subject : Subject
+Subjct : Subject
+Sticker : Sticker
+Student Id : Student Id
+teacher : Teacher
+Terms : Terms
+teachers : Teachers
+Test : Test
+Topics : Topics
+Today : Today
+Total Point : Total Point
+Total Point Today : Total Point Today
+Total Point This Week : Total Point This Week
+Type : Type
+This Week : This Week
+Users : Users
+User ID : User ID
+Special Avatar Need : Special Avatar Need
+student : Student
+student application : Student Application
+Student Behavior : Student Behavior
+students : Students
+introduction : <h3>New Registration</h3></br> For registration student, need some file must be upload in website :</br>- Photo </br>- Birth Certificate </br>- Family Card </br>- Graduation Certificate </br>
+medicine : Student Medical </br> If needed  it is OK to give my child the following medicine (check all that apply)
+condition : Health History (check all that apply)
+condition-label : If you checked any of the above conditions, please provide further explanation below
+schoolHealth: <h3>Student Health</h3>
+homeFilesUpload : Upload some file is needed : </br>- Photo </br>- Birth Certificate </br>- Family Card </br>- Graduation Certificate </br>
+picture : <h3>Photo</h3>
+birthCertificate : <h3>Birth Certificate</h3>
+familyCard : <h3>Family Card</h3>
+graduationCertificate : <h3>Graduation Certificate</h3>
+changePicture : Upload Picture
+changeBirthCertificate : Upload Birth Certificate
+changeFamilyCard : Upload Family Card
+changeGraduationCertificate : Upload Graduation Certificate
+uploadFile: Upload File
+registration: Welcome to the PGS Gizmo. Thank you for registering with us. For your convenience, here is a reminder of your login details:
+test : When you create a form, each field initially displays the value of the corresponding property of the form's domain object (if an object is bound to the form). If you want to override the initial value for the form or just an individual field, you can set it in the data option
+Keep Try : Sorry, you are have no point yet. Keep Try!!
+next: Next
+save: Save

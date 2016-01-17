@@ -1,0 +1,23 @@
+pgs_core_active_preference_organization:
+    pattern:  /organization/{organizationId}
+    defaults: { _controller: PGSCoreDomainBundle:Preference:organization, organizationId: null }
+    requirements:
+        _method: GET
+
+pgs_core_active_preference_school:
+    pattern:  /school/{schoolId}
+    defaults: { _controller: PGSCoreDomainBundle:Preference:school, schoolId: null }
+    requirements:
+        _method: GET
+
+pgs_core_active_preference_school_year:
+    pattern:  /school-year/{schoolYearId}
+    defaults: { _controller: PGSCoreDomainBundle:Preference:schoolYear, schoolYearId: null }
+    requirements:
+        _method: GET
+
+pgs_core_active_preference_reset:
+    pattern:  /reset/{entity}
+    defaults: { _controller: PGSCoreDomainBundle:Preference:reset, entity: null }
+    requirements:
+        _method: GET

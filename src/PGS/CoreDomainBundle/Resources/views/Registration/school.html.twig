@@ -1,0 +1,57 @@
+{% extends 'PGSCoreDomainBundle::form.html.twig' %}
+{% form_theme form 'PGSCoreDomainBundle:Form:form.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="form-section">School</h3>
+                <p></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 col-sm-3">
+                <img src="/images/gizmo-organization.png">
+            </div>
+
+            <div class="col-md-9 col-sm-9">
+                <div class="portlet">
+                    <div class="portlet-body form">
+                        <form action="" method="post" {{ form_enctype(form) }}>
+                            <div class="form-body">
+                                {{ form_widget(form) }}
+                            </div>
+
+                            <div class="form-actions fluid">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button class="btn blue" type="submit">Submit</button>
+                                    <button class="btn default" type="button">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#school_country').bind('change', null,function () {
+                $.ajax({
+                    'url': '{{ url('pgs_core_cascade_state_by_country') }}/' + $(this).val(),
+                    'beforeSend': function () {
+                        $('#school_state option:gt(0)').remove();
+                    },
+                    'success': function (result) {
+                        $('#school_state').append(result);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock scriptcurrent %}

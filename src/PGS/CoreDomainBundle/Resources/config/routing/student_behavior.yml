@@ -1,0 +1,27 @@
+pgs_core_student_behavior_list:
+    pattern:  /mybehavior
+    defaults: { _controller: PGSCoreDomainBundle:StudentBehavior:list }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_behavior_search_list:
+    pattern:  /mybehavior/{selectedClass}/{selectedDay}/{studentId}
+    defaults: { _controller: PGSCoreDomainBundle:StudentBehavior:searchlist, selectedClass: null, selectedDay: null, studentId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_behavior_rank:
+    pattern:  /myRank/{id}
+    defaults: { _controller: PGSCoreDomainBundle:StudentBehavior:rank, id: null}
+    requirements:
+        _method: GET|POST
+
+
+pgs_core_student_behavior_friend:
+    pattern:  /myFriend
+    defaults: { _controller: PGSCoreDomainBundle:StudentBehavior:friend}
+    requirements:
+        _method: GET
+
+
+

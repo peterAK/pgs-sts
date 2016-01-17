@@ -1,0 +1,35 @@
+pgs_core_student_condition_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:StudentCondition:list }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_condition_view:
+    pattern:  /view/{schoolHealthId}
+    defaults: { _controller: PGSCoreDomainBundle:StudentCondition:view, schoolHealthId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_condition_new:
+    pattern:  /new/{schoolHealthId}
+    defaults: { _controller: PGSCoreDomainBundle:StudentCondition:new, schoolHealthId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_condition_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:StudentCondition:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_condition_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:StudentCondition:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_condition_fetch:
+    pattern:  /fetch/{random}/{schoolHealthId}
+    defaults: { _controller: PGSCoreDomainBundle:StudentCondition:fetchRecord, random : null, schoolHealthId: null }
+    requirements:
+        _method: GET|POST

@@ -1,0 +1,328 @@
+<li {{ help or page or topic ? "class='open'" }}>
+    <a href="javascript:;">
+        <i class="fa fa-cogs"></i><span class="title">Site</span>
+        <span class="arrow {{ help or page or topic ? "class='open'" }}"></span>
+    </a>
+
+    <ul class="sub-menu" {{ help or page or topic ? "style='display:block;'" }}>
+        <li {{ help ? "class='active'" }}>
+            <a href="{{ path('pgs_core_help_list') }}">
+                <i class="fa fa-question-circle"></i>
+                <span class="title">{% trans %}Helps{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ topic ? "class='active'" }}>
+            <a href="{{ path('pgs_core_topic_list') }}">
+                <i class="fa fa-bookmark"></i>
+                <span class="title">{% trans %}Topics{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ page ? "class='active'" }}>
+            <a href="{{ path('pgs_core_page_list') }}">
+                <i class="fa fa-file-text"></i>
+                <span class="title">{% trans %}Pages{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li {{ academic_year or course or ethnicity or help or level or grade_level or grades
+        or school_grade_level or school_test or school_class_student or school_class_student
+        or school_year or school_term or schools_classes or term or test or score
+        or student_report ? "class='open'" }}>
+    <a href="javascript:;">
+        <i class="fa fa-graduation-cap"></i><span class="title">Academics</span>
+        <span class="arrow {{ academic_year or course or ethnicity or help or level or grade_level or grades
+                            or school_grade_level or school_test or school_class_student or school_class_student
+                            or school_year or school_term or schools_classes or term or test or score or announcement
+                            or student_report ? "class='open'" }}"></span>
+    </a>
+
+    <ul class="sub-menu" {{ academic_year or course or ethnicity or help or level or grade_level or grades
+                            or school_grade_level or school_test or school_class_student or school_class_student
+                            or school_year or school_term or schools_classes or term or test or score or announcement
+                            or student_report or announcement ? "style='display:block;'" }}>
+        <li {{ academic_year ? "class='active'" }}>
+            <a href="{{ path('pgs_core_academic_year_list') }}">
+                <i class="fa fa-calendar"></i>
+                <span class="title">{% trans %}Academic Years{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ course ? "class='active'" }}>
+            <a href="{{ path('pgs_core_course_list') }}">
+                <i class="fa fa-book"></i>
+                <span class="title">Courses</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ ethnicity ? "class='active'" }}>
+            <a href="{{ path('pgs_core_ethnicity_list') }}">
+                <i class="fa fa-paw"></i>
+                <span class="title">{% trans %}Ethnicities{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ level ? "class='active'" }}>
+            <a href="{{ path('pgs_core_level_list') }}">
+                <i class="fa fa-tasks"></i>
+                <span class="title">{% trans %}Levels{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ grades ? "class='active'" }}>
+            <a href="{{ path('pgs_core_grades_list') }}">
+                <i class="fa fa-cube"></i>
+                <span class="title">{% trans %}Grades{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ grade_level ? "class='active'" }}>
+            <a href="{{ path('pgs_core_grade_level_list') }}">
+                <i class="fa fa-cubes"></i>
+                <span class="title">{% trans %}Grade Levels{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ schools_classes ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_class_list') }}">
+                <i class="fa fa-calendar"></i>
+                <span class="title">School Classes</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school_class_course ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_class_course_list') }}">
+                <i class="fa fa-file-text"></i>
+                <span class="title">School Class Courses</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school_class_student ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_class_student_list') }}">
+                <i class="fa fa-calendar"></i>
+                <span class="title">School Class Students</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school_grade_level ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_grade_level_list') }}">
+                <i class="fa fa-cubes"></i>
+                <span class="title">{% trans %}School Grade Levels{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school_test ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_test_list') }}">
+                <i class="fa fa-clipboard"></i>
+                <span class="title">School Tests</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school_term ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_term_list') }}">
+                <i class="fa fa-clipboard"></i>
+                <span class="title">School Terms</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school_year ? "class='active'" }}>
+            <a href="{{ path('pgs_core_school_year_list') }}">
+                <i class="fa fa-calendar"></i>
+                <span class="title">School Years</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ subject ? "class='active'" }}>
+            <a href="{{ path('pgs_core_subject_list') }}">
+                <i class="fa fa-flag"></i>
+                <span class="title">{% trans %}Subject{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ score ? "class='active'" }}>
+            <a href="{{ path('pgs_core_score_list') }}">
+                <i class="fa fa-clipboard"></i>
+                <span class="title">Score</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ student_report ? "class='active'" }}>
+            <a href="{{ path('pgs_core_student_report_select_by_class') }}">
+                <i class="fa fa-book"></i>
+                <span class="title">Student Report</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ term ? "class='active'" }}>
+            <a href="{{ path('pgs_core_term_list') }}">
+                <i class="fa fa-flag"></i>
+                <span class="title">{% trans %}Terms{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ test ? "class='active'" }}>
+            <a href="{{ path('pgs_core_test_list') }}">
+                <i class="fa fa-clipboard"></i>
+                <span class="title">{% trans %}Test{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ announcement ? "class='active'" }}>
+            <a href="{{ path('pgs_core_announcement_list') }}">
+                <i class="fa fa-book"></i>
+                <span class="title">{% trans %}Announcement{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li {{ student_behavior or behavior or icon or avatar ? "class='open'" }}>
+    <a href="javascript:;">
+        <i class="fa fa-trophy"></i><span class="title">{% trans %}Reward Systems{% endtrans %}</span>
+        <span class="arrow {{ student_behavior or behavior or icon or avatar ? "class='open'" }}"></span>
+    </a>
+
+    <ul class="sub-menu" {{ student_behavior or behavior or icon or avatar ? "style='display:block;'" }}>
+        <li {{ student_behavior ? "class='active'" }}>
+            <a href="{{ path('pgs_core_behavior_appraisal_review', { 'selectedClass' : 'all', 'selectedDay' : 0 }) }}">
+                <i class="fa fa-heart"></i>
+                <span class="title">{% trans %}Student Behavior{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ behavior ? "class='active'" }}>
+            <a href="{{ path('pgs_core_behavior_list') }}">
+                <i class="fa fa-heart"></i>
+                <span class="title">{% trans %}Behaviors{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ icon ? "class='active'" }}>
+            <a href="{{ path('pgs_core_icon_list') }}">
+                <i class="fa fa-heart"></i>
+                <span class="title">{% trans %}Icon{% endtrans %}</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ avatar ? "class='active'" }}>
+            <a href="{{ path('pgs_core_avatar_list') }}">
+                <i class="fa fa-android"></i>
+                <span class="title">Avatar</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li {{application  or organization or parent or school or  student or teacher  ? "class='open'" }}>
+    <a href="javascript:;">
+        <i class="fa fa-suitcase"></i><span class="title">Administration</span>
+        <span class="arrow {{ course or organization or school or school_test  or school_year or student ? "class='open'" }}"></span>
+    </a>
+
+    <ul class="sub-menu" {{ application  or organization or parent or school or  student or teacher ? "style='display:block;'" }}>
+        <li {{ application ? "class='active'" }}>
+            <a href="{{ path('pgs_core_application_list') }}">
+                <i class="fa fa-bank"></i>
+                <span class="title">Application</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ parent ? "class='active'" }}>
+            <a href="{{ path('pgs_core_parent_student_list') }}">
+                <i class="fa fa-building"></i>
+                <span class="title">Parents</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ organization ? "class='active'" }}>
+            <a href="{{ path('pgs_core_organization_list') }}">
+                <i class="fa fa-bank"></i>
+                <span class="title">Organizations</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ school ? "class='active'" }}>
+            <a href="{{ path('pgs_core_schools_list') }}">
+                <i class="fa fa-building"></i>
+                <span class="title">Schools</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ student ? "class='active'" }}>
+            <a href="{{ path('pgs_core_student_list') }}">
+                <i class="fa fa-graduation-cap"></i>
+                <span class="title">Students</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ teacher ? "class='active'" }}>
+            <a href="{{ path('pgs_core_teacher_list') }}">
+                <i class="fa fa-graduation-cap"></i>
+                <span class="title">Teachers</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li {{ user_admin or user_principal ? "class='open'" }}>
+    <a href="javascript:;">
+        <i class="fa fa-users"></i><span class="title">{% trans %}Users{% endtrans %}</span>
+        <span class="arrow {{ user_admin or user_principal ? "class='open'" }}"></span>
+    </a>
+
+    <ul class="sub-menu" {{ user_admin or user_principal ? "style='display:block;'" }}>
+        <li {{ user_admin ? "class='active'" }}>
+            <a href="/">
+                <i class="fa fa-user"></i>
+                <span class="title">Administrators</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ user_principal ? "class='active'" }}>
+            <a href="{#{ path('pgs_admin_user_list_principal') }#}">
+                <i class="fa fa-user"></i>
+                <span class="title">Affiliates</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+<li {{ condition or medical or formula ? "class='open'" }}>
+    <a href="javascript:;">
+        <i class="fa fa-trophy"></i><span class="title">Others</span>
+        <span class="arrow {{condition or medical or formula ? "class='open'" }}"></span>
+    </a>
+
+    <ul class="sub-menu" {{ condition or medical or formula ? "style='display:block;'" }}>
+        <li {{ condition ? "class='active'" }}>
+            <a href="{{ path('pgs_core_condition_list') }}">
+                <i class="fa fa-heart"></i>
+                <span class="title">Conditions</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ medical ? "class='active'" }}>
+            <a href="{{ path('pgs_core_medical_list') }}">
+                <i class="fa fa-heart"></i>
+                <span class="title">Medicals</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+        <li {{ formula ? "class='active'" }}>
+            <a href="{{ path('pgs_core_formula_list') }}">
+                <i class="fa fa-heart"></i>
+                <span class="title">Formulas</span>
+                <span class="selected"></span>
+            </a>
+        </li>
+    </ul>
+</li>

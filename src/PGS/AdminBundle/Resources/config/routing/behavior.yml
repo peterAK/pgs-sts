@@ -1,0 +1,35 @@
+pgs_admin_behavior_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Behavior:list }
+    requirements:
+        _method: GET
+
+pgs_admin_behavior_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Behavior:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_behavior_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSAdminBundle:Behavior:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_behavior_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Behavior:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_behavior_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Behavior:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_behavior_activate:
+    pattern:  /activate/{id}
+    defaults: { _controller: PGSAdminBundle:Behavior:activate, id: null }
+    requirements:
+        _method: GET|POST

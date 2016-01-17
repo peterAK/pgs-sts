@@ -1,0 +1,5 @@
+{% if school.logo %}
+    <img src="/uploads/school/{{ school.id }}/{{ school.logo }}" class="thumbnail pull-right"/>
+{% else %}
+    <img src="/uploads/blank-image.png" class="thumbnail pull-right"/>
+{% endif %}

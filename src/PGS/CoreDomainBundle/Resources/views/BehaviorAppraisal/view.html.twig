@@ -1,0 +1,57 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href= "{{ home}}" >
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_behavior_list') }}">
+                {{ model|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+                {{ behavior.name }}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block pagetitle %}{{ behavior.name }} <small>Behavior </small>{% endblock pagetitle %}
+
+{% block tabcontent %}
+    <table border="0px">
+        <tr>
+            <td colspan="3">
+                <img width="200px" height="200px" src="/uploads/avatar/{{ behavior.icon.id }}/{{ behavior.icon.iconFile }}">
+            </td>
+            <td>
+                {% trans %}Name{% endtrans %}: {{ behavior.name }} </br>
+                {% trans %}Type{% endtrans %}: {{ behavior.type }} </br>
+                {% trans %}Point{% endtrans %}: {{ behavior.point }}
+            </td>
+        </tr>
+    </table>
+{% endblock tabcontent %}

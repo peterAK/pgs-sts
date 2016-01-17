@@ -1,0 +1,10 @@
+{% extends 'PGSCoreDomainBundle::view.html.twig' %}
+
+{% block pagetitle %}{{ icon.name }} <small>Icon </small>{% endblock pagetitle %}
+
+{% block tabcontent %}
+    Name: {{ icon.name }}<br/>
+    Type: {{ icon.type }}<br/>
+    Status: {{ icon.status }}<br/>
+    Icon: {{ icon.icon_file }}<br/>
+{% endblock tabcontent %}

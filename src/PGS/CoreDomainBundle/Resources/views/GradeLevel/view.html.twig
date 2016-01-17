@@ -1,0 +1,52 @@
+{% extends 'PGSAdminBundle::view.html.twig' %}
+
+{% block styleapplication %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleapplication %}
+
+{% block pagetitle %}{{ model|title }} View{% endblock pagetitle %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_grade_level_view', { 'id': gradeLevel.id }) }}">
+                {{ model|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            View
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-8 profile-info">
+                    <h3 class="form-section">
+                        View
+                    </h3>
+                    <div class="well">
+                        <h4>Grade Level: {{ gradeLevel.id }}</h4>
+                        <address>
+                            Level: {{ gradeLevel.level }}
+                            Grade: {{ gradeLevel.grade }}
+                        </address>
+                    </div>
+                </div>
+                <!--end col-md-8-->
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}

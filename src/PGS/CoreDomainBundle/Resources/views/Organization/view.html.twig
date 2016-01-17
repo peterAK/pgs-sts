@@ -1,0 +1,12 @@
+{% extends 'PGSCoreDomainBundle::view.html.twig' %}
+
+{% block pagetitle %}{{ organization.name }} <small>Organization </small>{% endblock pagetitle %}
+
+{% block tabcontent %}
+    Name: {{ organization.name }}<br/>
+    Address 1: {{ organization.address1 }}<br/>
+    Address 2: {{ organization.address2 }}<br/>
+    City: {{ organization.city }}<br/>
+    State: {{ organization.state}}<br/>
+    Country: {{ organization.country }}<br/>
+{% endblock tabcontent %}

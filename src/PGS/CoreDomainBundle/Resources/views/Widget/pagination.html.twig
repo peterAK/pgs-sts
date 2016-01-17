@@ -1,0 +1,41 @@
+{# default Sliding pagination control implementation #}
+
+{% if pageCount > 1 %}
+    <ul class="pagination">
+        {% if first is defined and current != first %}{% set isFirst = true %}{% else %}{% set isFirst = false %}{% endif %}
+        <li class="first {{ isFirst ? '' : 'disabled' }}">
+            <a class="modalLink" href="{{ path(route, query|merge({(pageParameterName): first, 'rnd' : random()})) }}"><i class="fa fa-angle-double-left"></i></a>
+        </li>
+
+        {% if previous is defined %}{% set isPrevious = true %}{% else %}{% set isPrevious = false %}{% endif %}
+        <li class="prev {{ isPrevious ? '' : 'disabled' }}">
+            {% if isPrevious %}<a class="modalLink" href="{{ path(route, query|merge({(pageParameterName): previous, 'rnd' : random()})) }}"><i class="fa fa-angle-left"></i></a>
+            {% else %}
+                <a class="modalLink" href=""><i class="fa fa-angle-left"></i></a>
+            {% endif %}
+        </li>
+
+        {% for page in pagesInRange %}
+            <li {% if page == current %} class="active"{% endif %}>
+                {% if page != current %}
+                    <a class="modalLink" href="{{ path(route, query|merge({(pageParameterName): page, 'rnd' : random()})) }}">{{ page }}</a>
+                {% else %}
+                    <a class="modalLink" href="">{{ page }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+
+        {% if next is defined %}{% set isNext = true %}{% else %}{% set isNext = false %}{% endif %}
+        <li class="next {{ isNext ? '' : 'disabled' }}">
+            {% if isNext %}<a class="modalLink" href="{{ path(route, query|merge({(pageParameterName): next, 'rnd' : random()})) }}"><i class="fa fa-angle-right"></i></a>
+            {% else %}
+                <a class="modalLink" href=""><i class="fa fa-angle-right"></i></a>
+            {% endif %}
+        </li>
+
+        {% if last is defined and current != last %}{% set isLast = true %}{% else %}{% set isLast = false %}{% endif %}
+        <li class="last {{ isLast ? '' : 'disabled' }}">
+            <a class="modalLink" href="{{ path(route, query|merge({(pageParameterName): last, 'rnd' : random()})) }}"><i class="fa fa-angle-double-right"></i></a>
+        </li>
+    </ul>
+{% endif %}

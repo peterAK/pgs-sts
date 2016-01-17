@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.School" namespace="PGS\CoreDomainBundle\Model\School">
+    <table name="school" phpName="School">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="code" type="VARCHAR" size="20" required="false" />
+        <column name="name" type="VARCHAR" size="100" required="true" />
+        <column name="url" type="VARCHAR" size="100" />
+        <column name="level_id" type="INTEGER" required="true" />
+        <column name="address" phpName="Address" type="VARCHAR" size="100" required="false"/>
+        <column name="city" phpName="City" type="VARCHAR" size="100" required="false"/>
+        <column name="state_id" phpName="StateId" type="INTEGER" required="false"/>
+        <column name="zip" phpName="Zip" type="VARCHAR" size="10" required="false"/>
+        <column name="country_id" phpName="CountryId" type="INTEGER" required="true"/>
+        <column name="organization_id" phpName="OrganizationId" type="INTEGER"/>
+        <column name="phone" phpName="Phone" type="VARCHAR" size="15" required="false"/>
+        <column name="fax" phpName="Fax" type="VARCHAR" size="15" required="false"/>
+        <column name="mobile" phpName="Mobile" type="VARCHAR" size="15" required="false"/>
+        <column name="email" phpName="Email" type="VARCHAR" size="100" required="false"/>
+        <column name="website" phpName="Website" type="VARCHAR" size="100" required="false"/>
+        <column name="logo" type="LONGVARCHAR" required="false"/>
+        <column name="description" phpName="Description" type="CLOB" required="false"/>
+        <column name="excerpt" type="VARCHAR" size="250"/>
+        <column name="status" type="ENUM" valueSet="new, active, inactive, banned" defaultValue="new"/>
+        <!-- confirmation : new = unconfirmed, phone = confirmed via phone, letter = confirmed with documentation -->
+        <column name="confirmation" type="ENUM" valueSet="new, phone, letter" defaultValue="new"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="state" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="state_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="country" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="country_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="organization">
+            <reference local="organization_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="level" onDelete="RESTRICT" onUpdate="CASCADE">
+            <reference local="level_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="description, excerpt"/>
+        </behavior>
+        <behavior name="sluggable">
+            <parameter name="slug_column" value="url" />
+            <parameter name="slug_pattern" value="{Name}" />
+            <parameter name="replace_pattern" value="/[^\w\/]+/u" />
+            <parameter name="replacement" value="-" />
+            <parameter name="separator" value="_" />
+            <parameter name="permanent" value="true" />
+        </behavior>
+        <behavior name="sortable" />
+        <behavior name="timestampable" />
+    </table>
+</database>

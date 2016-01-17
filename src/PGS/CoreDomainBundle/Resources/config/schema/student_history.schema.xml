@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.StudentHistory" namespace="PGS\CoreDomainBundle\Model\StudentHistory">
+    <table name="student_history" phpName="StudentHistory">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"  />
+        <column name="student_id" type="INTEGER" required="true" />
+        <column name="status" type="ENUM" valueSet=" promote, failed, drop out, transfer, new, in progress" defaultValue="in progress"/>
+
+        <foreign-key foreignTable="student" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="student_id" foreign="id"/>
+        </foreign-key>
+    </table>
+</database>

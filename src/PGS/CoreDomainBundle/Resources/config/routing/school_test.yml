@@ -1,0 +1,39 @@
+pgs_core_school_test_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:list, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_test_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_school_test_new:
+    pattern:  /new/{organization}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:new, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_test_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_test_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_test_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:viewSchoolTestByStatus, status: all }
+
+pgs_core_school_test_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolTest:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST

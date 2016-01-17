@@ -1,0 +1,25 @@
+imports:
+    - { resource: services/twig.yml }
+    - { resource: services/form.yml }
+
+parameters:
+
+services:
+#    pgs.core.component.active_preference_container:
+#        class: PGS\CoreDomainBundle\Container\OldActivePreferenceContainer
+#        arguments:
+#            - @session
+#            - @pgs.core.manager.user
+#            - @pgs.core.repository.user_profile
+#            - @pgs.core.repository.country
+#            - @pgs.core.repository.state
+
+    pgs.core.security.authentication_handler:
+        class: PGS\CoreDomainBundle\Security\AuthenticationHandler
+        calls:
+            - [ setContainer, [@service_container] ]
+
+    pgs.core.security.user_provider:
+        class: "PGS\CoreDomainBundle\Security\UserProvider"
+        arguments:
+            - '@fos_user.user_manager'

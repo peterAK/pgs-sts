@@ -1,0 +1,56 @@
+#pgs_core_student_report_list:
+#    pattern:  /
+#    defaults: { _controller: PGSCoreDomainBundle:StudentReport:list }
+#    requirements:
+#        _method: GET
+#
+
+pgs_core_student_report_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:StudentReport:view, id: null }
+    requirements:
+        _method: GET
+
+#pgs_core_student_report_new:
+#    pattern:  /new
+#    defaults: { _controller: PGSCoreDomainBundle:StudentReport:new }
+#    requirements:
+#        _method: GET|POST
+#
+#pgs_core_student_report_edit:
+#    pattern:  /edit/{id}
+#    defaults: { _controller: PGSCoreDomainBundle:StudentReport:edit, id: null }
+#    requirements:
+#        _method: GET|POST
+#
+#pgs_core_student_report_delete:
+#    pattern:  /delete/{id}
+#    defaults: { _controller: PGSCoreDomainBundle:StudentReport:delete, id: null }
+#    requirements:
+#        _method: GET|POST
+
+pgs_core_student_report_approve_status:
+    pattern:  /approveStatus/{studentId}/{status}
+    defaults: { _controller: PGSCoreDomainBundle:StudentReport:approveStatus, studentId: null , status: null }
+    requirements:
+        _method: GET|POST
+
+
+pgs_core_student_report_select_by_class:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:StudentReport:selectByClass }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_report_choose_student:
+    pattern:  /choiceStudent/{schoolClassId}
+    defaults: { _controller: PGSCoreDomainBundle:StudentReport:chooseStudent, schoolClassId: null}
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_report_report:
+    pattern:  /raport/{studentId}
+    defaults: { _controller: PGSCoreDomainBundle:StudentReport:report, studentId: null}
+    requirements:
+        _method: GET|POST
+

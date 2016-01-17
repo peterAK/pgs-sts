@@ -1,0 +1,35 @@
+pgs_core_term_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Term:list }
+    requirements:
+        _method: GET
+
+pgs_core_term_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Term:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_term_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Term:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_term_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Term:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_term_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Term:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_term_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:Term:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST

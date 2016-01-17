@@ -1,0 +1,40 @@
+parameters:
+
+services:
+
+    pgs.core.twig.time_ago:
+        class: "PGS\CoreDomainBundle\Twig\TimeAgoExtension"
+        arguments: [@translator]
+        tags:
+        - { name: twig.extension }
+
+    pgs.core.extension.active_preference:
+        class: "PGS\CoreDomainBundle\Twig\ActivePreferenceExtension"
+        arguments:
+            - @pgs.core.container.active_preference
+        tags:
+            - { name: twig.extension }
+
+    pgs.core.extension.list_organizations:
+        class: "PGS\CoreDomainBundle\Twig\OrganizationListExtension"
+        arguments:
+            - @pgs.core.container.active_preference
+            - @pgs.core.manager.organization
+        tags:
+            - { name: twig.extension }
+
+    pgs.core.extension.list_schools:
+        class: "PGS\CoreDomainBundle\Twig\SchoolListExtension"
+        arguments:
+            - @pgs.core.container.active_preference
+            - @pgs.core.manager.school
+        tags:
+            - { name: twig.extension }
+
+    pgs.core.extension.list_school_years:
+        class: "PGS\CoreDomainBundle\Twig\SchoolYearListExtension"
+        arguments:
+            - @pgs.core.container.active_preference
+            - @pgs.core.manager.school_year
+        tags:
+            - { name: twig.extension }

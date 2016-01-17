@@ -1,0 +1,4 @@
+<option value="">{{ 'form.school.term.select'|trans }}</option>
+{% for schoolTerm in schoolTerms %}
+    <option value="{{ schoolTerm.id }}">{{ schoolTerm.schoolYear.academicYear.description }}</option>
+{% endfor %}

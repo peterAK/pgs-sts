@@ -1,0 +1,67 @@
+pgs_core_behavior_appraisal_give_point:
+    pattern:  /give-point/{id}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:givePoint, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_behavior_appraisal_review:
+    pattern:  /review/{selectedClass}/{selectedDay}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:review, selectedClass: null, selectedDay: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_behavior_review_admin:
+    pattern:  /review/{selectedClass}/{selectedDay}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:review, selectedClass: null, selectedDay: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_behavior_appraisal_review_all_by_day:
+    pattern:  /review/{day}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:reviewAllByDay, day: null }
+    requirements:
+        _method: GET
+
+pgs_core_behavior_appraisal_review_all:
+    pattern:  /review/all
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:reviewAll, day: null}
+    requirements:
+        _method: GET
+
+pgs_core_behavior_appraisal_delete:
+    pattern:  /delete/{studentBehaviorId}/{schoolClassCourseId}/{daySearched}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:delete, studentBehaviorId: null, schoolClassCourseId: null, daySearched: null }
+    requirements:
+        _method: GET
+
+pgs_core_behavior_appraisal_manage_behavior:
+    pattern:  /behavior
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:manageBehavior}
+    requirements:
+        _method: GET
+
+pgs_core_behavior_appraisal_add_behavior:
+    pattern:  /add behavior
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:addBehavior}
+    requirements:
+        _method: GET|POST
+
+pgs_core_behavior_appraisal_delete_behavior:
+    pattern:  /delete behavior/{id}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:deleteBehavior, id: null}
+    requirements:
+        _method: GET
+
+pgs_core_behavior_appraisal_edit_behavior:
+    pattern:  /edit behavior/{id}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:editBehavior, id: null}
+    requirements:
+        _method: GET|POST
+
+
+pgs_core_behavior_appraisal_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:BehaviorAppraisal:view, id: null }
+    requirements:
+        _method: GET
+#

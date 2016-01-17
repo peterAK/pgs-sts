@@ -1,0 +1,40 @@
+pgs_core_school_class_course_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassCourse:list }
+    requirements:
+        _method: GET
+
+pgs_core_school_class_course_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassCourse:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_school_class_course_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassCourse:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_class_course_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassCourse:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_class_course_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassCourse:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_class_course_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassCourse:viewSchoolClassCourseByStatus, status: all }
+
+pgs_core_school_class_course_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClass:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST
+

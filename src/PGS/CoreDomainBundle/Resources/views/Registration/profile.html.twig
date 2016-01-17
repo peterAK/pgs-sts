@@ -1,0 +1,63 @@
+{% extends 'PGSCoreDomainBundle::form.html.twig' %}
+{% form_theme form 'PGSCoreDomainBundle:Form:form.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="form-section">User Profile</h3>
+                <p></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 col-sm-3">
+                <img src="/images/gizmo-profile.png">
+                <div class="sidebar-box active">
+                    <h2>User Profile</h2>
+                    <p>Please complete the user profile</p>
+                </div>
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'topic.list'})) }}
+
+            </div>
+
+            <div class="col-md-9 col-sm-9">
+                <div class="portlet">
+                    <div class="portlet-body form">
+                        <form action="" method="post" {{ form_enctype(form) }}>
+                            <div class="form-body">
+                                {{ form_widget(form) }}
+                            </div>
+
+                            <div class="form-actions fluid">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button class="btn blue" type="submit">Submit</button>
+                                    <button class="btn default" type="button">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#userProfile_country').bind('change', null,function () {
+                $.ajax({
+                    'url': '{{ url('pgs_core_cascade_state_by_country') }}/' + $(this).val(),
+                    'beforeSend': function () {
+                        $('#userProfile_state option:gt(0)').remove();
+                    },
+                    'success': function (result) {
+                        $('#userProfile_state').append(result);
+                    }
+                });
+            }).change();
+        });
+    </script>
+{% endblock scriptcurrent %}

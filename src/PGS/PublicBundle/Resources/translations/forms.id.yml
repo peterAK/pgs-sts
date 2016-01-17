@@ -1,0 +1,176 @@
+form.locale : Bahasa
+form.route : Rute
+form.roles : Roles
+form.bundles : Bundles
+form.language : Bahasa
+form.access : Akses
+
+form.address : Alamat*
+form.city : Kota*
+form.code : Kode
+form.content : Isi
+form.country : Negara*
+form.country.select : Pilih negara
+form.description : Keterangan
+form.description.short : Keterangan singkat
+form.email : Email*
+form.excerpt : Keterangan singkat
+form.fax : Faksimile
+form.key : Kata kunci
+form.logo : Gambar
+form.mobile : HP
+form.minimalPoint : Poin Minimal
+form.name : Nama
+form.name.first : Nama depan*
+form.name.last : Nama belakang*
+form.name.middle : Nama tengah
+form.name.nick : Nama panggilan
+form.gender.select : Pilih jenis kelamin
+form.gender : Jenis kelamin
+form.phone : Telpon
+form.point : Poin
+form.school : Sekolah*
+form.subject : Judul
+form.to : Kepada
+form.place.of.birth : Tempat kelahiran*
+form.date.of.birth : Tanggal Kelahiran*
+form.recipient : Penerima
+form.religion : Agama
+form.school.select : Pilih sekolah
+form.state: Propinsi
+form.state.select : Pilih propinsi
+form.status : Status
+form.status.select : Pilih status
+form.title : Judul
+form.topic : Topik
+form.type : Jenis
+form.user.id: ID Pengguna
+form.user.select : Pilih user
+form.username: Nama user
+form.website : Situs
+form.year.start : Awal waktu
+form.year.end : Akhir waktu
+form.zipcode : Kode pos
+form.mailing.address : Email*
+form.occupation : Pekerjaan
+
+form.academic.year : Tahun akademik
+form.academic.year.select : Pilih tahun akademik
+
+form.help.key : Kata kunci
+form.help.content : Isi
+form.help.title : Judul
+
+form.iconFile : Logo
+
+form.level.code : Singkatan
+form.level.name : Nama Tingkatan
+form.level.select : Pilih tingkat sekolah
+
+form.page.topic.select : Pilih topik
+
+form.organization.establish : Tanggal pendirian
+form.organization.name : Nama Yayasan
+form.organization.license : No Izin/Akta
+
+form.publish.start : Awal publikasi
+form.publish.end : Akhir publikasi
+
+form.school.year.end : Akhir tahun
+form.school.year.start : Awal tahun
+form.school.year.select : Pilih Tahun Ajaran
+
+form.seo.description : Keterangan SEO
+form.seo.keyword : Kata-kata SEO
+
+form.grade : Kelas
+form.grade.select: Pilih Kelas
+form.grade.level : Tingkatan Kelas
+form.student.nation.no : No induk nasional
+form.student.prior.test.no : No ujian terakhir
+form.student.no : No Pelajar
+
+form.test : Test
+form.test.select : Pilih test
+
+form.application1.no : No registrasi*
+form.ethnicity.select : Pilih suku
+form.ethnicity : Suku*
+form.indonesian : Indonesia
+form.child.status.select : Pilih status
+form.child.status : Status
+form.register.for : Mendaftar untuk*
+form.register.for.grade : Kelas*
+form.entered.by : Didaftarkan oleh
+form.nationality : Kebangsaan
+form.child.total : Total saudara*
+form.child.no : Anak ke*
+form.note : Nota
+form.hobby : Hobby
+form.zipcode: Kode pos
+form.name.first.father : Nama depan ayah
+form.name.last.father : Nama belakang ayah
+form.business.address.father : Nama / Alamat kantor
+form.occupation.father : Pekerjaan ayah
+form.phone.father : Telepon ayah
+form.mailing.father : Email ayah
+form.name.first.mother : Nama depan ibu
+form.name.last.mother : Nama belakang ibu
+form.business.address.mother : Nama / Alamat kantor
+form.occupation.mother : Pekerjaan ibu
+form.phone.mother : Telepon ibu
+form.mailing.mother : Email ibu
+form.name.first.guardian : Nama depan wali
+form.name.last.guardian : Nama belakang wali
+form.occupation.guardian : Pekerjaan wali
+form.phone.guardian : Telepon wali
+form.mailing.guardian : Email wali
+
+
+form.student.name: Nama siswa
+form.emergency.physician.name : Nama anggota keluarga
+form.emergency.relationship: Hubungan keluarga
+form.emergency.phone : Telepon
+form.allergies : Alergi pada obat / makanan/ serangga / lainnya
+form.allergies.yes : Jika ya, jabarkan
+form.allergies.action : Aksi yang dapat dilakukan
+form.condition.exp : Sejarah kesehatan
+form.student.psychological : Apakah anak anda menjalani pengobatan psikis / terapi ?
+form.psychological.exp : Jika ya, jelaskan
+form.student.aware : Apakah ada kesulitan belajar , masalah perilaku , kesehatan emosional atau mental yang harus diperhatikan sekolah?
+form.aware.exp : Jika ya, jelaskan
+form.student.ability : Apakah Anda memiliki komentar lain tentang bagaimana kondisi ini berdampak pada kemampuan siswa untuk menghadiri kegiatan sekolah ? ( mis rekreasi , dll )
+form.medicine : Jika diperlukan silahkan untuk memberikan anak saya obat berikut ( Pilih semua jika diperlukan )
+form.medical.emergency.name : Nama dokter keluarga
+form.medical.emergency.phone : Telepon dokter keluarga
+form.medical.emergency.address : Alamat dokter keluarga
+form.parent.statement.name : Orang Tua
+form.student.statement.name : Siswa
+form.parent.signature : Nama dan tanda tangan*
+form.date.of.signature : waktu tanda tangan*
+
+form.score.homework: Nilai PR
+form.score.daily: Nilai Ujian harian
+form.score.mid: Nilai Ujian pertengahan
+form.score.final: NIlai Ujian Akhir
+form.score.type: Tipe nilai
+form.score.wave: status
+form.school.class.student : Kelas
+form.school.class.student.select: Pilih kelas
+form.term : Masa ajaran
+form.term.select : Pilih masa ajaran
+
+form.final.exam.point: Nilai ujian akhir (%)
+form.mid.exam.point : Nilai ujian pertengahan  (%)
+form.daily.exam.point: Nilai ujian harian (%)
+form.activity.point: Nilai aktivitas (%)
+
+form.active: Aktifkan
+
+form.formula: Formula
+form.formula.select: Pilih formula
+form.course: Mata Pelajaran
+form.course.select: Pilih Mata Pelajaran
+form.time.start : Waktu mulai
+form.time.end : Waktu selesai
+form.grade.level.select: Pilih tingkatan kelas

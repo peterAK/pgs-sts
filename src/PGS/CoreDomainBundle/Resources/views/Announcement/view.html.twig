@@ -1,0 +1,60 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href= "{{ home}}" >
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_announcement_list') }}">
+                {{ model|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+                {{ announcement.subject }}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block pagetitle %}{{ announcement.subject }} <small>Announcement </small>{% endblock pagetitle %}
+
+{% block content %}
+    <table border="0px">
+        <tr>
+            {% if(announcement.file!=null) %}
+                <td colspan="3">
+                    <img width="200px" height="200px" src="/uploads/announcement/{{ announcement.id }}/{{ announcement.file }}">
+                </td>
+            {% endif %}
+            <td>
+                Subject: {{ announcement.subject }} </br>
+                Announcement: {{ announcement.description }} </br>
+                Posted By: {{ announcement.user.userProfile.firstName }}</br>
+                Recipient: {{ announcement.recipient }}
+            </td>
+        </tr>
+    </table>
+{% endblock content %}

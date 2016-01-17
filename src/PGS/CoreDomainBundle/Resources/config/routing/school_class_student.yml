@@ -1,0 +1,51 @@
+pgs_core_school_class_student_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:list }
+    requirements:
+        _method: GET
+
+pgs_core_school_class_student_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_school_class_student_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_class_student_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_class_student_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_school_class_student_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:viewSchoolClassByStatus, status: all }
+
+pgs_core_school_class_student_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_fetch:
+    pattern:  /fetch/{random}/{schoolClassId}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:fetchRecord, random : null, schoolClassId: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_student_choice_class:
+    pattern:  /choice/{schoolClassId}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:choiceClass, schoolClassId: null }
+    requirements:
+        _method: GET|POST

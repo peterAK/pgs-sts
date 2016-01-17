@@ -1,0 +1,28 @@
+trsteel_ckeditor:
+    class: Trsteel\CkeditorBundle\Form\Type\CkeditorType
+    transformers: ['html_purifier']
+    toolbar: ['document', 'clipboard', 'editing', '/', 'basicstyles', 'paragraph', 'links', '/', 'insert', 'styles', 'tools']
+    toolbar_groups:
+        document: ['Source','-','Save','-','Templates','colordialog']
+        clipboard: ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo']
+        editing: ['Find','Replace','-','SelectAll']
+        basicstyles: ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat']
+        paragraph: ['NumberedList','BulletedList','-','Outdent','Indent','-','JustifyLeft', 'JustifyCenter','JustifyRight','JustifyBlock']
+        links: ['Link','Unlink','Anchor']
+        insert: ['Image','Table','HorizontalRule']
+        styles: ['Styles','Format']
+        tools: ['Maximize', 'ShowBlocks']
+    ui_color: '#0000ff'
+    startup_outline_blocks: true
+    width: 800 #Integer or %
+    height: 300 #Integer or %
+    language: 'en'
+    skin: moono
+    filebrowser_upload_url:
+#        url: /bundles/pgsweb/uploadify/index.php
+#        route: browse_image
+#        url: relative-url.php?type=file
+    filebrowser_image_browse_url:
+        url: /js/plugins/kcfinder/browse.php?type=tinymce
+#        route_parameters:
+#            type: image

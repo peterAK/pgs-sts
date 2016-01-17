@@ -1,0 +1,29 @@
+pgs_admin_subject_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Subject:list }
+    requirements:
+        _method: GET
+
+pgs_admin_subject_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Subject:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_subject_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSAdminBundle:Subject:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_subject_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Subject:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_subject_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Subject:delete, id: null }
+    requirements:
+        _method: GET|POST

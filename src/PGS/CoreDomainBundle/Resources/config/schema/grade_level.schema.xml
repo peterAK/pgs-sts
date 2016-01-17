@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.GradeLevel" namespace="PGS\CoreDomainBundle\Model\GradeLevel">
+    <table name="grade_level" phpName="GradeLevel">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="level_id" type="INTEGER" required="true"/>
+        <column name="grade_id" type="INTEGER" required="true"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="grade" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="grade_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="level" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="level_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="sortable" />
+    </table>
+</database>

@@ -1,0 +1,73 @@
+{% extends 'PGSAdminBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="/">
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_core_school_class_student_list') }}">
+            {{ model|title }}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    <div class="col-md-2">
+        <ul class="status-nav margin-bottom-10">
+            <li class="compose-btn">
+                <a href="{{ url('pgs_core_school_class_student_new') }}" data-title="Compose" class="btn green">
+                    <i class="fa fa-edit"></i> Add {{ model }}
+                </a>
+            </li>
+        </ul>
+        {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolClassStudent.list'})) }}
+    </div>
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title }}</h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        {#<th>Photo</th>#}
+                        <th>Student</th>
+                        <th>School Class</th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schoolClassStudent in schoolClassStudents %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_core_school_class_student_view', { 'id': schoolClassStudent.id }) }}">
+                                    {{ schoolClassStudent.id }}
+                                </a>
+                            </td>
+                            {#<td>#}
+                                {#<img width="20px" height="20px" src="/uploads/application/#}
+                                {#{{ schoolClassStudent.student.application.id }}/{{ schoolClassStudent.student.picture }}">#}
+                            {#</td>#}
+                            <td>{{ schoolClassStudent.student.firstName|capitalize }} {{ schoolClassStudent.student.lastName|capitalize }}</td>
+                            <td>{{ schoolClassStudent.schoolClass.name|capitalize }}</td>
+                            <td>
+                                <a href="{{ path('pgs_core_school_class_student_edit', { 'id': schoolClassStudent.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="{{ path('pgs_core_school_class_student_delete', { 'id': schoolClassStudent.id }) }}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock list %}

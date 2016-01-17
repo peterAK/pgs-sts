@@ -1,0 +1,30 @@
+pgs_core_teacher_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Teacher:list }
+    requirements:
+        _method: GET
+
+pgs_core_teacher_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Teacher:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_teacher_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Teacher:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_teacher_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Teacher:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_teacher_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Teacher:delete, id: null }
+    requirements:
+        _method: GET|POST
+

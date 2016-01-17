@@ -1,0 +1,45 @@
+{% extends 'PGSPublicBundle::base.html.twig' %}
+{% form_theme form 'PGSPublicBundle:Form:form2.html.twig' %}
+
+{% block container %}
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="portlet box blue">
+                                <div class="portlet-title"> </div>
+                                <div class="portlet-body form">
+                                    <form action="" method="post" {{ form_enctype(form) }}>
+                                        <div class="form-body">
+                                            <div class ="caption">
+                                                {#{% trans %}schoolHealth{% endtrans %}#}
+                                            </div>
+                                            {{ form_widget(form) }}
+                                        </div>
+                                        <div class="form-actions fluid">
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <button class="btn blue" type="submit">Next</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock container %}
+
+{#buat di new.html.twig dan edit.html.twig:#}
+{% block scriptcurrent %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $('.date').datepicker({ dateFormat: 'dd-mm-yy' });
+    </script>
+{% endblock scriptcurrent %}

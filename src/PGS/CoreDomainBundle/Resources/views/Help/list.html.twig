@@ -1,0 +1,77 @@
+{% extends 'PGSAdminBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="/">
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_core_help_list') }}">
+            {{ model|title }}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    <div class="col-md-2">
+        <ul class="status-nav margin-bottom-10">
+            <li class="compose-btn">
+                <a href="{{ url('pgs_core_help_new') }}" data-title="Compose" class="btn green">
+                    <i class="fa fa-edit"></i> Add {{ model|title }}
+                </a>
+            </li>
+        </ul>
+        {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'help.list'})) }}
+    </div>
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title }} : All</h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Key</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for help in helps %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_core_help_view', { 'id': help.id }) }}">
+                                    {{ help.id }}
+                                </a>
+                            </td>
+                            <td>{{ help.key }}</td>
+                            {% if app.request.locale == 'en' %}
+                                <td>{{ help.title}}</td>
+                            {% else %}
+                                <td>{{ help.translation('id_ID').title}}</td>
+                            {% endif %}
+                            <td>{{ help.content }}</td>
+                            <td>
+                                <a href="{{ path('pgs_core_help_edit', { 'id': help.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="{{ path('pgs_core_help_delete', { 'id': help.id }) }}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(helps) }}
+            </div>
+        </div>
+    </div>
+{% endblock list %}

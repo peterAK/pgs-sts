@@ -1,0 +1,7 @@
+parameters:
+#    pgs_admin.example.class: PGS\AdminBundle\Example
+
+services:
+#    pgs_admin.example:
+#        class: %pgs_admin.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

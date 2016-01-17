@@ -1,0 +1,135 @@
+    {% extends 'PGSAdminBundle::view.html.twig' %}
+
+{% block styleapplication %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleapplication %}
+
+{% block pagetitle %}{{ model|title }} View{% endblock pagetitle %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_school_health_view', { 'id': schoolHealth.id }) }}">
+                {{ model|title }}
+            </a>
+        </li>
+        {% if is_expr_granted("hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')") %}
+            <li class="btn-group">
+                <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+                                <span>
+                                    Actions
+                                </span>
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                        <a href="{{ url('pgs_core_school_health_edit', { 'id': schoolHealth.id }) }}">
+                            Edit
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabnav %}
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#tab_1_1">Overview</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab_1_2">Tab 2</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab_1_3">Tab 3</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab_1_4">Tab 4</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab_1_5">Tab 5</a>
+        </li>
+    </ul>
+{% endblock tabnav %}
+
+{% block tabcontent %}
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_1_1">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-8 profile-info">
+                            <h2>{{ schoolHealth.studentName}}</h2>
+                        </div>
+                        <!--end col-md-8-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_1_2">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-8 profile-info">
+                            <h2>Tab 2</h2>
+                        </div>
+                        <!--end col-md-8-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_1_3">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-8 profile-info">
+                            <h2>Tab 3</h2>
+                        </div>
+                        <!--end col-md-8-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_1_4">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-8 profile-info">
+                            <h2>Tab 4</h2>
+                        </div>
+                        <!--end col-md-8-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_1_5">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-8 profile-info">
+                            <h2>Tab 5</h2>
+                        </div>
+                        <!--end col-md-8-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}
+
+{% block content %}
+    {{ parent() }}
+    {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
+        Admin Text
+    {% endif %}
+{% endblock content %}

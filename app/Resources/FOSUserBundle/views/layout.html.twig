@@ -1,0 +1,111 @@
+{% extends "::base.html.twig" %}
+
+{% block font %}
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow&subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&subset=all" rel="stylesheet" type="text/css"><!--- fonts for slider on the index page -->
+{% endblock font %}
+
+{% block styleapplication %}
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/select2/select2.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/select2/select2-pgs.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style-responsive.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/plugins.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/themes/default.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/login.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/custom.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <!-- END PAGE LEVEL SCRIPTS -->
+{% endblock styleapplication %}
+
+{% block bodystart %}<body class="login">{% endblock bodystart %}
+{% block body %}
+    {% trans_default_domain 'FOSUserBundle' %}
+
+    <div class="logo">
+        <a href="{{url('homepage')}}">
+            <img src={{ asset('/images/gizmo.png') }} alt="Gizmo"/>
+        </a>
+    </div>
+
+    <div class="content">
+        {% block fos_user_content %}
+        {% endblock fos_user_content %}
+    </div>
+    <div class="copyright">
+        2014 &copy ClassGizmo
+    </div>
+
+{% block javascripts %}
+    <!-- BEGIN JAVASCRIPTS -->
+    {%- block scriptglobal -%}
+        <!-- BEGIN GLOBAL SCRIPTS -->
+        <!--[if lt IE 9]>
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/respond.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/excanvas.min.js' filter='?yui_js'%}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <![endif]-->
+
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-1.10.2.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-migrate-1.2.1.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/bootstrap/js/bootstrap.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-slimscroll/jquery.slimscroll.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery.blockui.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery.cokie.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts '@PGSPublicBundle/Resources/public/plugins/uniform/jquery.uniform.min.js' filter='?yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <!-- END GLOBAL SCRIPTS -->
+    {% endblock scriptglobal %}
+
+    {% block scriptpage %} {% endblock scriptpage %}
+
+    {% block scriptcurrent %} {% endblock scriptcurrent %}
+    <!-- END JAVASCRIPTS -->
+{% endblock javascripts %}
+    </body>
+{% endblock body %}
+
+

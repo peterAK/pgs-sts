@@ -1,0 +1,35 @@
+pgs_core_behavior_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Behavior:list }
+    requirements:
+        _method: GET
+
+pgs_core_behavior_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Behavior:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_behavior_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Behavior:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_behavior_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Behavior:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_behavior_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Behavior:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_behavior_activate:
+    pattern:  /activate/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Behavior:activate, id: null }
+    requirements:
+        _method: GET|POST

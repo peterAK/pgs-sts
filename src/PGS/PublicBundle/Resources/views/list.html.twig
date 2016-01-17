@@ -1,0 +1,41 @@
+{#{% if is_granted('ROLE_ADMIN') %}#}
+    {#{% set parentExtend = 'PGSAdminBundle::base.html.twig' %}#}
+{#{%  else %}#}
+    {#{% if is_granted('ROLE_SCHOOL') %}#}
+        {#{% set parentExtend = 'PGSSchoolBundle::base.html.twig' %}#}
+    {#{%  else %}#}
+        {#{% if is_granted('ROLE_PRINCIPAL') %}#}
+            {#{% set parentExtend = 'PGSPrincipalBundle::base.html.twig' %}#}
+        {#{%  else %}#}
+            {#{% if is_granted('ROLE_TEACHER') %}#}
+                {#{% set parentExtend = 'PGSTeacherBundle::base.html.twig' %}#}
+            {#{% else %}#}
+                {#{% if is_granted('ROLE_STUDENT') %}#}
+                    {#{% set parentExtend = 'PGSStudentBundle::base.html.twig' %}#}
+                {#{%  endif %}#}
+            {#{%  endif %}#}
+        {#{%  endif %}#}
+    {#{%  endif %}#}
+    {#{% if is_granted('ROLE_PARENT') %}#}
+        {#{% set parentExtend = 'PGSParentBundle::base.html.twig' %}#}
+    {#{%  endif %}#}
+{#{%  endif %}#}
+
+{#{% extends parentExtend %}#}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {#<h3 class="page-title">{% block pagetitle %}{{ model|title }} List{% endblock pagetitle %}</h3>#}
+            {#{% block breadcrumb %}{% endblock breadcrumb %}#}
+        </div>
+    </div>
+    {#{% stylesheets '@PGSPublicBundle/Resources/public/css/pages/status.css' filter='?yui_css' %}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <div class="row status">
+        {% block list %} {% endblock list %}
+    </div>
+{% endblock content %}
+
+

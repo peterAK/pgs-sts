@@ -1,0 +1,185 @@
+pgs_core_domain_homepage:
+    path:     /
+    defaults: { _controller: PGSCoreDomainBundle:Default:index }
+
+pgs_core_academic_year:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/academic_year.yml"
+    prefix: /academic-year
+
+pgs_core_active_preference:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/selector.yml"
+    prefix: /activate
+
+pgs_core_announcement:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/announcement.yml"
+    prefix: /announcement
+
+pgs_core_application:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/application.yml"
+    prefix: /application
+
+pgs_core_avatar:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/avatar.yml"
+    prefix: /avatar
+
+pgs_core_behavior:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/behavior.yml"
+    prefix: /behavior
+
+pgs_core_behavior_appraisal:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/behavior_appraisal.yml"
+    prefix: /behavior-appraisal
+
+pgs_core_cascade:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/cascade.yml"
+    prefix: /cascade
+
+pgs_core_course:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/course.yml"
+    prefix: /course
+
+pgs_core_ethnicity:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/ethnicity.yml"
+    prefix: /ethnicity
+
+pgs_core_formula:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/formula.yml"
+    prefix: /formula
+
+pgs_core_grades:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/grades.yml"
+    prefix: /grades
+
+pgs_core_grade_level:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/grade_level.yml"
+    prefix: /grade-level
+
+pgs_core_level:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/level.yml"
+    prefix: /level
+
+pgs_core_message:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/message.yml"
+    prefix: /message
+
+_pgs_core_parent:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/parent_student.yml"
+    prefix: /parent
+
+pgs_core_school_class:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_class.yml"
+    prefix: /school-classes
+
+pgs_core_school_class_course:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_class_course.yml"
+    prefix: /school-class-course
+
+pgs_core_school_class_student:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_class_student.yml"
+    prefix: /school-class-student
+
+pgs_core_subject:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/subject.yml"
+    prefix: /subject
+
+pgs_core_setup:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/setup.yml"
+    prefix: /setup
+
+pgs_core_help:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/help.yml"
+    prefix: /help
+
+pgs_core_icon:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/icon.yml"
+    prefix: /icon
+
+pgs_core_organization:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/organization.yml"
+    prefix: /organization
+
+pgs_core_page:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/page.yml"
+    prefix: /page
+
+pgs_core_school_health:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_health.yml"
+    prefix: /school-health
+
+pgs_core_school_test:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_test.yml"
+    prefix: /school-test
+
+pgs_core_school_year:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_year.yml"
+    prefix: /school-year
+
+pgs_core_school_term:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_term.yml"
+    prefix: /school-term
+
+pgs_core_schools:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school.yml"
+    prefix: /school
+
+pgs_core_school_grade_level:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/school_grade_level.yml"
+    prefix: /schoolGradeLevel
+
+pgs_core_student:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/student.yml"
+    prefix: /student
+
+pgs_core_student_avatar:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/student_avatar.yml"
+    prefix: /student-avatar
+
+pgs_core_student_behavior:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/student_behavior.yml"
+    prefix: /behavior-student
+
+pgs_core_term:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/term.yml"
+    prefix: /term
+
+pgs_core_test:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/test.yml"
+    prefix: /test
+
+pgs_core_topic:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/topic.yml"
+    prefix: /topic
+
+pgs_core_condition:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/condition.yml"
+    prefix: /condition
+
+pgs_core_medical:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/medical.yml"
+    prefix: /medical
+
+pgs_core_student_medical:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/student_medical.yml"
+    prefix: /medical-student
+
+pgs_core_student_condition:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/student_condition.yml"
+    prefix: /condition-student
+
+pgs_core_student_report:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/student_report.yml"
+    prefix: /report-student
+
+pgs_core_teacher:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/teacher.yml"
+    prefix: /teacher
+
+pgs_core_user_profile:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing/user_profile.yml"
+    prefix: /user-profile
+
+pgs_user_change_password:
+    pattern:  /change-password
+    defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
+    requirements:
+        _method: GET|POST

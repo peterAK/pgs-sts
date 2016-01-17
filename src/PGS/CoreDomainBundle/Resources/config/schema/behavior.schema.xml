@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Behavior" namespace="PGS\CoreDomainBundle\Model\Behavior">
+    <table name="behavior" phpName="Behavior">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="name" type="varchar" size="25" required="true"/>
+        <column name="description" type="LONGVARCHAR" required="true"/>
+        <column name="type" type="ENUM" valueSet="positive, negative" defaultValue="positive" required="true"/>
+        <column name="point" type="INTEGER" required="true" defaultValue="1"/>
+        <column name="icon_id" type="INTEGER" required="false"/>
+        <column name="user_id" type="INTEGER" required="false"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="icon" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="icon_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="name, description"/>
+        </behavior>
+        <behavior name="sortable" />
+        <behavior name="timestampable" />
+    </table>
+</database>

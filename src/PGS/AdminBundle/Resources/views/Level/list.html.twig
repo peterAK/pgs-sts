@@ -1,0 +1,74 @@
+{% extends 'PGSAdminBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="/">
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_admin_level_list') }}">
+            {{ model|title }}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    <div class="col-md-2">
+        <ul class="status-nav margin-bottom-10">
+            <li class="compose-btn">
+                <a href="{{ url('pgs_admin_level_new') }}" data-title="Compose" class="btn green">
+                    <i class="fa fa-edit"></i> Add {{ model }}
+                </a>
+            </li>
+        </ul>
+        {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'level.list'})) }}
+    </div>
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title }} : All</h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for level in levels %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_admin_level_view', { 'id': level.id }) }}">
+                                    {{ level.id }}
+                                </a>
+                            </td>
+                            {% if app.request.locale == 'en' %}
+                                <td>{{ level.code}}</td>
+                            {% else %}
+                                <td>{{ level.translation('id_ID').code}}</td>
+                            {% endif %}
+                            <td>{{ level.name|title }}</td>
+                            <td>{{ level.description|capitalize }}</td>
+                            <td>
+                                <a href="{{ path('pgs_admin_level_edit', { 'id': level.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="{{ path('pgs_admin_level_delete', { 'id': level.id }) }}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock list %}

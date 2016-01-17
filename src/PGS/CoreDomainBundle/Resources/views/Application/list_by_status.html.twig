@@ -1,0 +1,70 @@
+<table class="table table-striped table-bordered table-advance table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th><i class="fa fa-cog"></i></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for application in application %}
+        <tr>
+            <td>
+                <a href="{{ path('pgs_core_application_view', { 'id': application.id }) }}">
+                    {{ application.id }}
+                </a>
+            </td>
+            <td>{{ application.firstName}}&nbsp{{ application.lastName }}</td>
+            <td>{{ application.status }}</td>
+            {#<td>#}
+                {#{% if application.status == 'accepted' %}#}
+                    {#{{ application.status }}#}
+                {#{% else %}#}
+                    {#<select id="foo" name="category" class="form-control" autocomplete="off" >#}
+                        {#{% for status in statuses %}#}
+                            {#{% if status == application.status %}#}
+                                {#<option value="{{ application.id }}" selected="selected">{{ application.status }} </option>#}
+                            {#{% else %}#}
+                                {#<option value="{{ application.id }}" >{{ status }} </option>#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                    {#</select>#}
+                {#{% endif %}#}
+
+                {#<ul class="nav">#}
+                {#<li class="dropdown">#}
+                {#<a  class="dropdown-toggle" data-toggle="dropdown">SELECT <b class="caret"></b></a>#}
+                {#<ul class="dropdown-menu">#}
+                {#{% for status in status %}#}
+                {#<li>#}
+                {#{% if status != application.status %}#}
+                {#<a >{{ status }}</a>#}
+                {#{% endif %}#}
+                {#</li>#}
+                {#{% endfor %}#}
+                {#</ul>#}
+                {#</li>#}
+                {#</ul>#}
+            {#</td>#}
+            <td>
+
+                {% if application.status != 'accepted' %}
+                    {#{{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'application.edit'})) }}#}
+                    <a href="{{ path('pgs_core_application_edit', { 'id': application.id }) }}">
+                        <i class="fa fa-floppy-o"></i>
+                    </a>
+                    <a href="{{ path('pgs_core_application_edit', { 'id': application.id }) }}">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a class="confirm-delete" href="{{ path('pgs_core_application_delete', { 'id': application.id }) }}">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                {% endif %}
+
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

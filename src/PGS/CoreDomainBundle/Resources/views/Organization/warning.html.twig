@@ -1,0 +1,47 @@
+{% extends 'PGSAdminBundle::view.html.twig' %}
+
+{% block pagetitle %} Add Organization{% endblock pagetitle %}
+
+{% block styleapplication %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleapplication %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_organization_list') }}">
+                {{ model|title }}
+            </a>
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-8 profile-info">
+                    <h3 class="form-section">
+                        Add Organization
+                    </h3>
+                    <div class="well">
+                        <h4 class="warning">Action Not Available</h4>
+                        <div class="alert alert-danger">
+                            New Organization must be added along with a new principal user
+                        </div>
+                    </div>
+                </div>
+                <!--end col-md-8-->
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}

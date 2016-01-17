@@ -1,0 +1,30 @@
+pgs_core_user_profile_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:UserProfile:list }
+    requirements:
+        _method: GET
+
+pgs_core_user_profile_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:UserProfile:view, id: null }
+    requirements:
+        _method: GET
+#
+#pgs_core_user_profile_new:
+#    pattern:  /new/{parent}
+#    defaults: { _controller: PGSCoreDomainBundle:UserProfile:new, parent: null }
+#    requirements:
+#        _method: GET|POST
+
+pgs_core_user_profile_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:UserProfile:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_user_profile_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:UserProfile:delete, id: null }
+    requirements:
+        _method: GET|POST
+

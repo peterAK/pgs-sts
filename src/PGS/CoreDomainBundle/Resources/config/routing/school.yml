@@ -1,0 +1,43 @@
+pgs_core_schools_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:School:list }
+    requirements:
+        _method: GET|POST
+
+pgs_core_schools_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:School:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_schools_new:
+    pattern:  /new/{organization}
+    defaults: { _controller: PGSCoreDomainBundle:School:new, organization: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_schools_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:School:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_schools_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:School:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_schools_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:School:viewSchoolByStatus, status: all }
+
+pgs_core_schools_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:School:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_schools_upload:
+    pattern: /upload/{id}
+    defaults: { _controller: PGSCoreDomainBundle:School:upload, id: null }

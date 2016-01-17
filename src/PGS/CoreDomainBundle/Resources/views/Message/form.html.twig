@@ -1,0 +1,83 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href= "{{ home}}" >
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_message_list') }}">
+                {% trans %}Message{% endtrans %}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {% trans %}New Message{% endtrans %}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {% trans %}New Message{% endtrans %}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" {{ form_enctype(form) }}>
+                        <div class="form-body">
+                            {{ form_widget(form) }}
+                            <table>
+                                <tr>
+                                    <td><b>{% trans %}Recipient{% endtrans %}</b></td>
+                                    <td>
+                                        <select name="toId" class="col-md-8 form" style="overflow-y: hidden; width: 200px;">
+                                            {% for userProfile in userProfiles %}
+                                                {% if(userProfile.id!=user.id) %}
+                                                    <option value="{{ userProfile.id }}" >{{ userProfile.firstName }}</option>
+                                                {% endif %}
+                                             {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">{% trans %}Save{% endtrans %}</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock content %}

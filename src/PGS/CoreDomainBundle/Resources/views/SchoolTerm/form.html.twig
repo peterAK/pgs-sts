@@ -1,0 +1,88 @@
+{% extends 'PGSAdminBundle::view.html.twig' %}
+{% form_theme form 'PGSAdminBundle:Form:form.html.twig' %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_school_term_list') }}">
+                {{ model|capitalize }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {{ model|title}}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {% if schoolTerm.id %}Edit{% else %}New{% endif %} {{ model }}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" {{ form_enctype(form) }}>
+                        <div class="form-body">
+                            {{ form_widget(form) }}
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">Save</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            {% if schoolTerm.id %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolTerm.edit'})) }}
+            {% else %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolTerm.add'})) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock tabcontent %}
+{% block scriptcurrent %}
+    {{ parent() }}
+    {% javascripts '@PGSPublicBundle/Resources/public/plugins/upload/upload.js' filter='?yui_js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@PGSPublicBundle/Resources/public/scripts/jquery.nailthumb.1.1.min.js' filter='?yui_js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        $('.date').timepicker({ timeFormat: 'H:i:s' });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#school_term_school').bind('change', null,function () {
+                $.ajax({
+                    'url': '{{ url('pgs_core_cascade_school_year_by_school') }}/' + $(this).val(),
+                    'beforeSend': function () {
+                        $('#school_term_school_year')[0].options.length = 0;
+                    },
+                    'success': function (result) {
+                        $('#school_term_school_year').append(result);
+                    }
+                });
+            });
+        });
+
+    </script>
+{% endblock scriptcurrent %}

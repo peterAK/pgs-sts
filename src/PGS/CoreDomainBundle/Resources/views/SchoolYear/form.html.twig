@@ -1,0 +1,59 @@
+{% extends 'PGSCoreDomainBundle::form.html.twig' %}
+{% form_theme form 'PGSCoreDomainBundle:Form:form.html.twig' %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_school_year_list') }}">
+                {{ model|capitalize }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {{ model|title}}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {% if schoolYear.id %}Edit{% else %}New{% endif %} {{ model }}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" {{ form_enctype(form) }}>
+                        <div class="form-body">
+                            {{ form_widget(form) }}
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">Save</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            {% if schoolYear.id %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolYear.edit'})) }}
+            {% else %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolYear.add'})) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock tabcontent %}

@@ -1,0 +1,66 @@
+{% extends 'PGSAdminBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="/">
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_core_school_health_list') }}">
+            {{ model|title }}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    <div class="col-md-2">
+        <ul class="status-nav margin-bottom-10">
+            <li class="compose-btn">
+                <a href="{{ url('pgs_core_school_health_new') }}" data-title="Compose" class="btn green">
+                    <i class="fa fa-edit"></i> Add {{ model }}
+                </a>
+            </li>
+        </ul>
+        {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'school_health.list'})) }}
+    </div>
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title  }} : All</h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Student Name</th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schoolHealth in schoolHealth %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_core_school_health_view', { 'id': schoolHealth.id }) }}">
+                                    {{ schoolHealth.id }}
+                                </a>
+                            </td>
+                            <td>{{ schoolHealth.studentName }}</td>
+                            <td>
+                                <a href="{{ path('pgs_core_school_health_edit', { 'id': schoolHealth.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="confirm-delete" href="{{ path('pgs_core_school_health_delete', { 'id': schoolHealth.id }) }}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock list %}

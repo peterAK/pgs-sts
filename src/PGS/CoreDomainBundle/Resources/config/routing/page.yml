@@ -1,0 +1,45 @@
+pgs_core_page_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Page:list }
+    requirements:
+        _method: GET
+
+pgs_core_page_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Page:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_page_sidebar:
+    pattern:  /sidebar/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Page:sidebar, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_page_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Page:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_page_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Page:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_page_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Page:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_page_by_status:
+    pattern: /list/status/{status}
+    defaults: { _controller: PGSCoreDomainBundle:Page:viewPageByStatus, status: all }
+
+pgs_core_page_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSCoreDomainBundle:Page:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST

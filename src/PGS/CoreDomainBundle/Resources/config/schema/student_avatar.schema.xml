@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.StudentAvatar" namespace="PGS\CoreDomainBundle\Model\StudentAvatar">
+    <table name="student_avatar" phpName="StudentAvatar">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="selected" type="BOOLEAN" required="true"/>
+        <column name="avatar_id" type="INTEGER" required="true"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="avatar" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="avatar_id" foreign="id"/>
+        </foreign-key>
+    </table>
+</database>

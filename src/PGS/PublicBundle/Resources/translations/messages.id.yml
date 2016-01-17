@@ -1,0 +1,134 @@
+Academics : Akademik
+Academic Years : Tahun Akademik
+Action : Aksi
+Add : Tambah
+Address : Alamat
+Administration : Administrasi
+and : dan
+Announcement : Pengumuman
+Attachment : Sisipan
+All Class : Semua Kelas
+Add : Tambah
+All Time : Seluruhnya
+Avatar : Avatar
+Avatar Book : Buku Avatar
+Behavior : Sikap
+Behavior Name : Nama Sikap
+Behavior Point : Poin Sikap
+Behavior List : List Sikap
+Behaviors : Sikap
+contact : Kontak
+Class : Kelas
+Children Name : Nama Anak
+Created At : Tanggal buat
+Change Password : Ubah Kata Sandi
+Change Avatar : Ubah Avatar
+Dashboard : Halaman Utama
+Description : Deskripsi
+Daily Review : Review Harian
+Weekly Review : Review Mingguan
+Review All : Review Semua
+Edit : Edit
+Ethnicities : Etnik
+Give Point : Beri Poin
+Friend List : Daftar Teman
+Find By : Cari Berdasarkan
+Grades : Kelas
+Grades Levels  : Tingkatan Kelas
+School Grade Levels  : Tingkatan Kelas Sekolah
+home : Beranda
+Helps : Bantuan
+Icon : Ikon
+Levels : Tingkat
+login : Masuk
+log in : Masuk
+logout : Keluar
+Log Out : Keluar
+Manage Behavior : Kelola Sikap
+Manage Avatar : Kelola Avatar
+Manage Announcement : Kelola Pengumuman
+Message : Pesan
+Message List : List Pesan
+Message Room : Ruang Pesan
+My Avatar : Avatar Saya
+My Avatars : Avatar Saya
+My Behavior : Sikap Saya
+My Behavior Point : Poin Sikap Saya
+My Behavior Today : Sikap Saya Hari Ini
+My Behavior This Week : Sikap Saya Minggu Ini
+My Behavior Rank : Ranking Sikap Saya
+My Children Behavior : Sikap Anak Saya
+My Friends : Teman Saya
+My Point : Poin Saya
+My Point Today : Poin Saya Hari Ini
+My Point This Week : Poin Saya Minggu Ini
+Name : Nama
+Need : Membutuhkan
+New : Buat
+New Message : Pesan Baru
+organization : Organisasi
+Organization : Organisasi
+organizations : Organisasi
+Pages : Halaman
+parent : Orang tua
+parents : Orang tua
+Password Changed : Kata Sandi Berhasil Diubah
+Phone : Telepon
+Published By : Dibuat Oleh
+Point : Poin
+Profile : Data Diri
+Rank : Ranking
+Recipient : Penerima
+Reply here : Balas Disini
+Reward Systems : Sistem Reward
+Select Class : Pilih Kelas
+Search : Cari
+Secret Avatar : Avatar Rahasia
+SELECT : Pilih
+Select : Pilih
+SELECTED : Dipilih
+Selected : Dipilih
+Send : Kirim
+School : Sekolah
+school : Sekolah
+schools : Sekolah
+Subject : Mata Pelajaran
+Subjct : Judul
+Sticker : Stiker
+Student Id : ID Siswa
+teacher : Guru
+teachers : Guru
+Terms : Terms
+Test : Tes
+Type : Tipe
+Topics : Topik
+Today : Hari Ini
+Total Point : Total Poin
+Total Point Today : Total Poin Hari Ini
+Total Point This Week : Total Poin Minggu Ini
+This Week : Minggu Ini
+Users : Pengguna
+User ID : ID Pengguna
+Special Avatar Need : Avatar Spesial Membutuhkan
+student : Siswa
+student application : Pendaftaran siswa
+Student Behavior : Sikap Siswa
+students : Siswa
+introduction: <h3>Registrati</h3></br>Untuk pendaftaran siswa diperlukan beberapa file yang harus diunggah yaitu: <br>- Foto berpakaian formal </br>- Akta Kelahiran </br>- Kartu Keluarga </br>- Ijazah</br>
+medicine : Obat Siswa </br> Jika diperlukan silahkan untuk memberikan anak saya obat berikut ( Pilih semua jika diperlukan )
+condition : Riwayat Kesehatan </br> ( Pilih semua jika diperlukan )
+condition-label : Jika Anda mimilih salah satu kondisi di atas , silakan berikan penjelasan lebih lanjut di bawah ini
+schoolHealth: <h3>Kesehatan Siswa</h3>
+homeFilesUpload: Unggah beberapa file yang diperlukan : <br>- Foto berpakaian formal </br>- Akta Kelahiran </br>- Kartu Keluarga </br>- Ijazah</br>
+picture: <h3>Photo</h3>
+birthCertificate: <h3>Akta Kelahiran</h3>
+familyCard: <h3>Kartu Keluarga</h3>
+graduationCertificate: <h3>Ijazah</h3>
+changePicture : Unggah Foto
+changeBirthCertificate : Unggah Akta Kelahiran
+changeFamilyCard : Unggah Katu Keluarga
+changeGraduationCertificate : Unggah Surat Ijazah
+uploadFile: Unggah File
+registration: Selamat datang di PGS Gizmo. Terima kasih telah anda melakukan registrasi. Untuk kenyamanan Anda , mohon diperhatikan rincian login Anda:
+next: Lanjutkan
+save: Simpan

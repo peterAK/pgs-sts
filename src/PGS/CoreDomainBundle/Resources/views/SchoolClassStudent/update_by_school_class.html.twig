@@ -1,0 +1,4 @@
+<option value="">{{ 'form.school.class.student'|trans }}</option>
+{% for schoolClassStudent in schoolClassStudents %}
+    <option value="{{ schoolClassStudents.id }}">{{ schoolClassStudent.name }}</option>
+{% endfor %}

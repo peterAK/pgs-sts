@@ -1,0 +1,16 @@
+{% set schools = list_confirmed_schools() %}
+<ul class="dropdown-menu" aria-labelledby="mega-menu">
+    <li>
+        <div class="nav-content">
+            <div class="nav-content-col">
+                <ul>
+                    {% for school in schools %}
+                        <li class="nowrap">
+                            <a href="">{{ school.name|title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </li>
+</ul>

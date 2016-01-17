@@ -1,0 +1,48 @@
+<table class="table table-striped table-bordered table-advance table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th><i class="fa fa-wrench"></i></th>
+        <th><i class="fa fa-cog"></i></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for organization in organizations %}
+        <tr>
+            <td>
+                <a href="{{ path('pgs_admin_organization_view', { 'id': organization.id }) }}">
+                    {{ organization.id }}
+                </a>
+            </td>
+            <td>{{ organization.name|capitalize }}</td>
+            <td>{{ organization.description }}</td>
+            <td>{{ organization.status|capitalize }}</td>
+            <td class="nowrap">
+                <a href="{{ path('pgs_admin_organization_move', { 'id': organization.id, 'direction': 'top' }) }}">
+                    <i class="fa fa-angle-double-up"></i>
+                </a>
+                <a href="{{ path('pgs_admin_organization_move', { 'id': organization.id, 'direction': 'up' }) }}">
+                    <i class="fa fa-angle-up"></i>
+                </a>
+                <a href="{{ path('pgs_admin_organization_move', { 'id': organization.id, 'direction': 'down' }) }}">
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <a href="{{ path('pgs_admin_organization_move', { 'id': organization.id, 'direction': 'bottom' }) }}">
+                    <i class="fa fa-angle-double-down"></i>
+                </a>
+            </td>
+            <td class="nowrap">
+                <a href="{{ path('pgs_admin_organization_edit', { 'id': organization.id }) }}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a href="{{ path('pgs_admin_organization_delete', { 'id': organization.id }) }}">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,18 @@
+pgs_core_student_avatar_my_avatar:
+    pattern:  /My-Avatar
+    defaults: { _controller: PGSCoreDomainBundle:StudentAvatar:myAvatar}
+    requirements:
+        _method: GET
+
+pgs_core_student_avatar_list:
+    pattern:  /avatar-list
+    defaults: { _controller: PGSCoreDomainBundle:StudentAvatar:list}
+    requirements:
+        _method: GET
+
+
+pgs_core_student_avatar_select:
+    pattern:  /avatar-list/{id}
+    defaults: { _controller: PGSCoreDomainBundle:StudentAvatar:select, id: null }
+    requirements:
+        _method: GET

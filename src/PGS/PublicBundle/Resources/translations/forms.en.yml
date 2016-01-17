@@ -1,0 +1,185 @@
+form.locale : Locale
+form.route : Route
+form.roles : Roles
+form.bundles : Bundles
+form.language : Language
+form.access : Access
+
+form.address : Address*
+form.code : Code
+form.city : City*
+form.content : Content
+form.country : Country*
+form.country.select : Select a country
+form.description : Description
+form.description.short : Excerpt
+form.excerpt : Excerpt
+form.email : Email*
+form.fax : Fax
+form.key : Key Value
+form.logo : Logo
+form.mobile : Mobile
+form.minimalPoint : Minimum Behavior Point
+form.name : Name
+form.name.first : First name*
+form.name.last : Last name*
+form.name.middle : Middle name
+form.name.nick : Nickname
+form.gender.select : Select a gender
+form.gender : Gender
+form.phone : Phone
+form.point : Point
+form.recipient : Recipient
+form.school : School*
+form.school.select : Select a school
+form.to : To
+form.place.of.birth : Place of birth*
+form.date.of.birth : Date of birth*
+form.religion : Religion
+form.state: State*
+form.state.select : Select a state
+form.status : Status
+form.status.select : Select a status
+form.subject : Subject
+form.title : Title
+form.topic : Topic
+form.type : Type
+form.user.id: User ID
+form.user.select : Select user
+form.username: Username
+form.website : Website
+form.year.start : Date start
+form.year.end : Date end
+form.zipcode : Zip code
+form.mailing.address : Email*
+form.occupation : Occupation
+
+form.academic.year : Academic year*
+form.academic.year.select : Select an academic year
+
+form.school.year : School year*
+form.school.year.select : Select a school year
+
+form.help.key : Key Value
+form.help.content : Content
+form.help.title : Title
+
+form.iconFile : Logo
+
+form.level.code : Code
+form.level.name : Level Name
+form.level.select : Select school level
+
+form.page.topic.select : Select a topic
+
+form.organization.establish : Establish on
+form.organization.name : Organization name
+form.organization.license : Organization license
+
+form.publish.start : Start publish
+form.publish.end : End publish
+
+form.school.year.end : Year end
+form.school.year.start : Year start
+
+form.seo.description : SEO description
+form.seo.keyword : SEO keywords
+
+form.grade : Grade
+form.grade.level :  Grade Level
+form.grade.select: Select a grade
+form.student.nation.no : Student National #
+form.student.prior.test.no : Last National Test #
+form.student.no : Student #
+
+form.test : Test
+form.test.select : Select a test
+
+form.application1.no : Registration*
+form.ethnicity.select : Select enthnicity
+form.ethnicity : Enthnicity*
+form.indonesian : Indonesia
+form.register.for : Register For*
+form.register.for.grade : Grade*
+form.zipcode : Zip code
+form.entered.by : Entered by
+form.nationality : Nationality*
+form.child.total : Child Total*
+form.child.no : Child*
+form.child.status : Child status
+form.child.status.select : Select a status
+form.note : Note
+form.hobby : Hobby
+form.name.first.father : First name father
+form.name.last.father : Last name father
+form.business.address.father : Bussines address
+form.occupation.father : Occupation father
+form.phone.father : Phone father
+form.mailing.father : Email father
+form.name.first.mother : First name mother
+form.name.last.mother : Last name mother
+form.business.address.mother : Bussines address
+form.occupation.mother : Occupation mother
+form.phone.mother : Phone mother
+form.mailing.mother : Email mother
+form.name.first.guardian : First name legal guardian
+form.name.last.guardian : Last name legal guardian
+form.occupation.guardian : Occupation legal guardian
+form.phone.guardian : Phone legal guardian
+form.mailing.guardian : Email legal guardian
+
+
+form.student.name: Student name
+form.emergency.physician.name : Name other family members
+form.emergency.relationship: Relationship other family members
+form.emergency.phone : Phone other family members
+form.allergies : Allergies to medications / food / insects / other
+form.allergies.yes : If yes, list
+form.allergies.action : Action to be taken
+form.condition.exp : Health history
+form.student.psychological : Do your child have a psycological treatment / therapy ?
+form.psychological.exp : If yes, explain
+form.student.aware : Are there any learning difficulties, behavior issues, emotional or mental health that the school should aware of ?
+form.aware.exp : If yes, explain
+form.student.ability : Do you have any other comments on how this condition impacts upon this student ability to attend the school activities? (e.g field trip, etc)?
+form.medicine : If needed  it is OK to give my child the following medicine (check all that apply)
+form.medical.emergency.name : Name of family physician
+form.medical.emergency.phone : Phone of family physician
+form.medical.emergency.address : Address of family physician
+form.parent.statement.name : Parent statement
+form.student.statement.name : Student Statement
+form.parent.signature : Name parent of signature*
+form.date.of.signature : Date of signature*
+
+form.score.homework: Point homework
+form.score.daily: Point daily exam
+form.score.mid: Point mid exam
+form.score.final: Point final exam
+form.score.type: Type point
+form.score.wave: status
+form.school.class.student : Class
+form.school.class.student.select: Select a class
+form.term : Term
+form.term.select : Select a term
+
+form.final.exam.point: Final exam point (%)
+form.mid.exam.point : Mid exam point (%)
+form.daily.exam.point: Daily exam point (%)
+form.activity.point: Activity point (%)
+
+form.active: Active
+
+form.formula: Formula
+form.formula.select: Select a formula
+form.course: Course
+form.course.select: Select a course
+form.time.start : Start Time
+form.time.end : End Time
+
+form.grade.level.select: Select a grade level
+form.school.grade.level.select: Select a school grade level
+form.school.grade.level: School Grade Level
+form.school.class : School Class
+form.school.class.select : Select a school class
+form.school.term : School Term
+form.school.term.select : Select a school term

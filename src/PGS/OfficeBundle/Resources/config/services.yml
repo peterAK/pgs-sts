@@ -1,0 +1,4 @@
+services:
+#    pgs_office.example:
+#        class: PGS\OfficeBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Icon" namespace="PGS\CoreDomainBundle\Model\Icon">
+    <table name="icon" phpName="Icon">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="name" type="VARCHAR" size="30" required="true"/>
+        <column name="icon_file" type="LONGVARCHAR" required="true"/>
+        <column name="type" type="ENUM" valueSet="positive, negative" defaultValue="positive" required="true"/>
+        <column name="status" type="ENUM" valueSet="publish, unpublish" defaultValue="publish"/>
+
+        <!-- Behavior-->
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="name"/>
+        </behavior>
+        <behavior name="sortable" />
+
+    </table>
+</database>

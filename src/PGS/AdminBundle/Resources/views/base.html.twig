@@ -1,0 +1,120 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}<title>ClassGizmo | {{ model is defined ? model|title : 'Administration' }} </title>{% endblock %}
+
+{% block font %}
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow&subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&subset=all" rel="stylesheet" type="text/css"><!--- fonts for slider on the index page -->
+{% endblock font %}
+
+{% block styleglobal %}
+    {{ parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/uniform/css/uniform.default.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleglobal %}
+
+{% block styleapplication %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style-admin.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/style-admin-responsive.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/plugins.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/themes/default.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/themes/blue.css' filter='?yui_css' %}
+        <link id="style_color" rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/custom.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{%  endblock styleapplication %}
+
+{% block favicon %}
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}"/>
+{% endblock favicon %}
+
+{% block bodystart %}
+<body class="page-header-fixed">
+{% endblock bodystart %}
+
+{% block body %}
+    {% block header %}
+        {% include('PGSAdminBundle:Widget:topheader.html.twig') %}
+    {% endblock header %}
+
+    {% block container %}
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            {% block sidebar %}{% include('PGSCoreDomainBundle:Sidebar:sidebar.html.twig') %}{% endblock sidebar %}
+
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+                    {% block breadcrumb %}{% endblock breadcrumb %}
+                    {% block content %} {% endblock content %}
+                </div>
+            </div>
+        </div>
+        <!-- END CONTAINER -->
+    {% endblock container %}
+
+    {% block footer %}
+        {% include "PGSAdminBundle:Widget:footer.html.twig" %}
+    {% endblock footer %}
+
+    {% block javascripts %}
+        <!-- BEGIN JAVASCRIPTS -->
+        {% block scriptglobal %}
+            {{  parent() }}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery-slimscroll/jquery.slimscroll.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery.blockui.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/jquery.cokie.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/uniform/jquery.uniform.min.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock scriptglobal %}
+
+        {% block scriptpage %}
+            <!-- BEGIN PAGE LEVEL SCRIPTS -->
+            {% javascripts '@PGSPublicBundle/Resources/public/plugins/bootstrap-fileinput/bootstrap-fileinput.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <!-- END PAGE LEVEL SCRIPTS-->
+        {% endblock scriptpage %}
+
+        {% block scriptcurrent %}
+            <!-- BEGIN CURRENT SCRIPTS -->
+            {% javascripts '@PGSPublicBundle/Resources/public/scripts/app-admin.js' filter='?yui_js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <script type="text/javascript">
+                jQuery(document).ready(function() {
+                    App.init();
+                });
+            </script>
+            <!-- END CURRENT SCRIPTS -->
+        {% endblock scriptcurrent %}
+
+        <!-- END JAVASCRIPTS -->
+    {% endblock javascripts %}
+{% endblock body %}

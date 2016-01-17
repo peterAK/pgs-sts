@@ -1,0 +1,29 @@
+pgs_core_subject_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Subject:list }
+    requirements:
+        _method: GET
+
+pgs_core_subject_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Subject:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_subject_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSCoreDomainBundle:Subject:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_subject_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Subject:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_subject_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Subject:delete, id: null }
+    requirements:
+        _method: GET|POST

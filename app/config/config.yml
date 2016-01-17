@@ -1,0 +1,165 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: twig.yml }
+    - { resource: settings/ckeditor.yml }
+    - { resource: settings/sonata.yml }
+#    - { resource: settings/pgs.yml } # need to set up dependency injection
+    - { resource: @PGSAdminBundle/Resources/config/admin.yml }
+#    - { resource: @PGSHotelManagementBundle/Resources/config/services.yml }
+
+framework:
+    #esi:             ~
+    #translator:      { fallback: %locale% }
+    secret:          %secret%
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      true
+    templating:
+        engines: ['twig']
+        #form:
+            #resources:
+                #- 'PGSHMSVendorBundle:Form'
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:         ~
+    fragments:       ~
+    translator: { fallback: en }
+
+# Assetic Configuration
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    bundles:        [PGSAdminBundle, PGSCoreDomainBundle, PGSPublicBundle, FOSUserBundle ]
+    #java: /usr/bin/java
+    filters:
+        cssrewrite: ~
+        # closure:
+        #    jar: %kernel.root_dir%/Resources/java/compiler.jar
+        # yui_css:
+        #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: %mailer_transport%
+    host:      %mailer_host%
+    encryption: %mailer_encryption%
+    auth_mode:  %mailer_auth_mode%
+    username:  %mailer_user%
+    password:  %mailer_password%
+#    port: %mailer_port%
+    disable_delivery: false
+
+#    spool:     { type: memory }
+
+propel:
+    dbal:
+        driver:               %database_driver%
+        user:                 %database_user%
+        password:             %database_password%
+        dsn:                  %database_driver%:host=%database_host%;dbname=%database_name%;charset=UTF8
+        options:              {}
+        attributes:           {}
+        classname:            Glorpen\Propel\PropelBundle\Connection\EventPropelPDO
+    build_properties:
+        propel.behavior.event.class:    'vendor.glorpen.propel-bundle.Glorpen.Propel.PropelBundle.Behaviors.EventBehavior'
+        propel.behavior.extend.class:   'vendor.glorpen.propel-bundle.Glorpen.Propel.PropelBundle.Behaviors.ExtendBehavior'
+        propel.behavior.default:        "event, extend"
+
+glorpen_propel:
+    extended_models:
+        FOS\UserBundle\Propel\User: PGS\CoreDomainBundle\Model\User
+
+sensio_framework_extra:
+    view:
+        annotations: true
+
+fos_user:
+    db_driver: propel # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: PGS\CoreDomainBundle\Model\User
+    registration:
+        confirmation:
+            from_email: # Use this node only if you don't want the global email address for the confirmation email
+                address: registration@classgizmo.com
+                sender_name: ClassGizmo
+            enabled:    true # change to true for required email confirmation
+            template:   FOSUserBundle:Registration:email.txt.twig
+
+jms_di_extra:
+#    cache_warmer:
+#        enabled: true
+#    metadata:
+#        cache: file
+    locations:
+        directories: "%kernel.root_dir%/../src"
+        all_bundles: false
+        bundles: [PGSAdminBundle, PGSCoreDomainBundle, PGSPrincipalBundle, PGSCounselorBundle, PGSTeacherBundle, PGSParentBundle, PGSStudentBundle]
+    automatic_controller_injections:
+        properties:
+            request: "@request"
+            router: "@router"
+
+        method_calls:
+            setRouter: ["@router"]
+
+jms_i18n_routing:
+    default_locale: en
+    locales: [en, id]
+    strategy: prefix_except_default
+
+# app/config/config.yml
+jms_security_extra:
+    # Whether you want to secure all services (true), or only secure specific
+    # services (false); see also below
+    secure_all_services: false
+
+    # Enabling this setting will add an additional special attribute "ROLE_IDDQD".
+    # Anybody with this attribute will effectively bypass all security checks.
+    enable_iddqd_attribute: false
+
+    # Enables expression language
+    expressions: true
+
+    # Allows you to disable some, or all built-in voters
+    voters:
+        disable_authenticated: false
+        disable_role:          false
+        disable_acl:           false
+
+    # Allows you to specify access control rules for specific methods, such
+    # as controller actions
+    method_access_control: { }
+
+genemu_form:
+    date: ~
+    file:
+        swf: /uploadify/uploadify.swf
+#        uploader: /uploadify/uploadify.php
+        enabled:    true
+        folder:     /uploads
+        cancel_img: /uploadify/uploadify-cancel.png
+        configs:
+            fileSizeLimit: 6000000
+            fileExt: '*.jpg;*.jpeg;*.gif;*.png'
+            fileDesc: Image files
+            fileDataName: file
+            uploader: /uploadify/uploadify.php
+
+knp_paginator:
+    page_range: 5                # default page range used in pagination control
+    default_options:
+        page_name: pg            # page query parameter name
+        sort_field_name: sort    # sort field query parameter name
+        sort_direction_name: dir # sort direction query parameter name
+        distinct: true           # ensure distinct results, useful when ORM queries are using GROUP BY statements
+    template:
+#        pagination: KnpPaginatorBundle:Pagination:sliding.html.twig     # sliding pagination controls template
+        pagination: PGSCoreDomainBundle:Widget:pagination.html.twig
+        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template

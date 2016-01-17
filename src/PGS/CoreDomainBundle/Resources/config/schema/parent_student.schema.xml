@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.ParentStudent" namespace="PGS\CoreDomainBundle\Model\ParentStudent">
+    <table name="parent_student" phpName="ParentStudent">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="application_id" type="INTEGER" required="true" />
+        <column name="student_id" type="INTEGER" required="true" />
+        <column name="user_id" type="INTEGER" required="true" />
+
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="application" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="application_id" foreign="id" />
+        </foreign-key>
+        <foreign-key foreignTable="student" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="student_id" foreign="id" />
+        </foreign-key>
+
+    </table>
+</database>

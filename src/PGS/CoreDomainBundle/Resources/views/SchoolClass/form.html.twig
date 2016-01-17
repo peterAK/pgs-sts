@@ -1,0 +1,121 @@
+{% extends 'PGSAdminBundle::view.html.twig' %}
+{% form_theme form 'PGSAdminBundle:Form:form.html.twig' %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_school_class_list') }}">
+                {{ model|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {% if schoolClass.id %}Edit{% else %}New{% endif %} {{ model }}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+{% block list %}
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {% if schoolClass.id %}Edit{% else %}New{% endif %} {{ model }}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" {{ form_enctype(form) }}>
+                        <div class="form-body">
+                            {{ form_widget(form) }}
+                            {#<select name="iconselect" id="iconselect">#}
+                                {#<option value="icon" data-image="/uploads/icon/24/Like_1430715377"></option>#}
+                            {#</select>#}
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">Save</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            {% if schoolClass.id %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolClass.edit'})) }}
+            {% else %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'schoolClass.add'})) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock list %}
+{% endblock tabcontent %}
+
+{#{% block scriptcurrent %}#}
+    {#{{ parent() }}#}
+    {#<!-- BEGIN CURRENT SCRIPTS -->#}
+    {#{% javascripts '@PGSPublicBundle/Resources/public/scripts/app-admin.js' filter='?yui_js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#<!-- BEGIN CURRENT SCRIPTS -->#}
+    {#{% javascripts '@PGSPublicBundle/Resources/public/scripts/jquery-1.3.2.min.js' filter='?yui_js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#<!-- BEGIN CURRENT SCRIPTS -->#}
+    {#{% javascripts '@PGSPublicBundle/Resources/public/scripts/dd-min.js' filter='?yui_js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {#<script language="javascript">#}
+        {#$(document).ready(function() {#}
+                {#$("body select").dropdown();#}
+        {#});#}
+    {#</script>#}
+
+    {#<script type="text/javascript">#}
+        {#jQuery(document).ready(function() {#}
+            {#App.init();#}
+        {#});#}
+    {#</script>#}
+    {#<!-- END CURRENT SCRIPTS -->#}
+{#{% endblock scriptcurrent %}#}
+{% block scriptcurrent %}
+    {{ parent() }}
+    {% javascripts '@PGSPublicBundle/Resources/public/plugins/upload/upload.js' filter='?yui_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@PGSPublicBundle/Resources/public/scripts/jquery.nailthumb.1.1.min.js' filter='?yui_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $('.datetime').datetimepicker({ timeFormat: 'H:i:s' });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#school_class_course').bind('change', null,function () {
+                $.ajax({
+                    'url': '{{ url('pgs_core_cascade_school_year_by_school') }}/' + $(this).val(),
+                    'beforeSend': function () {
+                        $('#school_class_school_year')[0].options.length = 0;
+                    },
+                    'success': function (result) {
+                        $('#school_class_school_year').append(result);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock scriptcurrent %}

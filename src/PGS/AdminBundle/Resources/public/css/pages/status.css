@@ -1,0 +1,483 @@
+/***
+Status Nav
+***/
+.status {
+  margin-bottom: 20px;
+}
+
+.status .status {
+  margin-bottom: 0px;
+}
+
+.status .tab-content {
+  overflow: inherit;
+}
+
+.status .status-loading {
+  display: none;
+  font-size: 22px;
+  font-weight: 300;
+}
+
+/*Status Menu*/
+.status .status-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.status .status-nav li {
+  position: relative;
+}
+
+.status .status-nav li a {
+  color: #4d82a3;
+  display: block;
+  font-size: 15px;
+  border-left: none;
+  text-align: left !important;
+  padding: 8px 14px;
+  margin-bottom: 1px;
+  background: #f4f9fd;
+}
+
+.status .status-nav li.active-tab a,
+.status .status-nav li.active-tab:hover a {
+  color: #fff;
+  border-left: none;
+  background: #169ef4 !important;
+  text-decoration: none;
+}
+
+.status .status-nav li.active-tab b {
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 35px;
+  position: absolute;
+  display: inline-block;
+  background: url(../../img/status-nav-arrow-blue.png) no-repeat;
+}
+
+.status .status-nav li:hover a {
+  color: #4d82a3;
+  background: #eef4f7 !important;
+  text-decoration: none;
+}
+
+.status .status-nav li.compose-btn a {
+  color: #fff;
+  text-shadow: none;
+  text-align: center;
+  margin-bottom: 18px;
+  background: #35aa47;
+}
+
+.status .status-nav li.compose-btn i,
+.status .status-nav li.compose-btn:hover i {
+  top: 1px;
+  color: #fff;
+  font-size: 15px;
+  position: relative;
+  background: none !important;
+}
+
+.status .status-nav li.compose-btn a:hover {
+  background-color: #1d943b !important;
+}
+
+/*Status Content*/
+.status .status-header {
+  overflow: hidden;
+}
+
+.status .status-header h1 {
+  margin: 0;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.status .pagination-control {
+  text-align: right;
+}
+
+.status .pagination-control .pagination-info {
+  display: inline-block;
+  padding-right: 10px;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.status tr {
+  color: #777;
+  font-size: 13px;
+}
+
+.status tr label {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+.status tr.unread td{
+  font-weight: 600;
+}
+
+.status td i.icon-paper-clip {
+  top: 2px;
+  color: #d8e0e5;
+  font-size: 17px;
+  position: relative;
+}
+
+.status tr i.icon-star,
+.status tr i.icon-trash {
+  cursor: pointer;  
+}
+
+.status tr i.icon-star {
+  color: #eceef0;
+}
+
+.status tr i.icon-star:hover {
+  color: #fd7b12;
+}
+
+.status tr i.status-started {
+  color: #fd7b12;  
+}
+
+.status .table th, 
+.status .table td {
+  border: none;
+}
+
+.status .table th {  
+  background: #eef4f7;
+  border-bottom: solid 1px #ddd;
+}
+
+.status th.text-right {
+  text-align: right;
+}
+
+.status th label.status-select-all {
+  color: #828f97;
+  font-size: 13px;
+  padding: 1px 4px 0;
+}
+
+.status ul.status-nav {
+  margin-bottom: 0;
+}
+
+.status ul.status-nav li {
+  padding: 0;
+}
+
+.status ul.status-nav li span {
+  color: #828f97;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.status ul.status-nav i {
+  color: #fff;
+  padding: 1px 0;
+  font-size: 15px;
+  cursor: pointer; 
+  background: #d0dde4 !important;
+}
+
+.status ul.status-nav i:hover {
+  background: #169ef4 !important;
+}
+
+.status td.text-right {
+  width: 100px;
+  text-align: right;
+}
+
+.status td.status-small-cells {
+  width: 10px;
+}
+
+.status .table-hover tbody tr:hover>td, 
+.status .table-hover tbody tr:hover>th, 
+.status .table-striped tbody>tr:nth-child(odd)>td, 
+.status .table-striped tbody>tr:nth-child(odd)>th {
+  background: #f8fbfd;  
+  cursor: pointer;
+}
+
+.status .table-hover tbody tr:hover>td, 
+.status .table-hover tbody tr:hover>th {
+  background: #eef4f7;
+}
+
+/*status Drafts*/
+.status .status-drafts {
+  padding: 8px 0;
+  text-align: center;
+  border-top: solid 1px #eee;
+  border-bottom: solid 1px #eee;
+}
+
+/*status View*/
+.status-view-header {
+  margin-bottom: 20px;
+}
+
+.status-view-header h1 {
+  color: #666;
+  font-size: 22px;
+  line-height: 24px;
+  margin-bottom: 0 !important;
+}
+
+.status-view-header h1 a {
+  top: -2px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 7px;
+  line-height: 16px;
+  position: relative;
+  background: #b0bcc4;
+  display: inline-block;
+}
+
+.status-view-header h1 a:hover {
+  background: #aab5bc;
+  text-decoration: none;
+}
+
+.status-view-header i.icon-print {
+  color: #94a4ab;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-block;
+  padding: 6px 8px !important;
+  background: #edf1f4 !important;
+}
+
+.status-view-header i.icon-print:hover {
+  background: #e7ebef !important;
+}
+
+.status-view-info {
+  color: #666;  
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-top: solid 1px #eee;
+  border-bottom: solid 1px #eee;
+}
+
+.status-view-info strong {
+  color: #666;
+  margin: 0 10px 0 5px;
+}
+
+.status-view-info .status-info-btn {
+  text-align: right;
+}
+
+.status-view-info .status-info-btn ul {
+  text-align: left;
+}
+
+.status-view-info button {
+  top: 2px;
+  color: #94a4ab;
+  font-size: 13px;
+  margin-left: 4px; 
+  padding: 3px 10px;
+  position: relative;
+  background: #edf1f4;
+}
+
+.status-view-info button:hover {
+  color: #94a4ab;
+  background: #e7ebef;
+}
+
+.status-view {
+  color: #666;
+  padding: 15px 0 0;
+}
+
+.status-view a {
+  color: #169ce9;
+}
+
+.status-attached {
+  line-height: 16px;
+}
+
+.status-attached a {
+  margin: 0 2px;
+}
+
+.status-attached img {
+  height: auto;
+  max-width: 250px;
+  margin-bottom: 5px;
+}
+
+.status-attached span {
+  margin-right: 3px;
+}
+
+.status-attached strong {
+  color: #555;
+  display: block;
+  font-size: 13px;
+}
+
+.status-attached .margin-bottom-25 {
+  margin-bottom: 25px;
+}
+
+.status-attached .margin-bottom-15 {
+  margin-bottom: 15px;
+}
+
+
+/*status Compose*/
+.status-compose {
+  margin-top: 1px;
+  border: solid 1px #eee;
+}
+
+.status-compose-btn {
+  padding: 8px 4px;
+  background: #f0f6fa;
+}
+
+.status-compose-attachment {
+  padding: 8px 8px;
+}
+
+.status-compose-attachment .btn {
+  padding: 4px 10px;
+}
+
+.status-compose-btn button {
+  color: #fff;
+  font-size: 14px;
+  margin-left: 4px;
+  padding: 4px 10px;
+  background: #c0cfdd;
+}
+
+.status-compose-btn button:hover {
+  color: #fff;
+  background: #4d90fe;
+}
+
+.status-compose-btn button i {
+  margin-right: 3px;
+}
+
+.status-compose .status-form-group {
+  margin-bottom: 0;
+  position: relative;
+  border-bottom: solid 1px #eee;
+}
+
+.status-compose .controls {
+  margin-left: 85px;
+}
+
+.status-compose .status-form-group > label {
+  width: 80px;
+  float: left;
+  color: #979797;
+  text-align: right;
+}
+
+.status-compose .controls > input {
+  border: none !important;
+}
+.status-compose .controls-to {
+  padding-right: 55px;
+}
+
+.status-compose .controls-cc {
+  padding-right: 20px;
+}
+
+.status-compose .controls-bcc {
+  padding-right: 20px;
+}
+
+.status-compose .status-form-group a.close {
+  top: 13px;
+  right: 10px;
+  position: absolute;
+}
+
+.status-compose .mail-to .status-cc-bcc {
+  display: inline-block;
+  top: 7px;
+  right: 10px;
+  color: #979797;
+  font-size: 14px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.status-compose .mail-to .status-bcc {
+  margin-left: 5px;
+}
+
+.status-compose .mail-to status-cc:hover,
+.status-compose .mail-to status-bcc:hover {
+  color: #777;
+}
+
+.status-compose .wysihtml5 {
+  padding: 0px !important;
+  margin: 0px !important;
+  border: 0 !important;
+}
+
+.status-compose .wysihtml5-sandbox {
+  padding: 0px !important;
+  margin: 0px !important;
+  display: block !important;
+  border: 0 !important;
+  margin-top: 5px;
+  width: 100% !important;
+  border-left: none;
+  border-right: none;
+  border-color: #eee;
+}
+
+.status-compose .wysihtml5-toolbar {  
+  border: 0;
+  border-bottom: 1px solid #eee;
+}
+
+.status-compose .wysihtml5-toolbar > li {
+  height: 34px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+.status-compose .wysihtml5-toolbar > li > a,
+.status-compose .wysihtml5-toolbar > li > div > a {
+  background: #fff;
+}
+
+.status-compose .wysihtml5-toolbar .dropdown.open .dropdown-toggle,
+ul.wysihtml5-toolbar a.btn.wysihtml5-command-active-tab {
+  background: #eee !important;
+}
+
+@media (max-width: 480px) {
+
+  .status-compose .status-form-group > label {
+    margin-top: 7px;
+  }
+
+}

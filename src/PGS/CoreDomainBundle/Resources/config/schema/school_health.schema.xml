@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.SchoolHealth" namespace="PGS\CoreDomainBundle\Model\SchoolHealth">
+    <table name="school_health" phpName="SchoolHealth">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="application_id" type="INTEGER" required="false"/>
+        <column name="student_name" phpName="StudentName" type="VARCHAR" size="50" required="false"/>
+        <column name="emergency_physician_name"  type="VARCHAR" size="50" required="false"/>
+        <column name="emergency_relationship"  type="VARCHAR" size="10" required="false"/>
+        <column name="emergency_phone"  type="VARCHAR" size="20" required="false"/>
+        <column name="allergies" type="BOOLEAN" defaultValue="false" />
+        <column name="allergies_yes"  type="VARCHAR" size="100" required="false"/>
+        <column name="allergies_action"  type="VARCHAR" size="100" required="false"/>
+        <column name="condition_choice"  type="VARCHAR" size="100" required="false"/>
+        <column name="condition_exp"  type="VARCHAR" size="100" required="false"/>
+        <column name="student_psychological" type="BOOLEAN"  required="false"/>
+        <column name="psychological_exp"  type="VARCHAR" size="100" required="false"/>
+        <column name="student_aware" type="BOOLEAN"  required="false"/>
+        <column name="aware_exp"  type="VARCHAR" size="100" required="false"/>
+        <column name="student_ability" type="BOOLEAN"  required="false"/>
+        <column name="student_medicine"  type="VARCHAR" size="100" required="false"/>
+        <column name="medical_emergency_name"  type="VARCHAR" size="50" required="false"/>
+        <column name="medical_emergency_phone"  type="VARCHAR" size="20" required="false"/>
+        <column name="medical_emergency_address"  type="VARCHAR" size="100" required="false"/>
+        <column name="parent_statement_name"  type="VARCHAR" size="50" required="false"/>
+        <column name="student_statement_name"  type="VARCHAR" size="50" required="false"/>
+        <column name="parent_signature"  type="VARCHAR" size="50" required="true"/>
+        <column name="date_of_signature" type="DATE" required="true"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="application" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="application_id" foreign="id"/>
+        </foreign-key>
+    </table>
+</database>

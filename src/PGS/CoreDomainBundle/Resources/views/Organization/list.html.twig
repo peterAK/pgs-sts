@@ -1,0 +1,101 @@
+{% extends 'PGSCoreDomainBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="/">
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_core_organization_list') }}">
+            {{ model|title }}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    <div class="col-md-2">
+        {% if is_granted('ROLE_ADMIN') %}
+            <ul class="status-nav margin-bottom-10">
+                    <li class="compose-btn">
+                        <a href="{{ url('pgs_core_organization_new') }}" data-title="Compose" class="btn green">
+                            <i class="fa fa-edit"></i> Add {{ model }}
+                        </a>
+                    </li>
+                {% include('PGSCoreDomainBundle:Widget:status_selector.html.twig') %}
+            </ul>
+        {% endif %}
+        {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'organization.list'})) }}
+    </div>
+
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title }} : All</h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th><i class="fa fa-wrench"></i></th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for organization in organizations %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_core_organization_view', { 'id': organization.id }) }}">
+                                    {{ organization.id }}
+                                </a>
+                            </td>
+                            <td>{{ organization.name|title }}</td>
+                            {% if app.request.locale == 'en' %}
+                                <td>{{ organization.description}}</td>
+                            {% else %}
+                                <td>{{ organization.translation('id_ID').description}}</td>
+                            {% endif %}
+                            <td>{{ organization.status|capitalize }}</td>
+                            <td class="nowrap">
+                                <a href="{{ path('pgs_core_organization_move', { 'id': organization.id, 'direction': 'top' }) }}">
+                                    <i class="fa fa-angle-double-up"></i>
+                                </a>
+                                <a href="{{ path('pgs_core_organization_move', { 'id': organization.id, 'direction': 'up' }) }}">
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                                <a href="{{ path('pgs_core_organization_move', { 'id': organization.id, 'direction': 'down' }) }}">
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <a href="{{ path('pgs_core_organization_move', { 'id': organization.id, 'direction': 'bottom' }) }}">
+                                    <i class="fa fa-angle-double-down"></i>
+                                </a>
+                            </td>
+                            <td class="nowrap">
+                                <a href="{{ path('pgs_core_organization_edit', { 'id': organization.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="{{ path('pgs_core_organization_delete', { 'id': organization.id }) }}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock list %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+
+    {% set url = url('pgs_core_organization_by_status') %}
+    {% include("PGSAdminBundle:Widget:status.html.twig") with {'url': url('pgs_core_organization_by_status') } %}
+
+{% endblock scriptcurrent %}

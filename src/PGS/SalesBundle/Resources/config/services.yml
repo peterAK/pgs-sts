@@ -1,0 +1,4 @@
+services:
+#    pgs_sales.example:
+#        class: PGS\SalesBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

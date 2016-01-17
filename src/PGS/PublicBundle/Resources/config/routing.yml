@@ -1,0 +1,10 @@
+pgs_public_default_index:
+    pattern:  /
+    defaults: { _controller: PGSPublicBundle:Default:index }
+    requirements:
+        _method: GET
+
+pgs_public_registration_new:
+    pattern:  /new/{role}
+    defaults: { _controller: PGSPublicBundle:Registration:new, role: null }
+

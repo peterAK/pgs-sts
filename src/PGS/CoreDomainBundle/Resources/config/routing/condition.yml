@@ -1,0 +1,29 @@
+pgs_core_condition_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Condition:list }
+    requirements:
+        _method: GET
+
+pgs_core_condition_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Condition:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_condition_new:
+    pattern:  /new
+    defaults: { _controller: PGSCoreDomainBundle:Condition:new }
+    requirements:
+        _method: GET|POST
+
+pgs_core_condition_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Condition:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_condition_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Condition:delete, id: null }
+    requirements:
+        _method: GET|POST

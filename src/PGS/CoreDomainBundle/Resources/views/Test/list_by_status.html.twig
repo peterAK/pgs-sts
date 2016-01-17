@@ -1,0 +1,34 @@
+<table class="table table-striped table-bordered table-advance table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Author</th>
+        <th><i class="fa fa-cog"></i></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for test in tests %}
+        <tr>
+            <td>
+                <a href="{{ path('pgs_core_test_view', { 'id': test.id }) }}">
+                    {{ test.id }}
+                </a>
+            </td>
+            <td>{{ test.name|title }}</td>
+            <td>{{ test.description|capitalize }}</td>
+            <td>{{ test.status|capitalize }}</td>
+            <td>{{ test.user|capitalize }}</td>                            <td>
+                <a href="{{ path('pgs_core_test_edit', { 'id': test.id }) }}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a href="{{ path('pgs_core_test_delete', { 'id': test.id }) }}">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

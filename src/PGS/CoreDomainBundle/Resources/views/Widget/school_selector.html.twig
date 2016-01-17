@@ -1,0 +1,39 @@
+{% set schoolId = active_school_preference() is null ? null : active_school_preference().id %}
+{% set schools = list_schools() %}
+
+<ul class="list-unstyled list-inline pull-right" style="padding-top:12px;">
+    <!-- BEGIN SCHOOLS -->
+    <li class="selectors-block">
+        <a href="javascript:void(0);" class="current">
+            <i class="fa fa-building"></i>
+            {% if schoolId is defined and schoolId is not null %}
+                <span class="tooltips" data-placement="left" data-original-title="Active School">
+                    {{ active_school_preference().name|title }}
+                </span>
+            {% else %}
+                <span class="tooltips" data-placement="left" data-original-title="Active School">
+                    Select School
+                </span>
+            {% endif %}
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <div class="selectors-block-others-wrapper">
+            <div class="selectors-block-others">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ url('pgs_core_active_preference_reset', {'entity':'school'}) }}">Reset selection</a><br/>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PRINCIPAL') or is_granted('ROLE_SCHOOL') %}
+                    <a href="{{ url('pgs_core_schools_new') }}">Add new School</a><br/>
+                {% endif %}
+                {% for school in schools %}
+                    <a {% if school.id == schoolId %} class="active nowrap" {% endif %}
+                            href="{{- path('pgs_core_active_preference_school', {'schoolId': school.id}) -}}">
+                        {{ school.name|title }}<br/>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </li>
+    <!-- END LANGUAGE -->
+</ul>
+

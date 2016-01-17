@@ -1,0 +1,77 @@
+<script type="text/javascript">
+    var Status = function() {
+
+        var content = $('.status-content');
+        var loading = $('.status-loading');
+        var statusListing = '';
+
+        var loadStatus = function (el, name) {
+            var url = '{{ url }}/'+ name;
+            var title = $('.status-nav > li.' + name + ' a').attr('data-title');
+            statusListing = name;
+
+            loading.show();
+            content.html('');
+            toggleButton(el);
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: url,
+                dataType: "html",
+                success: function(res)
+                {
+                    toggleButton(el);
+
+                    $('.status-nav > li.active-tab').removeClass('active-tab');
+                    $('.status-nav > li.' + name).addClass('active-tab');
+                    $('.status-header > h1').text('{{ model|capitalize }}: ' + capitalizeFirstWord(title));
+
+                    loading.hide();
+                    content.html(res);
+                    App.fixContentHeight();
+                    App.initUniform();
+                },
+                error: function(xhr, ajaxOptions, thrownError)
+                {
+                    toggleButton(el);
+                },
+                async: false
+            });
+        }
+
+        var capitalizeFirstWord = function(text) {
+            return text.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        }
+
+        var toggleButton = function(el) {
+            if (typeof el == 'undefined') {
+                return;
+            }
+            if (el.attr("disabled")) {
+                el.attr("disabled", false);
+            } else {
+                el.attr("disabled", true);
+            }
+        }
+
+        return {
+            init : function() {
+                $('.status-nav > li.all> a').click(function () {
+                    loadStatus($(this), $(this).attr('data-title') ) ;
+                });
+
+                {% for status in accesses %}
+                    // handle status listing
+                    $('.status-nav > li.{{ status }}> a').click(function () {
+                        loadStatus($(this), $(this).attr('data-title') ) ;
+                    });
+                    {% endfor %}
+                }
+            };
+    }();
+
+    jQuery(document).ready(function() {
+        Status.init();
+    });
+</script>

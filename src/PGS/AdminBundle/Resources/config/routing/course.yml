@@ -1,0 +1,30 @@
+pgs_admin_course_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Course:list }
+    requirements:
+        _method: GET
+
+pgs_admin_course_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Course:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_course_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSAdminBundle:Course:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_course_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Course:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_course_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Course:delete, id: null }
+    requirements:
+        _method: GET|POST
+

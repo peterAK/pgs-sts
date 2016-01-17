@@ -1,0 +1,62 @@
+pgs_principal:
+    resource: "@PGSPrincipalBundle/Resources/config/routing.yml"
+    prefix:   /
+
+pgs_sales:
+    resource: "@PGSSalesBundle/Resources/config/routing.yml"
+    prefix:   /
+
+pgs_office:
+    resource: "@PGSOfficeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+homepage:
+    pattern:  /
+    defaults: { _controller: PGSPublicBundle:Default:index }
+    requirements:
+        _method: GET
+
+pgs_public:
+    resource: "@PGSPublicBundle/Resources/config/routing.yml"
+    prefix:   /
+
+pgs_admin:
+    resource: "@PGSAdminBundle/Resources/config/routing.yml"
+    prefix:   /admin
+
+pgs_core_domain:
+    resource: "@PGSCoreDomainBundle/Resources/config/routing.yml"
+    prefix:   /
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    prefix: /
+    options: { i18n: false }
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /secure_area/profile
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /secure_area/resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /
+
+admin:
+    resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
+    prefix: /admin
+
+_sonata_admin:
+    resource: .
+    type: sonata_admin
+    prefix: /super_admin
+
+genemu_upload:
+    resource: "@GenemuFormBundle/Resources/config/routing/upload.xml"

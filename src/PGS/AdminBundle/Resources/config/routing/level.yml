@@ -1,0 +1,29 @@
+pgs_admin_level_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Level:list }
+    requirements:
+        _method: GET
+
+pgs_admin_level_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Level:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_level_new:
+    pattern:  /new
+    defaults: { _controller: PGSAdminBundle:Level:new }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_level_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Level:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_level_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Level:delete, id: null }
+    requirements:
+        _method: GET|POST

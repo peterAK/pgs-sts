@@ -1,0 +1,128 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% form_theme form 'PGSCoreDomainBundle:Form:form.html.twig' %}
+
+{% block pagetitle %}New Avatar{% endblock pagetitle %}
+
+{% block stylepage %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/plugins/upload/style-upload.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/jquery.nailthumb.1.1.min.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock stylepage %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="{{ home }}">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_avatar_list') }}">
+                {{ model|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {% if avatar.id %}{% trans %}Edit{% endtrans %}{% else %}{% trans %}New{% endtrans %}{% endif %} {% trans %}Avatar{% endtrans %}
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {% if avatar.id %}{% trans %}Edit{% endtrans %}{% else %}{% trans %}New{% endtrans %}{% endif %} {% trans %}Avatar{% endtrans %}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" {{ form_enctype(form) }}>
+                        <div class="form-body">
+                            {#THUMBNAIL CONTAINER FOR UPLOADED IMAGE#}
+                            <div class="form-group" style="margin-bottom: 3px; {% if avatar.id == false %}display: none{% endif %}" id="thumb-container">
+                                <label style="opacity: 0"></label>
+                                <div id="thumb">
+                                    <img src="/uploads/avatar/{{ avatar.id }}/{{ avatar.picFile }}" class="thumbnail"/>
+                                </div>
+                            </div>
+                            <div class="form-group" id="uploaders">
+                                <label style="opacity: 0"></label>
+                                <div class="fileUpload btn btn-primary">
+                                    <span>Upload Avatar</span>
+                                    <input type="file" name="images" id="images" class="upload" accept="image/jpg,image/jpeg,image/png,image/gif,image/bmp,image/tiff" />
+                                    <button type="submit" id="btn" >Upload Files!</button><span style="margin-bottom: 5px"></span>
+                                </div>
+                                <!-- for showing upload progress -->
+                                <div id="response" style="display: inline-table;">
+                                    <img src="/uploads/ajax-loader.gif" id="loader" style="display: none">
+                                    <span id="uploadStatus" style="display: none">Uploading...</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="url" value="{{ path('pgs_core_avatar_upload') }}"/>
+
+                            {{ form_widget(form) }}
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">{% trans %}Save{% endtrans %}</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            {% if avatar.id %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'avatar.add'})) }}
+            {% else %}
+                {{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'avatar.edit'})) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock content %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+    {% javascripts '@PGSPublicBundle/Resources/public/plugins/upload/upload.js' filter='?yui_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@PGSPublicBundle/Resources/public/scripts/jquery.nailthumb.1.1.min.js' filter='?yui_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+
+{% endblock scriptcurrent %}

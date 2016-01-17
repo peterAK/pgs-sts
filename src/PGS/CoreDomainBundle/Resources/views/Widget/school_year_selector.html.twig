@@ -1,0 +1,34 @@
+{% set schoolYearId = active_school_year_preference() is null ? null : active_school_year_preference().id %}
+{% set schoolYears = list_school_years() %}
+
+<ul class="list-unstyled list-inline pull-right" style="padding-top:12px;">
+    <!-- BEGIN SCHOOLS -->
+    <li class="selectors-block">
+        <a href="javascript:void(0);" class="current">
+            <i class="fa fa-building"></i>
+            {% if schoolYearId is defined and schoolYearId is not null %}
+                <span class="tooltips" data-placement="left" data-original-title="Active School Year">
+                    {{ active_school_year_preference().academicYear.description|title }}
+                </span>
+            {% else %}
+                <span class="tooltips" data-placement="left" data-original-title="Active School Year">
+                    Select School Year
+                </span>
+            {% endif %}
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <div class="selectors-block-others-wrapper">
+            <div class="selectors-block-others">
+                <a href="{{ url('pgs_core_active_preference_reset', {'entity':'schoolYear'}) }}">Unset School Year</a><br/>
+                {% for schoolYear in schoolYears %}
+                    <a {% if schoolYear.id == schoolYearId %} class="active nowrap" {% endif %}
+                            href="{{- path('pgs_core_active_preference_school_year', {'schoolYearId': schoolYear.id}) -}}">
+                        {{ schoolYear.academicYear.yearStart }}-{{ schoolYear.academicYear.yearEnd }}<br/>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </li>
+    <!-- END LANGUAGE -->
+</ul>
+

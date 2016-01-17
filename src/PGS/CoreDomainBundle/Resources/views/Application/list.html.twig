@@ -1,0 +1,127 @@
+{#{% extends 'PGSCoreDomainBundle::list.html.twig' %}#}
+{% extends 'PGSAdminBundle::list.html.twig' %}
+
+{% block breadcrumb %}
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="/">
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_core_application_list') }}">
+            {{ model|title }}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block list %}
+    {#<div class="col-md-2">#}
+        {#{% if is_granted('ROLE_ADMIN') %}#}
+            {#<ul class="status-nav margin-bottom-10">#}
+                {#<li class="compose-btn">#}
+                    {#&#123;&#35;<a href="{{ url('pgs_core_organization_new') }}" data-title="Compose" class="btn green">&#35;&#125;#}
+                        {#&#123;&#35;<i class="fa fa-edit"></i> Add {{ model }}&#35;&#125;#}
+                    {#&#123;&#35;</a>&#35;&#125;#}
+                {#</li>#}
+                {#{% include('PGSCoreDomainBundle:Widget:status_selector.html.twig') %}#}
+            {#</ul>#}
+        {#{% endif %}#}
+        {#{{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'application.list'})) }}#}
+    {#</div>#}
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{{ model|title  }} : All</h1>
+        </div>
+        <div class="status-content">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in application %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_core_application_view', { 'id': application.id }) }}">
+                                    {{ application.id }}
+                                </a>
+                            </td>
+                            <td>{{ application.firstName}}&nbsp{{ application.lastName }}</td>
+                            {#<td>{{ application.status }}</td>#}
+                            <td>
+                                {% if application.status == 'accepted' %}
+                                    {{ application.status }}
+                                {% else %}
+                                    {#<select id="foo" name="application" class="form-control" autocomplete="off" >#}
+                                        {#{% for status in statuses %}#}
+                                            {#{% if status == application.status %}#}
+                                            {#<option value="{{ application.id }}" selected="selected">{{ application.status }} </option>#}
+
+                                             {#{% else %}#}
+                                                 {#<option value="{{ application.id }}" >{{ status }} </option>#}
+                                            {#{% endif %}#}
+                                        {#{% endfor %}#}
+                                    {#</select>#}
+                                    <ul class="list-unstyled list-inline">
+                                        <li class="selectors-block">
+                                            <a href="javascript:void(0);" class="current">
+                                                {{ application.status }}  <i class="fa fa-angle-down"></i>
+                                            </a>
+                                            <div class="selectors-block-others-wrapper">
+                                                <div class="selectors-block-others">
+                                                    {% for status in statuses %}
+                                                        {% if status != application.status %}
+                                                            <a href="{{ path('pgs_core_application_approve', { 'id': application.id, 'status':status }) }}">
+                                                                <i class="fa fa-circle"></i>{{ status }}</br>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if application.status != 'accepted' %}
+                                    <a href="{{ path('pgs_core_application_edit', { 'id': application.id }) }}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a class="confirm-delete" href="{{ path('pgs_core_application_delete', { 'id': application.id }) }}">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(application) }}
+            </div>
+        </div>
+    </div>
+{% endblock list %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+
+    {% set url = url('pgs_core_application_by_status') %}
+    {% include("PGSCoreDomainBundle:Widget:status.html.twig") with {'url': url('pgs_core_application_by_status') } %}
+
+    <script type="text/javascript">
+
+
+    </script>
+
+{% endblock scriptcurrent %}
+
+

@@ -1,0 +1,72 @@
+{% extends 'PGSAdminBundle::view.html.twig' %}
+
+{% block styleapplication %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleapplication %}
+
+{% block pagetitle %}{{ model|title }} View{% endblock pagetitle %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_school_class_student_view', { 'id': schoolClassStudent.id }) }}">
+                {{ model|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+                {#{{ schoolClassStudent.name|title }}#}
+        </li>
+        {% if is_expr_granted("hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')") %}
+            <li class="btn-group">
+                <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+                    <span>
+                        Actions
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                        <a href="{{ url('pgs_core_school_class_student_edit', { 'id': schoolClassStudent.id }) }}">
+                            Edit
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-8 profile-info">
+                    <h3 class="form-section">
+                        {#{% if app.request.locale == 'en' %}#}
+                            {#<td>{{ behavior.name}}</td>#}
+                        {#{% else %}#}
+                            {#<td>{{ behavior.translation('id_ID').name}}</td>#}
+                        {#{% endif %}#}
+                    </h3>
+                    <div class="well">
+                        {#<h4>{{ behavior.code }}</h4>#}
+                        {#<address>#}
+                            {#{{ behavior.description }}#}
+                        {#</address>#}
+                    </div>
+                </div>
+                <!--end col-md-8-->
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}

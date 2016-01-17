@@ -1,0 +1,28 @@
+<div class="help-tile double triple-down selected bg-blue">
+    <div class="corner">
+    </div>
+    <div class="check">
+    </div>
+    <div class="tile-body">
+        <h4>
+            {% if app.request.locale == 'en' %}
+                {{ page.title}}
+            {% else %}
+                {{ page.translation('id_ID').title}}
+            {% endif %}
+        </h4>
+        {{ page.content|raw }}
+    </div>
+
+    <div class="tile-object">
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="name">
+                <a href="{{ url('pgs_core_page_edit', { 'id': page.id}) }}">Edit Page</a>
+            </div>
+        {% endif %}
+
+        <div class="number">
+            <i class="fa fa-newspaper-o"></i>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+pgs_core_help_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Help:list }
+    requirements:
+        _method: GET
+
+pgs_core_help_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Help:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_help_new:
+    pattern:  /new/{key}
+    defaults: { _controller: PGSCoreDomainBundle:Help:new, key: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_help_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Help:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_help_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Help:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_help_fetch:
+    pattern:  /fetch/{key}/{role}
+    defaults: { _controller: PGSCoreDomainBundle:Help:fetch, key: null, role: null }
+    requirements:
+        _method: GET|POST

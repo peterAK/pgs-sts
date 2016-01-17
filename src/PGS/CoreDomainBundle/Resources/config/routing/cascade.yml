@@ -1,0 +1,12 @@
+pgs_core_cascade_state_by_country:
+    pattern: /update/State/Country/{id}
+    defaults: { _controller: PGSCoreDomainBundle:State:updateStateByCountry, id: null }
+
+pgs_core_cascade_school_year_by_school:
+    pattern:  /update/SchoolYear/School/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolYear:updateSchoolYearBySchool, id:null }
+
+pgs_core_cascade_school_class_student_by_school_class:
+    pattern:  /update/SchoolClassStudent/SchoolClass/{id}
+    defaults: { _controller: PGSCoreDomainBundle:SchoolClassStudent:updateSchoolClassStudentBySchoolClass, id:null }
+

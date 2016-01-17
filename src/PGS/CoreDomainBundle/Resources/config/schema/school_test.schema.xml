@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.SchoolTest" namespace="PGS\CoreDomainBundle\Model\SchoolTest">
+    <table name="school_test" phpName="SchoolTest">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="school_id" type="INTEGER" required="true"/>
+        <column name="test_id" type="INTEGER" required="true"/>
+        <column name="name" type="VARCHAR" size="50" required="true"/>
+        <column name="description" type="LONGVARCHAR" required="true"/>
+		<column name="status" type="ENUM" valueSet="new, active, inactive" defaultValue="new"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="school" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="school_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="test" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="test_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="sortable">
+            <parameter name="use_scope" value="true"/>
+            <parameter name="scope_column" value="school_id"/>
+        </behavior>
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="name, description" />
+        </behavior>
+    </table>
+</database>

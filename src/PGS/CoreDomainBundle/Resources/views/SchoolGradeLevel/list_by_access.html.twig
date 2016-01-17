@@ -1,0 +1,53 @@
+<table class="table table-striped table-bordered table-advance table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Key</th>
+        <th>Title</th>
+        <th>Access</th>
+        <th><i class="fa fa-wrench"></i></th>
+        <th><i class="fa fa-cog"></i></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for schoolGradeLevel in schoolGradeLevels %}
+        <tr>
+            <td>
+                <a href="{{ path('pgs_core_school_grade_level_view', { 'id': schoolGradeLevel.id }) }}">
+                    {{ schoolGradeLevel.id }}
+                </a>
+            </td>
+            <td><span class="level-{{ schoolGradeLevel.treeLevel }}">{{ schoolGradeLevel.key }}</span></td>
+            <td>{{ schoolGradeLevel.title }}</td>
+            <td>{{ schoolGradeLevel.access }}</td>
+            <td class="nowrap">
+                <a href="{{ path('pgs_core_school_grade_level_new', { 'parent': schoolGradeLevel.id }) }}">
+                    <i class="fa fa-plus-square-o"></i>
+                </a>
+                {% if not schoolGradeLevel.root %}
+                    <a href="{{ path('pgs_core_school_grade_level_move', { 'id': schoolGradeLevel.id, 'direction': 'top' }) }}">
+                        <i class="fa fa-angle-double-up"></i>
+                    </a>
+                    <a href="{{ path('pgs_core_school_grade_level_move', { 'id': schoolGradeLevel.id, 'direction': 'up' }) }}">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                    <a href="{{ path('pgs_core_school_grade_level_move', { 'id': schoolGradeLevel.id, 'direction': 'down' }) }}">
+                        <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <a href="{{ path('pgs_core_school_grade_level_move', { 'id': schoolGradeLevel.id, 'direction': 'bottom' }) }}">
+                        <i class="fa fa-angle-double-down"></i>
+                    </a>
+                {% endif %}
+            </td>
+            <td class="nowrap">
+                <a href="{{ path('pgs_core_school_grade_level_edit', { 'id': schoolGradeLevel.id }) }}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a class="confirm-delete" href="{{ path('pgs_core_school_grade_level_delete', { 'id': schoolGradeLevel.id }) }}">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

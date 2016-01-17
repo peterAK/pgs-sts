@@ -1,0 +1,65 @@
+{% extends 'PGSAdminBundle::view.html.twig' %}
+
+{#{% block breadcrumb %}#}
+    {#<ul class="page-breadcrumb breadcrumb">#}
+        {#<li>#}
+            {#<a href="/">#}
+                {#<i class="fa fa-home"></i>#}
+            {#</a>#}
+            {#<i class="fa fa-angle-right"></i>#}
+        {#</li>#}
+        {#<li>#}
+            {#<a href="{{ url('pgs_core_score_list') }}">#}
+                {#{{ model|title }}#}
+            {#</a>#}
+            {#<i class="fa fa-angle-right"></i>#}
+        {#</li>#}
+        {#<li>#}
+            {#{% if score.id %}Edit{% else %}New{% endif %} {{ model }}#}
+        {#</li>#}
+    {#</ul>#}
+{#{% endblock breadcrumb %}#}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class ="caption">
+                        {#{% if score.id %}Edit{% else %}New{% endif %} {{ model }}#}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form action="" method="post" >
+                        <div class="form-body">
+                            <label>Student</label></br>
+                            <select name="selectedStudent" class="col-md-8">
+                                {% for schoolClassStudent in schoolClassStudents %}
+                                    <option value="{{ schoolClassStudent.student.id }}">
+                                        {{ schoolClassStudent.student.firstName|capitalize }} {{ schoolClassStudent.student.lastName|capitalize }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn blue" type="submit">View Raport</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {#<div class="col-md-3">#}
+        {#{% if score.id %}#}
+        {#{{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'score.edit'})) }}#}
+        {#{% else %}#}
+        {#{{ render(controller('PGSCoreDomainBundle:Help:fetch', { 'key':'score.add'})) }}#}
+        {#{% endif %}#}
+        {#</div>#}
+    </div>
+    <div class="clearfix"></div>
+{% endblock tabcontent %}

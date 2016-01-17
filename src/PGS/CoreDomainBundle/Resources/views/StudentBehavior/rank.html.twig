@@ -1,0 +1,117 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb" style="margin-bottom: 0px;">
+        <li>
+            <a href="{{ home }}">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_student_behavior_rank') }}">
+                {% trans %}My Behavior Rank{% endtrans %}
+            </a>
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <div class="col-md-10">
+        <div class="status-header">
+            <h1 class="pull-left">{% trans %}My Behavior Rank{% endtrans %}</h1>
+        </div>
+    </div>
+        <div class="status-content" style="overflow-y: scroll; width: 100%; height: 450px;">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                <tr>
+                    <form action="" method="post">
+                        <td>{% trans %}Find By{% endtrans %}:</td>
+                        <td colspan="2">
+                            <select name="id" class="col-md-8">
+                                <option value="all" selected="selected">{% trans %}All Class{% endtrans %}</option>
+                                {% for schoolClassCourse in schoolClassCourses %}
+                                    {% if schoolClassId==schoolClassCourse.schoolClassId %}
+                                        <option value="{{ schoolClassCourse.id }}" selected="selected">{{ schoolClassCourse.course.name }}</option>
+                                    {% elseif schoolClassCourse.schoolClassId=='all' %}
+                                        <option value="all" selected="selected">{% trans %}All Class{% endtrans %}</option>
+                                    {% else %}
+                                        <option value="{{ schoolClassCourse.id }}">{{ schoolClassCourse.course.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><button class="btn blue" type="submit">{% trans %}Search{% endtrans %}</button></td>
+                    </form>
+                </tr>
+                <tr>
+                    <th style="text-align: center;">{% trans %}Rank{% endtrans %}</th>
+                    <th style="text-align: center;">{% trans %}Name{% endtrans %}</th>
+                    <th style="text-align: center;">{% trans %}Avatar{% endtrans %}</th>
+                    <th style="text-align: center;">{% trans %}Behavior Point{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set num=1 %}
+                {% set check = false %}
+                {% for rank in ranks %}
+                    {% if(rank.student.userId==myId) %}
+                        {% set check = true %}
+                        <tr style="color: red;">
+                            <td>{{ num }}</td>{% set num=num+1 %}
+                            <td>{{ rank.student.user.userProfile.firstName }}</td>
+                            <td>
+                                {% set ada=false %}
+                                {% for studentAvatar in studentAvatars %}
+                                    {% if studentAvatar.userId==rank.student.userId and studentAvatar.selected==true %}
+                                        <img width="50px" height="100px" style="margin-left: 25px;margin-right: 25px;" src="/uploads/avatar/{{ studentAvatar.avatarId }}/{{ studentAvatar.avatar.picFile }}">
+                                        {% set ada=true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if ada==false %}
+                                    <img width="50px" height="100px" style="margin-left: 25px;margin-right: 25px;" src="/uploads/default.jpg">
+                                {% endif %}
+                            </td>
+                            <td>{{ rank.getTotalPoint}}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{ num }}</td>{% set num=num+1 %}
+                            <td>{{ rank.student.user.userProfile.firstName }}</td>
+                            <td>-</td>
+                            <td>{{ rank.getTotalPoint}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if check == false %}
+                    <h5 style="color: red;">{% trans %}Keep Try{% endtrans %}</h5>
+                {% endif %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {#{{ knp_pagination_render(schoolClassCourseStudentBehaviors) }}#}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

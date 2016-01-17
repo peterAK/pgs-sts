@@ -1,0 +1,109 @@
+{% extends 'PGSCoreDomainBundle::view.html.twig' %}
+
+{% block styleapplication %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleapplication %}
+
+{% block pagetitle %}{{ model|title }} View{% endblock pagetitle %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="/">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_schools_list') }}">
+                {{ model|title }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_schools_view', { 'id': school.id }) }}">
+                {{ school.name|title }}
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {{ school.name|raw }}
+        </li>
+        {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
+            <li class="btn-group">
+                <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+                    <span>
+                        Actions
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                        <a href="{{ url('pgs_core_schools_edit', { 'id': school.id }) }}">
+                            Edit
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-8 profile-info">
+                    <h3 class="form-section">
+                        {{ school.name|raw}}
+                    </h3>
+
+                    <div class="well">
+                        <h1>Information
+                            {% include('PGSCoreDomainBundle:School:logo.html.twig') %}
+                        </h1>
+                        <p>{{ school.description }}</p>
+                        <p>{{ school.excerpt }}</p>
+
+                        <ul class="list-inline">
+                            <li>
+                                <i class="fa fa-map-marker"></i> {{ school.address ? school.address : 'N/A' }}
+                            </li>
+                            <li>
+                                {{ school.city? school.city : 'N/A' }}
+                            </li>
+                            <li>
+                                {{ school.state? school.state: 'N/A' }}
+                            </li>
+                            <li>
+                                {{ school.country? school.country: 'N/A' }}
+                            </li>
+                        </ul>
+
+                        <ul class="list-inline">
+                            <li>
+                                <i class="fa fa-phone"></i> {{ school.phone ? school.phone : 'N/A' }}
+                            </li>
+                            <li>
+                                <i class="fa fa-fax"></i> {{ school.fax ? school.fax : 'N/A' }}
+                            </li>
+                            <li>
+                                <i class="fa fa-mobile"></i> {{ school.mobile ? school.mobile : 'N/A' }}
+                            </li>
+                            <li>
+                                <i class="fa fa-envelope"></i> {{ school.email ? school.email : 'N/A' }}
+                            </li>
+                            <li>
+                                <i class="fa fa-globe"></i> {{ school.website ? school.website : 'N/A' }}
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+                <!--end col-md-8-->
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}

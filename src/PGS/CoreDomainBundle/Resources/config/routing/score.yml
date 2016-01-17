@@ -1,0 +1,42 @@
+pgs_core_score_list:
+    pattern:  /
+    defaults: { _controller: PGSCoreDomainBundle:Score:list }
+    requirements:
+        _method: GET
+
+pgs_core_score_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Score:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_core_score_new:
+    pattern:  /new
+    defaults: { _controller: PGSCoreDomainBundle:Score:new }
+    requirements:
+        _method: GET|POST
+
+pgs_core_score_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Score:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_score_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSCoreDomainBundle:Score:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_core_score_select_by_class:
+    pattern:  /select
+    defaults: { _controller: PGSCoreDomainBundle:Score:selectByClass }
+    requirements:
+        _method: GET|POST
+
+pgs_core_score_list_by_class:
+    pattern:  /listClass/{schoolClassCourseId}
+    defaults: { _controller: PGSCoreDomainBundle:Score:listByClass, schoolClassCourseId: null}
+    requirements:
+        _method: GET|POST
+

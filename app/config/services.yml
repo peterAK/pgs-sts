@@ -1,0 +1,3 @@
+services:
+    security_context:
+        alias: security.context

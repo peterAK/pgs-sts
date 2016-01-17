@@ -1,0 +1,29 @@
+pgs_admin_ethnicity_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Ethnicity:list }
+    requirements:
+        _method: GET
+
+pgs_admin_ethnicity_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Ethnicity:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_ethnicity_new:
+    pattern:  /new
+    defaults: { _controller: PGSAdminBundle:Ethnicity:new }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_ethnicity_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Ethnicity:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_ethnicity_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Ethnicity:delete, id: null }
+    requirements:
+        _method: GET|POST

@@ -1,0 +1,3 @@
+pgs_sales_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: PGSSalesBundle:Default:index }

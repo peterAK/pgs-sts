@@ -1,0 +1,112 @@
+{% set parentExtend='PGSStudentBundle::base.html.twig' %}
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set parentExtend='PGSAdminBundle::base.html.twig' %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set parentExtend='PGSPrincipalBundle::base.html.twig' %}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set parentExtend='PGSTeacherBundle::base.html.twig' %}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set parentExtend='PGSStudentBundle::base.html.twig' %}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set parentExtend='PGSParentBundle::base.html.twig' %}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends parentExtend %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb" style="margin-top: 0px; margin-bottom: 0px;">
+        <li>
+            <a href= "{{ home}}" >
+            <i class="fa fa-home"></i>
+        </a>
+        <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+        <a href="{{ url('pgs_core_announcement_list') }}">
+            {% trans %}Announcement{% endtrans %}
+        </a>
+    </li>
+</ul>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div>
+        <h1 style="margin-top: 0px;">{% trans %}Announcement{% endtrans %}</h1>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PRINCIPAL') or is_granted('ROLE_TEACHER') %}
+            <a href="{{ url('pgs_core_announcement_new') }}" data-title="Compose" class="btn green">
+                <i class="fa fa-edit"></i> {% trans %}Add{% endtrans %} {% trans %}Announcement{% endtrans %}
+            </a>
+        {% endif %}
+    </div>
+    <div class="col-md-10">
+        <div class="status-content pull-left" style="overflow-y: scroll; width: 100%; height:400px;">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>{% trans %}Subjct{% endtrans %}</th>
+                        <th>{% trans %}Announcement{% endtrans %}</th>
+                        <th>{% trans %}Attachment{% endtrans %}</th>
+                        <th>{% trans %}Published By{% endtrans %}</th>
+                        <th>{% trans %}Recipient{% endtrans %}</th>
+                        <th><i class="fa fa-cog"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for announcement in announcements %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('pgs_core_announcement_view', { 'id': announcement.id }) }}">
+                                    {{ announcement.id }}
+                                </a>
+                            </td>
+                            <td>{{ announcement.subject}}</td>
+                            <td>{{ announcement.description}}</td>
+                            <td>
+                                {% if announcement.file != null %}
+                                    <img width="50px" height="50px" src="/uploads/announcement/{{ announcement.id }}/{{ announcement.file }}">
+                                {% else %}
+                                    <img width="20px" height="20px" src="/uploads/blank-image.jpg">
+                                {% endif %}
+                            </td>
+                            <td>{{ announcement.user.userProfile.firstName }}</td>
+                            <td>
+                                {% if(announcement.recipient=='studentParent') %}
+                                    Student & Parent
+                                {% else %}
+                                    {{ announcement.recipient | capitalize }}
+                                {% endif %}
+                            </td>
+                            <td class="nowrap">
+                                {% if user.id==announcement.postedBy or is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('pgs_core_announcement_edit', { 'id': announcement.id }) }}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="{{ path('pgs_core_announcement_delete', { 'id': announcement.id }) }}">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                {% else %}
+                                    <p style="text-align: center;">-</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(announcements) }}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scriptcurrent %}
+    {{ parent() }}
+
+{% endblock scriptcurrent %}

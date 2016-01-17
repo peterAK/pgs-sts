@@ -1,0 +1,53 @@
+<!-- BEGIN TOP HEADER -->
+<div class="header navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand logo-v1" href="{{ url('homepage') }}">
+                <img id="logoimg" alt="" src="/images/logo-small-gray.png">
+            </a>
+
+            <div class="navbar-collapse collapse pull-right">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{{ url('homepage') }}">{{ 'home'|trans|title }}</a>
+                    </li>
+
+                    <li>
+                        <a href="">{{ 'contact'|trans|title }}</a>
+                    </li>
+
+                    <li>
+                        {% if app.request.locale == 'en' %}
+                            <a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale' : 'id'})) }}">{{ 'id'|language('id') }}</a>
+                        {% else %}
+                            <a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale' : 'en'})) }}">{{ 'en'|language('en') }}</a>
+                        {% endif %}
+                    </li>
+
+
+
+                    <li>
+                        <a href="{{ url('fos_user_security_login') }}">{{ 'login'|trans|title }}</a>
+                    </li>
+
+                    <li class="menu-search">
+                        <span class="sep"></span>
+                        <i class="fa fa-search search-btn"></i>
+
+                        <div class="search-box">
+                            <form action="#">
+                                <div class="input-group input-large">
+                                    <input type="text" placeholder="Search" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn theme-btn" type="submit">Go</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END TOP HEADER -->

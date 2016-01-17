@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Student" namespace="PGS\CoreDomainBundle\Model\Student">
+    <table name="student" phpName="Student">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="user_id" type="INTEGER" required="false"/>
+        <column name="application_id" type="INTEGER" required="false"/>
+        <column name="health_id" type="INTEGER" required="false"/>
+        <column name="student_nation_no" type="VARCHAR" size="20" required="true"/>
+        <column name="student_no" type="VARCHAR" size="20" required="true"/>
+        <column name="first_name" phpName="FirstName" type="VARCHAR" size="30" required="true"/>
+        <column name="middle_name" phpName="MiddleName" type="VARCHAR" size="30" required="false"/>
+        <column name="last_name" phpName="LastName" type="VARCHAR" size="30" required="false"/>
+        <column name="nick_name" phpName="NickName" type="VARCHAR" size="30" required="false"/>
+        <column name="gender" type="ENUM" valueSet="unknown, male, female" defaultValue="unknown"/>
+        <column name="place_of_birth" type="VARCHAR" size="50" />
+        <column name="date_of_birth" type="DATE" />
+        <column name="religion" type="ENUM" valueSet="other, islam, christian, catholic, hindu, buddhist, confucian" defaultValue="other"/>
+        <column name="picture" type="VARCHAR" size="100" required="false"/>
+        <column name="birth_certificate" type="VARCHAR" size="100" required="false"/>
+        <column name="family_card" type="VARCHAR" size="100" required="false"/>
+        <column name="graduation_certificate" type="VARCHAR" size="100" required="false"/>
+        <column name="authorization_code" type="LONGVARCHAR" required="true" />
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="application" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="application_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="school_health" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="health_id" foreign="id"/>
+        </foreign-key>
+    </table>
+</database>

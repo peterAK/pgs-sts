@@ -1,0 +1,60 @@
+{% set home= url('pgs_student_dashboard') %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set home=url('pgs_admin_dashboard') %}
+{% elseif is_granted('ROLE_PRINCIPAL')%}
+    {% set home= url('pgs_principal_dashboard') %}
+{% elseif is_granted('ROLE_TEACHER')%}
+    {% set home= url('pgs_teacher_dashboard') %}
+{% elseif is_granted('ROLE_STUDENT')%}
+    {% set home= url('pgs_student_dashboard') %}
+{% elseif is_granted('ROLE_PARENT')%}
+    {% set home= url('pgs_parent_dashboard') %}
+{% endif%}
+
+{% extends 'PGSCoreDomainBundle::view.html.twig' %}
+
+{% block pagetitle %} Add Icon{% endblock pagetitle %}
+
+{% block styleapplication %}
+    {{  parent() }}
+    {% stylesheets '@PGSPublicBundle/Resources/public/css/pages/view.css' filter='?yui_css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock styleapplication %}
+
+{% block breadcrumb %}
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="{{ home }}">
+                <i class="fa fa-home"></i>
+            </a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{{ url('pgs_core_icon_list') }}">
+                {{ model|title }}
+            </a>
+        </li>
+    </ul>
+{% endblock breadcrumb %}
+
+{% block tabcontent %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-8 profile-info">
+                    <h3 class="form-section">
+                        Add Icon
+                    </h3>
+                    <div class="well">
+                        <h4 class="warning">Action Not Available</h4>
+                        <div class="alert alert-danger">
+                            New Icon must be added along with a new principal user
+                        </div>
+                    </div>
+                </div>
+                <!--end col-md-8-->
+            </div>
+        </div>
+    </div>
+{% endblock tabcontent %}

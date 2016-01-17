@@ -1,0 +1,26 @@
+parameters:
+
+services:
+    pgs.core.twig.time_ago:
+        class: "PGS\CoreDomainBundle\Twig\TimeAgoExtension"
+        arguments: [@translator]
+        tags:
+        - { name: twig.extension }
+
+    pgs.core.extension.active_preference:
+        class: "PGS\CoreDomainBundle\Twig\ActivePreferenceExtension"
+        arguments:
+            - @pgs.core.container.old_active_preference
+        tags:
+            - { name: twig.extension }
+
+#    pgs.core.form.flow.application:
+#        class: "PGS\CoreDomainBundle\Form\ApplicationFlow"
+#        parent: craue.form.flow
+#        scope: request
+#
+#
+#    pgs.core.form.flow.registration:
+#        class: "PGS\CoreDomainBundle\Form\RegistrationFlow"
+#        parent: craue.form.flow
+#        scope: request

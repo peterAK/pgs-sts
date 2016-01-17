@@ -1,0 +1,35 @@
+pgs_admin_term_list:
+    pattern:  /
+    defaults: { _controller: PGSAdminBundle:Term:list }
+    requirements:
+        _method: GET
+
+pgs_admin_term_view:
+    pattern:  /view/{id}
+    defaults: { _controller: PGSAdminBundle:Term:view, id: null }
+    requirements:
+        _method: GET
+
+pgs_admin_term_new:
+    pattern:  /new/{parent}
+    defaults: { _controller: PGSAdminBundle:Term:new, parent: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_term_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: PGSAdminBundle:Term:edit, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_term_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: PGSAdminBundle:Term:delete, id: null }
+    requirements:
+        _method: GET|POST
+
+pgs_admin_term_move:
+    pattern:  /move/{id}/{direction}
+    defaults: { _controller: PGSAdminBundle:Term:move, id:null, direction: null }
+    requirements:
+        _method: GET|POST

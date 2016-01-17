@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.SchoolEmployment" namespace="PGS\CoreDomainBundle\Model\SchoolEmployment">
+    <table name="school_employment" phpName="SchoolEmployment">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="employee_id" type="INTEGER" required="true"/>
+        <column name="school_id" type="INTEGER" required="false"/>
+        <column name="school_year_id" type="INTEGER" required="false"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="employee" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="employee_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="school" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="school_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="school_year" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="school_year_id" foreign="id"/>
+        </foreign-key>
+    </table>
+</database>

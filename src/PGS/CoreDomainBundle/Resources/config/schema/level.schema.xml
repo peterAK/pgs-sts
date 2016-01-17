@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Level" namespace="PGS\CoreDomainBundle\Model\Level">
+    <table name="level" phpName="Level">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="code" type="VARCHAR" size="5" required="true" />
+        <column name="name" type="VARCHAR" size="100" required="true" />
+        <column name="description" type="LONGVARCHAR" required="false" />
+
+        <!-- Behavior-->
+        <behavior name="sortable" />
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="code, name, description"/>
+        </behavior>
+    </table>
+</database>
