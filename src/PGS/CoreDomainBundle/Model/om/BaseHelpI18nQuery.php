@@ -24,15 +24,11 @@ use PGS\CoreDomainBundle\Model\HelpI18nQuery;
  * @method HelpI18nQuery orderByLocale($order = Criteria::ASC) Order by the locale column
  * @method HelpI18nQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method HelpI18nQuery orderByContent($order = Criteria::ASC) Order by the content column
- * @method HelpI18nQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method HelpI18nQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method HelpI18nQuery groupById() Group by the id column
  * @method HelpI18nQuery groupByLocale() Group by the locale column
  * @method HelpI18nQuery groupByTitle() Group by the title column
  * @method HelpI18nQuery groupByContent() Group by the content column
- * @method HelpI18nQuery groupByCreatedAt() Group by the created_at column
- * @method HelpI18nQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method HelpI18nQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method HelpI18nQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,15 +45,11 @@ use PGS\CoreDomainBundle\Model\HelpI18nQuery;
  * @method HelpI18n findOneByLocale(string $locale) Return the first HelpI18n filtered by the locale column
  * @method HelpI18n findOneByTitle(string $title) Return the first HelpI18n filtered by the title column
  * @method HelpI18n findOneByContent(string $content) Return the first HelpI18n filtered by the content column
- * @method HelpI18n findOneByCreatedAt(string $created_at) Return the first HelpI18n filtered by the created_at column
- * @method HelpI18n findOneByUpdatedAt(string $updated_at) Return the first HelpI18n filtered by the updated_at column
  *
  * @method array findById(int $id) Return HelpI18n objects filtered by the id column
  * @method array findByLocale(string $locale) Return HelpI18n objects filtered by the locale column
  * @method array findByTitle(string $title) Return HelpI18n objects filtered by the title column
  * @method array findByContent(string $content) Return HelpI18n objects filtered by the content column
- * @method array findByCreatedAt(string $created_at) Return HelpI18n objects filtered by the created_at column
- * @method array findByUpdatedAt(string $updated_at) Return HelpI18n objects filtered by the updated_at column
  */
 abstract class BaseHelpI18nQuery extends ModelCriteria
 {
@@ -151,7 +143,7 @@ abstract class BaseHelpI18nQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `locale`, `title`, `content`, `created_at`, `updated_at` FROM `help_i18n` WHERE `id` = :p0 AND `locale` = :p1';
+        $sql = 'SELECT `id`, `locale`, `title`, `content` FROM `help_i18n` WHERE `id` = :p0 AND `locale` = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -385,92 +377,6 @@ abstract class BaseHelpI18nQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return HelpI18nQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(HelpI18nPeer::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(HelpI18nPeer::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(HelpI18nPeer::CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return HelpI18nQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
-    {
-        if (is_array($updatedAt)) {
-            $useMinMax = false;
-            if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(HelpI18nPeer::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(HelpI18nPeer::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(HelpI18nPeer::UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
      * Filter the query by a related Help object
      *
      * @param   Help|PropelObjectCollection $help The related object(s) to use as filter
@@ -634,71 +540,6 @@ abstract class BaseHelpI18nQuery extends ModelCriteria
         return $this->postUpdate($affectedRows, $con);
     }
 
-    // timestampable behavior
-
-    /**
-     * Filter by the latest updated
-     *
-     * @param      int $nbDays Maximum age of the latest update in days
-     *
-     * @return     HelpI18nQuery The current query, for fluid interface
-     */
-    public function recentlyUpdated($nbDays = 7)
-    {
-        return $this->addUsingAlias(HelpI18nPeer::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by update date desc
-     *
-     * @return     HelpI18nQuery The current query, for fluid interface
-     */
-    public function lastUpdatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(HelpI18nPeer::UPDATED_AT);
-    }
-
-    /**
-     * Order by update date asc
-     *
-     * @return     HelpI18nQuery The current query, for fluid interface
-     */
-    public function firstUpdatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(HelpI18nPeer::UPDATED_AT);
-    }
-
-    /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     HelpI18nQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(HelpI18nPeer::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by create date desc
-     *
-     * @return     HelpI18nQuery The current query, for fluid interface
-     */
-    public function lastCreatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(HelpI18nPeer::CREATED_AT);
-    }
-
-    /**
-     * Order by create date asc
-     *
-     * @return     HelpI18nQuery The current query, for fluid interface
-     */
-    public function firstCreatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(HelpI18nPeer::CREATED_AT);
-    }
     // extend behavior
     public function setFormatter($formatter)
     {

@@ -15,15 +15,13 @@ use \PropelPDO;
 use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
 use Glorpen\Propel\PropelBundle\Events\QueryEvent;
 use PGS\CoreDomainBundle\Model\Country;
+use PGS\CoreDomainBundle\Model\Region;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\User;
-use PGS\CoreDomainBundle\Model\UserProfile;
-use PGS\CoreDomainBundle\Model\Employee\Employee;
 use PGS\CoreDomainBundle\Model\Organization\Organization;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationI18n;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationPeer;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationQuery;
-use PGS\CoreDomainBundle\Model\School\School;
 
 /**
  * @method OrganizationQuery orderById($order = Criteria::ASC) Order by the id column
@@ -31,13 +29,14 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method OrganizationQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method OrganizationQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method OrganizationQuery orderByGovermentLicense($order = Criteria::ASC) Order by the goverment_license column
- * @method OrganizationQuery orderByEstablishAt($order = Criteria::ASC) Order by the establish_at column
+ * @method OrganizationQuery orderByJoinAt($order = Criteria::ASC) Order by the join_at column
  * @method OrganizationQuery orderByAddress1($order = Criteria::ASC) Order by the address1 column
  * @method OrganizationQuery orderByAddress2($order = Criteria::ASC) Order by the address2 column
  * @method OrganizationQuery orderByCity($order = Criteria::ASC) Order by the city column
- * @method OrganizationQuery orderByStateId($order = Criteria::ASC) Order by the state_id column
  * @method OrganizationQuery orderByZipcode($order = Criteria::ASC) Order by the zipcode column
  * @method OrganizationQuery orderByCountryId($order = Criteria::ASC) Order by the country_id column
+ * @method OrganizationQuery orderByStateId($order = Criteria::ASC) Order by the state_id column
+ * @method OrganizationQuery orderByRegionId($order = Criteria::ASC) Order by the region_id column
  * @method OrganizationQuery orderByPhone($order = Criteria::ASC) Order by the phone column
  * @method OrganizationQuery orderByFax($order = Criteria::ASC) Order by the fax column
  * @method OrganizationQuery orderByMobile($order = Criteria::ASC) Order by the mobile column
@@ -45,6 +44,7 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method OrganizationQuery orderByWebsite($order = Criteria::ASC) Order by the website column
  * @method OrganizationQuery orderByLogo($order = Criteria::ASC) Order by the logo column
  * @method OrganizationQuery orderByStatus($order = Criteria::ASC) Order by the status column
+ * @method OrganizationQuery orderByIsPrincipal($order = Criteria::ASC) Order by the is_principal column
  * @method OrganizationQuery orderByConfirmation($order = Criteria::ASC) Order by the confirmation column
  * @method OrganizationQuery orderBySortableRank($order = Criteria::ASC) Order by the sortable_rank column
  * @method OrganizationQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
@@ -55,13 +55,14 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method OrganizationQuery groupByName() Group by the name column
  * @method OrganizationQuery groupByUrl() Group by the url column
  * @method OrganizationQuery groupByGovermentLicense() Group by the goverment_license column
- * @method OrganizationQuery groupByEstablishAt() Group by the establish_at column
+ * @method OrganizationQuery groupByJoinAt() Group by the join_at column
  * @method OrganizationQuery groupByAddress1() Group by the address1 column
  * @method OrganizationQuery groupByAddress2() Group by the address2 column
  * @method OrganizationQuery groupByCity() Group by the city column
- * @method OrganizationQuery groupByStateId() Group by the state_id column
  * @method OrganizationQuery groupByZipcode() Group by the zipcode column
  * @method OrganizationQuery groupByCountryId() Group by the country_id column
+ * @method OrganizationQuery groupByStateId() Group by the state_id column
+ * @method OrganizationQuery groupByRegionId() Group by the region_id column
  * @method OrganizationQuery groupByPhone() Group by the phone column
  * @method OrganizationQuery groupByFax() Group by the fax column
  * @method OrganizationQuery groupByMobile() Group by the mobile column
@@ -69,6 +70,7 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method OrganizationQuery groupByWebsite() Group by the website column
  * @method OrganizationQuery groupByLogo() Group by the logo column
  * @method OrganizationQuery groupByStatus() Group by the status column
+ * @method OrganizationQuery groupByIsPrincipal() Group by the is_principal column
  * @method OrganizationQuery groupByConfirmation() Group by the confirmation column
  * @method OrganizationQuery groupBySortableRank() Group by the sortable_rank column
  * @method OrganizationQuery groupByCreatedAt() Group by the created_at column
@@ -90,17 +92,9 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method OrganizationQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method OrganizationQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
  *
- * @method OrganizationQuery leftJoinUserProfile($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserProfile relation
- * @method OrganizationQuery rightJoinUserProfile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserProfile relation
- * @method OrganizationQuery innerJoinUserProfile($relationAlias = null) Adds a INNER JOIN clause to the query using the UserProfile relation
- *
- * @method OrganizationQuery leftJoinEmployee($relationAlias = null) Adds a LEFT JOIN clause to the query using the Employee relation
- * @method OrganizationQuery rightJoinEmployee($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Employee relation
- * @method OrganizationQuery innerJoinEmployee($relationAlias = null) Adds a INNER JOIN clause to the query using the Employee relation
- *
- * @method OrganizationQuery leftJoinSchool($relationAlias = null) Adds a LEFT JOIN clause to the query using the School relation
- * @method OrganizationQuery rightJoinSchool($relationAlias = null) Adds a RIGHT JOIN clause to the query using the School relation
- * @method OrganizationQuery innerJoinSchool($relationAlias = null) Adds a INNER JOIN clause to the query using the School relation
+ * @method OrganizationQuery leftJoinRegion($relationAlias = null) Adds a LEFT JOIN clause to the query using the Region relation
+ * @method OrganizationQuery rightJoinRegion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Region relation
+ * @method OrganizationQuery innerJoinRegion($relationAlias = null) Adds a INNER JOIN clause to the query using the Region relation
  *
  * @method OrganizationQuery leftJoinOrganizationI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the OrganizationI18n relation
  * @method OrganizationQuery rightJoinOrganizationI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the OrganizationI18n relation
@@ -113,13 +107,14 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method Organization findOneByName(string $name) Return the first Organization filtered by the name column
  * @method Organization findOneByUrl(string $url) Return the first Organization filtered by the url column
  * @method Organization findOneByGovermentLicense(string $goverment_license) Return the first Organization filtered by the goverment_license column
- * @method Organization findOneByEstablishAt(string $establish_at) Return the first Organization filtered by the establish_at column
+ * @method Organization findOneByJoinAt(string $join_at) Return the first Organization filtered by the join_at column
  * @method Organization findOneByAddress1(string $address1) Return the first Organization filtered by the address1 column
  * @method Organization findOneByAddress2(string $address2) Return the first Organization filtered by the address2 column
  * @method Organization findOneByCity(string $city) Return the first Organization filtered by the city column
- * @method Organization findOneByStateId(int $state_id) Return the first Organization filtered by the state_id column
  * @method Organization findOneByZipcode(string $zipcode) Return the first Organization filtered by the zipcode column
  * @method Organization findOneByCountryId(int $country_id) Return the first Organization filtered by the country_id column
+ * @method Organization findOneByStateId(int $state_id) Return the first Organization filtered by the state_id column
+ * @method Organization findOneByRegionId(int $region_id) Return the first Organization filtered by the region_id column
  * @method Organization findOneByPhone(string $phone) Return the first Organization filtered by the phone column
  * @method Organization findOneByFax(string $fax) Return the first Organization filtered by the fax column
  * @method Organization findOneByMobile(string $mobile) Return the first Organization filtered by the mobile column
@@ -127,6 +122,7 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method Organization findOneByWebsite(string $website) Return the first Organization filtered by the website column
  * @method Organization findOneByLogo(string $logo) Return the first Organization filtered by the logo column
  * @method Organization findOneByStatus(int $status) Return the first Organization filtered by the status column
+ * @method Organization findOneByIsPrincipal(boolean $is_principal) Return the first Organization filtered by the is_principal column
  * @method Organization findOneByConfirmation(int $confirmation) Return the first Organization filtered by the confirmation column
  * @method Organization findOneBySortableRank(int $sortable_rank) Return the first Organization filtered by the sortable_rank column
  * @method Organization findOneByCreatedAt(string $created_at) Return the first Organization filtered by the created_at column
@@ -137,13 +133,14 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method array findByName(string $name) Return Organization objects filtered by the name column
  * @method array findByUrl(string $url) Return Organization objects filtered by the url column
  * @method array findByGovermentLicense(string $goverment_license) Return Organization objects filtered by the goverment_license column
- * @method array findByEstablishAt(string $establish_at) Return Organization objects filtered by the establish_at column
+ * @method array findByJoinAt(string $join_at) Return Organization objects filtered by the join_at column
  * @method array findByAddress1(string $address1) Return Organization objects filtered by the address1 column
  * @method array findByAddress2(string $address2) Return Organization objects filtered by the address2 column
  * @method array findByCity(string $city) Return Organization objects filtered by the city column
- * @method array findByStateId(int $state_id) Return Organization objects filtered by the state_id column
  * @method array findByZipcode(string $zipcode) Return Organization objects filtered by the zipcode column
  * @method array findByCountryId(int $country_id) Return Organization objects filtered by the country_id column
+ * @method array findByStateId(int $state_id) Return Organization objects filtered by the state_id column
+ * @method array findByRegionId(int $region_id) Return Organization objects filtered by the region_id column
  * @method array findByPhone(string $phone) Return Organization objects filtered by the phone column
  * @method array findByFax(string $fax) Return Organization objects filtered by the fax column
  * @method array findByMobile(string $mobile) Return Organization objects filtered by the mobile column
@@ -151,6 +148,7 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method array findByWebsite(string $website) Return Organization objects filtered by the website column
  * @method array findByLogo(string $logo) Return Organization objects filtered by the logo column
  * @method array findByStatus(int $status) Return Organization objects filtered by the status column
+ * @method array findByIsPrincipal(boolean $is_principal) Return Organization objects filtered by the is_principal column
  * @method array findByConfirmation(int $confirmation) Return Organization objects filtered by the confirmation column
  * @method array findBySortableRank(int $sortable_rank) Return Organization objects filtered by the sortable_rank column
  * @method array findByCreatedAt(string $created_at) Return Organization objects filtered by the created_at column
@@ -264,7 +262,7 @@ abstract class BaseOrganizationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `user_id`, `name`, `url`, `goverment_license`, `establish_at`, `address1`, `address2`, `city`, `state_id`, `zipcode`, `country_id`, `phone`, `fax`, `mobile`, `email`, `website`, `logo`, `status`, `confirmation`, `sortable_rank`, `created_at`, `updated_at` FROM `organization` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `user_id`, `name`, `url`, `goverment_license`, `join_at`, `address1`, `address2`, `city`, `zipcode`, `country_id`, `state_id`, `region_id`, `phone`, `fax`, `mobile`, `email`, `website`, `logo`, `status`, `is_principal`, `confirmation`, `sortable_rank`, `created_at`, `updated_at` FROM `organization` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -528,16 +526,16 @@ abstract class BaseOrganizationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the establish_at column
+     * Filter the query on the join_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByEstablishAt('2011-03-14'); // WHERE establish_at = '2011-03-14'
-     * $query->filterByEstablishAt('now'); // WHERE establish_at = '2011-03-14'
-     * $query->filterByEstablishAt(array('max' => 'yesterday')); // WHERE establish_at < '2011-03-13'
+     * $query->filterByJoinAt('2011-03-14'); // WHERE join_at = '2011-03-14'
+     * $query->filterByJoinAt('now'); // WHERE join_at = '2011-03-14'
+     * $query->filterByJoinAt(array('max' => 'yesterday')); // WHERE join_at < '2011-03-13'
      * </code>
      *
-     * @param     mixed $establishAt The value to use as filter.
+     * @param     mixed $joinAt The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -547,16 +545,16 @@ abstract class BaseOrganizationQuery extends ModelCriteria
      *
      * @return OrganizationQuery The current query, for fluid interface
      */
-    public function filterByEstablishAt($establishAt = null, $comparison = null)
+    public function filterByJoinAt($joinAt = null, $comparison = null)
     {
-        if (is_array($establishAt)) {
+        if (is_array($joinAt)) {
             $useMinMax = false;
-            if (isset($establishAt['min'])) {
-                $this->addUsingAlias(OrganizationPeer::ESTABLISH_AT, $establishAt['min'], Criteria::GREATER_EQUAL);
+            if (isset($joinAt['min'])) {
+                $this->addUsingAlias(OrganizationPeer::JOIN_AT, $joinAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($establishAt['max'])) {
-                $this->addUsingAlias(OrganizationPeer::ESTABLISH_AT, $establishAt['max'], Criteria::LESS_EQUAL);
+            if (isset($joinAt['max'])) {
+                $this->addUsingAlias(OrganizationPeer::JOIN_AT, $joinAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -567,7 +565,7 @@ abstract class BaseOrganizationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(OrganizationPeer::ESTABLISH_AT, $establishAt, $comparison);
+        return $this->addUsingAlias(OrganizationPeer::JOIN_AT, $joinAt, $comparison);
     }
 
     /**
@@ -658,50 +656,6 @@ abstract class BaseOrganizationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the state_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByStateId(1234); // WHERE state_id = 1234
-     * $query->filterByStateId(array(12, 34)); // WHERE state_id IN (12, 34)
-     * $query->filterByStateId(array('min' => 12)); // WHERE state_id >= 12
-     * $query->filterByStateId(array('max' => 12)); // WHERE state_id <= 12
-     * </code>
-     *
-     * @see       filterByState()
-     *
-     * @param     mixed $stateId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return OrganizationQuery The current query, for fluid interface
-     */
-    public function filterByStateId($stateId = null, $comparison = null)
-    {
-        if (is_array($stateId)) {
-            $useMinMax = false;
-            if (isset($stateId['min'])) {
-                $this->addUsingAlias(OrganizationPeer::STATE_ID, $stateId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($stateId['max'])) {
-                $this->addUsingAlias(OrganizationPeer::STATE_ID, $stateId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(OrganizationPeer::STATE_ID, $stateId, $comparison);
-    }
-
-    /**
      * Filter the query on the zipcode column
      *
      * Example usage:
@@ -772,6 +726,94 @@ abstract class BaseOrganizationQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(OrganizationPeer::COUNTRY_ID, $countryId, $comparison);
+    }
+
+    /**
+     * Filter the query on the state_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStateId(1234); // WHERE state_id = 1234
+     * $query->filterByStateId(array(12, 34)); // WHERE state_id IN (12, 34)
+     * $query->filterByStateId(array('min' => 12)); // WHERE state_id >= 12
+     * $query->filterByStateId(array('max' => 12)); // WHERE state_id <= 12
+     * </code>
+     *
+     * @see       filterByState()
+     *
+     * @param     mixed $stateId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return OrganizationQuery The current query, for fluid interface
+     */
+    public function filterByStateId($stateId = null, $comparison = null)
+    {
+        if (is_array($stateId)) {
+            $useMinMax = false;
+            if (isset($stateId['min'])) {
+                $this->addUsingAlias(OrganizationPeer::STATE_ID, $stateId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($stateId['max'])) {
+                $this->addUsingAlias(OrganizationPeer::STATE_ID, $stateId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(OrganizationPeer::STATE_ID, $stateId, $comparison);
+    }
+
+    /**
+     * Filter the query on the region_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRegionId(1234); // WHERE region_id = 1234
+     * $query->filterByRegionId(array(12, 34)); // WHERE region_id IN (12, 34)
+     * $query->filterByRegionId(array('min' => 12)); // WHERE region_id >= 12
+     * $query->filterByRegionId(array('max' => 12)); // WHERE region_id <= 12
+     * </code>
+     *
+     * @see       filterByRegion()
+     *
+     * @param     mixed $regionId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return OrganizationQuery The current query, for fluid interface
+     */
+    public function filterByRegionId($regionId = null, $comparison = null)
+    {
+        if (is_array($regionId)) {
+            $useMinMax = false;
+            if (isset($regionId['min'])) {
+                $this->addUsingAlias(OrganizationPeer::REGION_ID, $regionId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($regionId['max'])) {
+                $this->addUsingAlias(OrganizationPeer::REGION_ID, $regionId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(OrganizationPeer::REGION_ID, $regionId, $comparison);
     }
 
     /**
@@ -973,6 +1015,33 @@ abstract class BaseOrganizationQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(OrganizationPeer::STATUS, $status, $comparison);
+    }
+
+    /**
+     * Filter the query on the is_principal column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsPrincipal(true); // WHERE is_principal = true
+     * $query->filterByIsPrincipal('yes'); // WHERE is_principal = true
+     * </code>
+     *
+     * @param     boolean|string $isPrincipal The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return OrganizationQuery The current query, for fluid interface
+     */
+    public function filterByIsPrincipal($isPrincipal = null, $comparison = null)
+    {
+        if (is_string($isPrincipal)) {
+            $isPrincipal = in_array(strtolower($isPrincipal), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(OrganizationPeer::IS_PRINCIPAL, $isPrincipal, $comparison);
     }
 
     /**
@@ -1359,41 +1428,43 @@ abstract class BaseOrganizationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related UserProfile object
+     * Filter the query by a related Region object
      *
-     * @param   UserProfile|PropelObjectCollection $userProfile  the related object to use as filter
+     * @param   Region|PropelObjectCollection $region The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 OrganizationQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByUserProfile($userProfile, $comparison = null)
+    public function filterByRegion($region, $comparison = null)
     {
-        if ($userProfile instanceof UserProfile) {
+        if ($region instanceof Region) {
             return $this
-                ->addUsingAlias(OrganizationPeer::ID, $userProfile->getOrganizationId(), $comparison);
-        } elseif ($userProfile instanceof PropelObjectCollection) {
+                ->addUsingAlias(OrganizationPeer::REGION_ID, $region->getId(), $comparison);
+        } elseif ($region instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
             return $this
-                ->useUserProfileQuery()
-                ->filterByPrimaryKeys($userProfile->getPrimaryKeys())
-                ->endUse();
+                ->addUsingAlias(OrganizationPeer::REGION_ID, $region->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByUserProfile() only accepts arguments of type UserProfile or PropelCollection');
+            throw new PropelException('filterByRegion() only accepts arguments of type Region or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the UserProfile relation
+     * Adds a JOIN clause to the query using the Region relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return OrganizationQuery The current query, for fluid interface
      */
-    public function joinUserProfile($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinRegion($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('UserProfile');
+        $relationMap = $tableMap->getRelation('Region');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -1408,14 +1479,14 @@ abstract class BaseOrganizationQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'UserProfile');
+            $this->addJoinObject($join, 'Region');
         }
 
         return $this;
     }
 
     /**
-     * Use the UserProfile relation UserProfile object
+     * Use the Region relation Region object
      *
      * @see       useQuery()
      *
@@ -1423,161 +1494,13 @@ abstract class BaseOrganizationQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \PGS\CoreDomainBundle\Model\UserProfileQuery A secondary query class using the current class as primary query
+     * @return   \PGS\CoreDomainBundle\Model\RegionQuery A secondary query class using the current class as primary query
      */
-    public function useUserProfileQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useRegionQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinUserProfile($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UserProfile', '\PGS\CoreDomainBundle\Model\UserProfileQuery');
-    }
-
-    /**
-     * Filter the query by a related Employee object
-     *
-     * @param   Employee|PropelObjectCollection $employee  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 OrganizationQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByEmployee($employee, $comparison = null)
-    {
-        if ($employee instanceof Employee) {
-            return $this
-                ->addUsingAlias(OrganizationPeer::ID, $employee->getOrganizationId(), $comparison);
-        } elseif ($employee instanceof PropelObjectCollection) {
-            return $this
-                ->useEmployeeQuery()
-                ->filterByPrimaryKeys($employee->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByEmployee() only accepts arguments of type Employee or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Employee relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return OrganizationQuery The current query, for fluid interface
-     */
-    public function joinEmployee($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Employee');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Employee');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Employee relation Employee object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \PGS\CoreDomainBundle\Model\Employee\EmployeeQuery A secondary query class using the current class as primary query
-     */
-    public function useEmployeeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinEmployee($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Employee', '\PGS\CoreDomainBundle\Model\Employee\EmployeeQuery');
-    }
-
-    /**
-     * Filter the query by a related School object
-     *
-     * @param   School|PropelObjectCollection $school  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 OrganizationQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterBySchool($school, $comparison = null)
-    {
-        if ($school instanceof School) {
-            return $this
-                ->addUsingAlias(OrganizationPeer::ID, $school->getOrganizationId(), $comparison);
-        } elseif ($school instanceof PropelObjectCollection) {
-            return $this
-                ->useSchoolQuery()
-                ->filterByPrimaryKeys($school->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySchool() only accepts arguments of type School or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the School relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return OrganizationQuery The current query, for fluid interface
-     */
-    public function joinSchool($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('School');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'School');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the School relation School object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \PGS\CoreDomainBundle\Model\School\SchoolQuery A secondary query class using the current class as primary query
-     */
-    public function useSchoolQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinSchool($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'School', '\PGS\CoreDomainBundle\Model\School\SchoolQuery');
+            ->joinRegion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Region', '\PGS\CoreDomainBundle\Model\RegionQuery');
     }
 
     /**

@@ -85,27 +85,9 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Announcement', 'PGS\\CoreDomainBundle\\Model\\Announcement\\Announcement', RelationMap::ONE_TO_MANY, array('id' => 'posted_by', ), 'CASCADE', 'CASCADE', 'Announcements');
-        $this->addRelation('Application', 'PGS\\CoreDomainBundle\\Model\\Application\\Application', RelationMap::ONE_TO_MANY, array('id' => 'entered_by', ), 'SET NULL', 'CASCADE', 'Applications');
-        $this->addRelation('Behavior', 'PGS\\CoreDomainBundle\\Model\\Behavior\\Behavior', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'Behaviors');
-        $this->addRelation('Category', 'PGS\\CoreDomainBundle\\Model\\Category\\Category', RelationMap::ONE_TO_MANY, array('id' => 'author_id', ), 'CASCADE', 'CASCADE', 'Categories');
         $this->addRelation('UserGroup', 'PGS\\CoreDomainBundle\\Model\\UserGroup', RelationMap::ONE_TO_MANY, array('id' => 'fos_user_id', ), null, null, 'UserGroups');
         $this->addRelation('UserLog', 'PGS\\CoreDomainBundle\\Model\\UserLog', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'UserLogs');
-        $this->addRelation('LicensePayment', 'PGS\\CoreDomainBundle\\Model\\LicensePayment', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'LicensePayments');
-        $this->addRelation('UserLicense', 'PGS\\CoreDomainBundle\\Model\\UserLicense', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'UserLicenses');
-        $this->addRelation('Page', 'PGS\\CoreDomainBundle\\Model\\Page', RelationMap::ONE_TO_MANY, array('id' => 'author_id', ), 'CASCADE', 'CASCADE', 'Pages');
-        $this->addRelation('Employee', 'PGS\\CoreDomainBundle\\Model\\Employee\\Employee', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'Employees');
-        $this->addRelation('Ethnicity', 'PGS\\CoreDomainBundle\\Model\\Ethnicity\\Ethnicity', RelationMap::ONE_TO_MANY, array('id' => 'author_id', ), 'CASCADE', 'CASCADE', 'Ethnicities');
-        $this->addRelation('MessageRelatedByFromId', 'PGS\\CoreDomainBundle\\Model\\Message\\Message', RelationMap::ONE_TO_MANY, array('id' => 'from_id', ), 'CASCADE', 'CASCADE', 'MessagesRelatedByFromId');
-        $this->addRelation('MessageRelatedByToId', 'PGS\\CoreDomainBundle\\Model\\Message\\Message', RelationMap::ONE_TO_MANY, array('id' => 'to_id', ), 'CASCADE', 'CASCADE', 'MessagesRelatedByToId');
         $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', null, 'Organizations');
-        $this->addRelation('ParentStudent', 'PGS\\CoreDomainBundle\\Model\\ParentStudent\\ParentStudent', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', 'CASCADE', 'ParentStudents');
-        $this->addRelation('Religion', 'PGS\\CoreDomainBundle\\Model\\Religion\\Religion', RelationMap::ONE_TO_MANY, array('id' => 'author_id', ), 'CASCADE', 'CASCADE', 'Religions');
-        $this->addRelation('SchoolClassCourseRelatedByPrimaryTeacherId', 'PGS\\CoreDomainBundle\\Model\\SchoolClassCourse\\SchoolClassCourse', RelationMap::ONE_TO_MANY, array('id' => 'primary_teacher_id', ), 'SET NULL', 'CASCADE', 'SchoolClassCoursesRelatedByPrimaryTeacherId');
-        $this->addRelation('SchoolClassCourseRelatedBySecondaryTeacherId', 'PGS\\CoreDomainBundle\\Model\\SchoolClassCourse\\SchoolClassCourse', RelationMap::ONE_TO_MANY, array('id' => 'secondary_teacher_id', ), 'SET NULL', 'CASCADE', 'SchoolClassCoursesRelatedBySecondaryTeacherId');
-        $this->addRelation('Student', 'PGS\\CoreDomainBundle\\Model\\Student\\Student', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'Students');
-        $this->addRelation('StudentAvatar', 'PGS\\CoreDomainBundle\\Model\\StudentAvatar\\StudentAvatar', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', 'CASCADE', 'StudentAvatars');
-        $this->addRelation('Test', 'PGS\\CoreDomainBundle\\Model\\Test\\Test', RelationMap::ONE_TO_MANY, array('id' => 'author_id', ), 'CASCADE', 'CASCADE', 'Tests');
         $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Group', 'PGS\\CoreDomainBundle\\Model\\Group', RelationMap::MANY_TO_MANY, array(), null, null, 'Groups');
     } // buildRelations()

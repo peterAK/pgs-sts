@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="default" package="src.PGS.CoreDomainBundle.Model" namespace="PGS\CoreDomainBundle\Model">
-    <table name="site" phpName="Site" idMethod="native">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="meta_key" type="VARCHAR" size="100" required="true"/>
-        <column name="meta_value" type="LONGVARCHAR" required="true"/>
-        <vendor type="mysql">
-            <parameter name="Engine" value="InnoDB"/>
-        </vendor>
-    </table>
-
     <table name="fos_user" phpName="User">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="username" type="varchar" size="255" primaryString="true" />
@@ -83,9 +74,6 @@
         <foreign-key foreignTable="country" onDelete="RESTRICT" onUpdate="RESTRICT">
             <reference local="country_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="organization" onDelete="SETNULL" onUpdate="CASCADE">
-            <reference local="organization_id" foreign="id"/>
-        </foreign-key>
     </table>
 
     <table name="fos_group" phpName="Group">
@@ -141,6 +129,17 @@
         </vendor>
     </table>
 
+    <table name="country" phpName="Country" idMethod="native">
+        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+        <column name="desscription" phpName="Description" type="VARCHAR" size="100" required="true"/>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
     <table name="state" phpName="State" idMethod="native">
         <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
@@ -162,59 +161,30 @@
         </vendor>
     </table>
 
-    <table name="country" phpName="Country" idMethod="native">
+    <table name="region" phpName="Region" idMethod="native">
         <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
         <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
-        <column name="desscription" phpName="Description" type="VARCHAR" size="100" required="true"/>
 
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
     </table>
 
-    <table name="license" phpName="License" idMethod="native">
+    <table name="city" phpName="City" idMethod="native">
         <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="name" phpName="Name" type="VARCHAR" size="50" required="true"/>
-        <column name="days" type="SMALLINT" required="true" defaultValue="0"/>
-        <column name="fee" type="DECIMAL" size="12" scale="2" defaultValue="0"/>
-        <column name="salt" phpName="Salt" type="VARCHAR" size="255" required="true"/>
-
-        <!-- Behavior-->
-        <behavior name="timestampable" />
-
-        <vendor type="mysql">
-            <parameter name="Engine" value="InnoDB"/>
-        </vendor>
-    </table>
-
-    <table name="license_payment" phpName="LicensePayment" idMethod="native">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="user_id" type="INTEGER" required="true"/>
-        <column name="license_id" type="INTEGER"/>
-        <column name="payment_date" type="DATE" />
-        <column name="quantity" type="TINYINT"  defaultValue="1"/>
-        <column name="price" type="DECIMAL" size="12" scale="2"/>
-        <column name="subtotal" type="DECIMAL" size="12" scale="2" />
-        <column name="discount" type="DECIMAL" size="12" scale="2" />
-        <column name="tax" type="DECIMAL" size="12" scale="2"  />
-        <column name="total" type="DECIMAL" size="12" scale="2"  />
-        <column name="transaction_code" type="VARCHAR" size="255"/>
-        <column name="status" type="ENUM" valueSet="new, active, inactive, expired" defaultValue="new"/>
+        <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+        <column name="state_id" phpName="StateId" type="INTEGER"/>
 
         <!-- Relations -->
-        <foreign-key foreignTable="fos_user">
-            <reference local="user_id" foreign="id"/>
-        </foreign-key>
-        <foreign-key foreignTable="license" onDelete="SETNULL" onUpdate="CASCADE">
-            <reference local="license_id" foreign="id"/>
+        <foreign-key foreignTable="state" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="state_id" foreign="id"/>
         </foreign-key>
 
         <!-- Behavior-->
-        <behavior name="timestampable" />
-        <behavior name="archivable" />
         <behavior name="delegate">
-            <parameter name="to" value="license" />
+            <parameter name="to" value="state" />
         </behavior>
 
         <vendor type="mysql">
@@ -222,33 +192,25 @@
         </vendor>
     </table>
 
-    <table name="user_license" phpName="UserLicense" idMethod="native">
+    <table name="area" phpName="Area" idMethod="native">
         <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="user_id" type="INTEGER" required="true"/>
-        <column name="license_id" type="INTEGER"/>
-        <column name="license_code" type="VARCHAR" size="255" required="true"/>
-        <column name="register_date" type="DATE" /><!-- first date when user register -->
-        <column name="renewal_date" type="DATE" /><!-- first date when user renews his subscription -->
-        <column name="days" type="SMALLINT" required="true" defaultValue="365"/>
-        <column name="license_payment_id" type="INTEGER" required="false"/>
+        <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+        <column name="zip_code" phpName="ZipCode" type="VARCHAR" size="10" required="false"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+        <column name="state_id" phpName="StateId" type="INTEGER"/>
+        <column name="city_id" phpName="CityId" type="INTEGER"/>
 
         <!-- Relations -->
-        <foreign-key foreignTable="fos_user">
-            <reference local="user_id" foreign="id"/>
+        <foreign-key foreignTable="state" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="state_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="license" onDelete="SETNULL" onUpdate="CASCADE">
-            <reference local="license_id" foreign="id"/>
-        </foreign-key>
-        <foreign-key foreignTable="license_payment">
-            <reference local="license_payment_id" foreign="id"/>
+        <foreign-key foreignTable="city" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="city_id" foreign="id"/>
         </foreign-key>
 
-        <!-- Behavior-->
-        <behavior name="timestampable" />
-        <behavior name="archivable" />
-        <behavior name="delegate">
-            <parameter name="to" value="license"/>
-        </behavior>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
     </table>
 
     <table name="help" phpName="Help">
@@ -263,90 +225,6 @@
         <!-- Behavior-->
         <behavior name="i18n">
             <parameter name="i18n_columns" value="title, content"/>
-        </behavior>
-    </table>
-
-    <table name="topic" phpName="Topic">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="key" type="VARCHAR" size="100" required="true"/>
-        <unique>
-            <unique-column name="key" />
-        </unique>
-        <column name="title" type="VARCHAR" size="150"/>
-        <column name="access" type="ENUM" valueSet="admin, school, staff, parent, student, public" defaultValue="school"/>
-
-        <!-- Behavior-->
-        <behavior name="nested_set" />
-    </table>
-
-    <table name="page" phpName="Page">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="author_id" type="INTEGER" required="true"/>
-        <column name="school_id" type="INTEGER" required="false"/>
-        <column name="topic_id" type="INTEGER" required="true"/>
-        <column name="title" type="VARCHAR" size="250" required="true"/>
-        <column name="title_canonical" type="varchar" size="250" />
-        <unique>
-            <unique-column name="title_canonical" />
-        </unique>
-        <column name="content" type="LONGVARCHAR" required="true"/>
-        <column name="excerpt" type="VARCHAR" size="250"/>
-        <column name="start_publish" type="TIMESTAMP"/>
-        <column name="end_publish" type="TIMESTAMP"/>
-        <column name="seo_keyword" type="LONGVARCHAR"/>
-        <column name="seo_description" type="LONGVARCHAR"/>
-        <column name="status" type="ENUM" valueSet="draft, publish, closed" defaultValue="draft"/>
-        <column name="access" type="ENUM" valueSet="admin, school, staff, parent, student, public" defaultValue="school"/>
-
-        <!-- Relations -->
-        <foreign-key foreignTable="fos_user" onDelete="CASCADE" onUpdate="CASCADE">
-            <reference local="author_id" foreign="id"/>
-        </foreign-key>
-        <foreign-key foreignTable="school" onDelete="CASCADE" onUpdate="CASCADE">
-            <reference local="school_id" foreign="id"/>
-        </foreign-key>
-        <foreign-key foreignTable="topic" onDelete="CASCADE" onUpdate="CASCADE">
-            <reference local="topic_id" foreign="id" />
-        </foreign-key>
-
-        <!-- Behavior-->
-        <behavior name="nested_set">
-            <parameter name="use_scope" value="true" />
-            <parameter name="scope_column" value="topic_id" />
-        </behavior>
-        <behavior name="sortable" />
-        <behavior name="i18n">
-            <parameter name="i18n_columns" value="title, content, excerpt, seo_keyword, seo_description" />
-        </behavior>
-        <behavior name="timestampable" />
-    </table>
-
-    <table name="process" phpName="Process">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="key" type="VARCHAR" size="100" required="true"/>
-        <unique>
-            <unique-column name="key" />
-        </unique>
-        <column name="name" type="VARCHAR" size="50" required="true"/>
-        <column name="description" type="LONGVARCHAR" required="true"/>
-
-        <behavior name="i18n">
-            <parameter name="i18n_columns" value="name, description" />
-        </behavior>
-    </table>
-
-    <table name="step" phpName="Step">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="name" type="VARCHAR" size="50" required="true"/>
-        <column name="description" type="LONGVARCHAR" required="true"/>
-
-        <!-- Behavior-->
-        <behavior name="sortable">
-            <parameter name="use_scope" value="true"/>
-            <parameter name="scope_column" value="process_id"/>
-        </behavior>
-        <behavior name="i18n">
-            <parameter name="i18n_columns" value="name,description" />
         </behavior>
     </table>
 </database>

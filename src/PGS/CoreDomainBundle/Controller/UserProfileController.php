@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class UserProfileController extends AbstractCoreBaseController
+class UserProfileController extends AbstractBaseController
 {
     /**
      * @var UserProfileManager

@@ -1,6 +1,6 @@
 {% extends '::base.html.twig' %}
 
-{% block title %}<title>ClassGizmo | Your Classroom Partner</title>{% endblock %}
+
 
 {% block font %}
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=all" rel="stylesheet" type="text/css">
@@ -38,7 +38,7 @@
 {% block body %}
     {% block header %}
         {% if app.user %}
-            {% include('PGSCoreDomainBundle:Widget:topheader.html.twig') %}
+            {#{% include('PGSCoreDomainBundle:Widget:topheader.html.twig') %}#}
         {% else %}
             {% include('PGSPublicBundle:Widget:topheader.html.twig') %}
         {% endif %}

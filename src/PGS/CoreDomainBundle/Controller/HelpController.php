@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Intl\Intl;
 
-class HelpController extends AbstractCoreBaseController
+class HelpController extends AbstractBaseController
 {
     /**
      * @var HelpManager

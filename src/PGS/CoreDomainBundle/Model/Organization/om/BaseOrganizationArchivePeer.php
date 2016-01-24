@@ -32,13 +32,13 @@ abstract class BaseOrganizationArchivePeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\Organization\\map\\OrganizationArchiveTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 26;
+    const NUM_COLUMNS = 28;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 26;
+    const NUM_HYDRATE_COLUMNS = 28;
 
     /** the column name for the id field */
     const ID = 'organization_archive.id';
@@ -61,8 +61,8 @@ abstract class BaseOrganizationArchivePeer
     /** the column name for the goverment_license field */
     const GOVERMENT_LICENSE = 'organization_archive.goverment_license';
 
-    /** the column name for the establish_at field */
-    const ESTABLISH_AT = 'organization_archive.establish_at';
+    /** the column name for the join_at field */
+    const JOIN_AT = 'organization_archive.join_at';
 
     /** the column name for the address1 field */
     const ADDRESS1 = 'organization_archive.address1';
@@ -73,14 +73,17 @@ abstract class BaseOrganizationArchivePeer
     /** the column name for the city field */
     const CITY = 'organization_archive.city';
 
-    /** the column name for the state_id field */
-    const STATE_ID = 'organization_archive.state_id';
-
     /** the column name for the zipcode field */
     const ZIPCODE = 'organization_archive.zipcode';
 
     /** the column name for the country_id field */
     const COUNTRY_ID = 'organization_archive.country_id';
+
+    /** the column name for the state_id field */
+    const STATE_ID = 'organization_archive.state_id';
+
+    /** the column name for the region_id field */
+    const REGION_ID = 'organization_archive.region_id';
 
     /** the column name for the phone field */
     const PHONE = 'organization_archive.phone';
@@ -102,6 +105,9 @@ abstract class BaseOrganizationArchivePeer
 
     /** the column name for the status field */
     const STATUS = 'organization_archive.status';
+
+    /** the column name for the is_principal field */
+    const IS_PRINCIPAL = 'organization_archive.is_principal';
 
     /** the column name for the confirmation field */
     const CONFIRMATION = 'organization_archive.confirmation';
@@ -148,12 +154,12 @@ abstract class BaseOrganizationArchivePeer
      * e.g. OrganizationArchivePeer::$fieldNames[OrganizationArchivePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'Name', 'Url', 'Description', 'Excerpt', 'GovermentLicense', 'EstablishAt', 'Address1', 'Address2', 'City', 'StateId', 'Zipcode', 'CountryId', 'Phone', 'Fax', 'Mobile', 'Email', 'Website', 'Logo', 'Status', 'Confirmation', 'SortableRank', 'CreatedAt', 'UpdatedAt', 'ArchivedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'userId', 'name', 'url', 'description', 'excerpt', 'govermentLicense', 'establishAt', 'address1', 'address2', 'city', 'stateId', 'zipcode', 'countryId', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'confirmation', 'sortableRank', 'createdAt', 'updatedAt', 'archivedAt', ),
-        BasePeer::TYPE_COLNAME => array (OrganizationArchivePeer::ID, OrganizationArchivePeer::USER_ID, OrganizationArchivePeer::NAME, OrganizationArchivePeer::URL, OrganizationArchivePeer::DESCRIPTION, OrganizationArchivePeer::EXCERPT, OrganizationArchivePeer::GOVERMENT_LICENSE, OrganizationArchivePeer::ESTABLISH_AT, OrganizationArchivePeer::ADDRESS1, OrganizationArchivePeer::ADDRESS2, OrganizationArchivePeer::CITY, OrganizationArchivePeer::STATE_ID, OrganizationArchivePeer::ZIPCODE, OrganizationArchivePeer::COUNTRY_ID, OrganizationArchivePeer::PHONE, OrganizationArchivePeer::FAX, OrganizationArchivePeer::MOBILE, OrganizationArchivePeer::EMAIL, OrganizationArchivePeer::WEBSITE, OrganizationArchivePeer::LOGO, OrganizationArchivePeer::STATUS, OrganizationArchivePeer::CONFIRMATION, OrganizationArchivePeer::SORTABLE_RANK, OrganizationArchivePeer::CREATED_AT, OrganizationArchivePeer::UPDATED_AT, OrganizationArchivePeer::ARCHIVED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'USER_ID', 'NAME', 'URL', 'DESCRIPTION', 'EXCERPT', 'GOVERMENT_LICENSE', 'ESTABLISH_AT', 'ADDRESS1', 'ADDRESS2', 'CITY', 'STATE_ID', 'ZIPCODE', 'COUNTRY_ID', 'PHONE', 'FAX', 'MOBILE', 'EMAIL', 'WEBSITE', 'LOGO', 'STATUS', 'CONFIRMATION', 'SORTABLE_RANK', 'CREATED_AT', 'UPDATED_AT', 'ARCHIVED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'name', 'url', 'description', 'excerpt', 'goverment_license', 'establish_at', 'address1', 'address2', 'city', 'state_id', 'zipcode', 'country_id', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'confirmation', 'sortable_rank', 'created_at', 'updated_at', 'archived_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'Name', 'Url', 'Description', 'Excerpt', 'GovermentLicense', 'JoinAt', 'Address1', 'Address2', 'City', 'Zipcode', 'CountryId', 'StateId', 'RegionId', 'Phone', 'Fax', 'Mobile', 'Email', 'Website', 'Logo', 'Status', 'IsPrincipal', 'Confirmation', 'SortableRank', 'CreatedAt', 'UpdatedAt', 'ArchivedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'userId', 'name', 'url', 'description', 'excerpt', 'govermentLicense', 'joinAt', 'address1', 'address2', 'city', 'zipcode', 'countryId', 'stateId', 'regionId', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'isPrincipal', 'confirmation', 'sortableRank', 'createdAt', 'updatedAt', 'archivedAt', ),
+        BasePeer::TYPE_COLNAME => array (OrganizationArchivePeer::ID, OrganizationArchivePeer::USER_ID, OrganizationArchivePeer::NAME, OrganizationArchivePeer::URL, OrganizationArchivePeer::DESCRIPTION, OrganizationArchivePeer::EXCERPT, OrganizationArchivePeer::GOVERMENT_LICENSE, OrganizationArchivePeer::JOIN_AT, OrganizationArchivePeer::ADDRESS1, OrganizationArchivePeer::ADDRESS2, OrganizationArchivePeer::CITY, OrganizationArchivePeer::ZIPCODE, OrganizationArchivePeer::COUNTRY_ID, OrganizationArchivePeer::STATE_ID, OrganizationArchivePeer::REGION_ID, OrganizationArchivePeer::PHONE, OrganizationArchivePeer::FAX, OrganizationArchivePeer::MOBILE, OrganizationArchivePeer::EMAIL, OrganizationArchivePeer::WEBSITE, OrganizationArchivePeer::LOGO, OrganizationArchivePeer::STATUS, OrganizationArchivePeer::IS_PRINCIPAL, OrganizationArchivePeer::CONFIRMATION, OrganizationArchivePeer::SORTABLE_RANK, OrganizationArchivePeer::CREATED_AT, OrganizationArchivePeer::UPDATED_AT, OrganizationArchivePeer::ARCHIVED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'USER_ID', 'NAME', 'URL', 'DESCRIPTION', 'EXCERPT', 'GOVERMENT_LICENSE', 'JOIN_AT', 'ADDRESS1', 'ADDRESS2', 'CITY', 'ZIPCODE', 'COUNTRY_ID', 'STATE_ID', 'REGION_ID', 'PHONE', 'FAX', 'MOBILE', 'EMAIL', 'WEBSITE', 'LOGO', 'STATUS', 'IS_PRINCIPAL', 'CONFIRMATION', 'SORTABLE_RANK', 'CREATED_AT', 'UPDATED_AT', 'ARCHIVED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'name', 'url', 'description', 'excerpt', 'goverment_license', 'join_at', 'address1', 'address2', 'city', 'zipcode', 'country_id', 'state_id', 'region_id', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'is_principal', 'confirmation', 'sortable_rank', 'created_at', 'updated_at', 'archived_at', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, )
     );
 
     /**
@@ -163,12 +169,12 @@ abstract class BaseOrganizationArchivePeer
      * e.g. OrganizationArchivePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'Name' => 2, 'Url' => 3, 'Description' => 4, 'Excerpt' => 5, 'GovermentLicense' => 6, 'EstablishAt' => 7, 'Address1' => 8, 'Address2' => 9, 'City' => 10, 'StateId' => 11, 'Zipcode' => 12, 'CountryId' => 13, 'Phone' => 14, 'Fax' => 15, 'Mobile' => 16, 'Email' => 17, 'Website' => 18, 'Logo' => 19, 'Status' => 20, 'Confirmation' => 21, 'SortableRank' => 22, 'CreatedAt' => 23, 'UpdatedAt' => 24, 'ArchivedAt' => 25, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'userId' => 1, 'name' => 2, 'url' => 3, 'description' => 4, 'excerpt' => 5, 'govermentLicense' => 6, 'establishAt' => 7, 'address1' => 8, 'address2' => 9, 'city' => 10, 'stateId' => 11, 'zipcode' => 12, 'countryId' => 13, 'phone' => 14, 'fax' => 15, 'mobile' => 16, 'email' => 17, 'website' => 18, 'logo' => 19, 'status' => 20, 'confirmation' => 21, 'sortableRank' => 22, 'createdAt' => 23, 'updatedAt' => 24, 'archivedAt' => 25, ),
-        BasePeer::TYPE_COLNAME => array (OrganizationArchivePeer::ID => 0, OrganizationArchivePeer::USER_ID => 1, OrganizationArchivePeer::NAME => 2, OrganizationArchivePeer::URL => 3, OrganizationArchivePeer::DESCRIPTION => 4, OrganizationArchivePeer::EXCERPT => 5, OrganizationArchivePeer::GOVERMENT_LICENSE => 6, OrganizationArchivePeer::ESTABLISH_AT => 7, OrganizationArchivePeer::ADDRESS1 => 8, OrganizationArchivePeer::ADDRESS2 => 9, OrganizationArchivePeer::CITY => 10, OrganizationArchivePeer::STATE_ID => 11, OrganizationArchivePeer::ZIPCODE => 12, OrganizationArchivePeer::COUNTRY_ID => 13, OrganizationArchivePeer::PHONE => 14, OrganizationArchivePeer::FAX => 15, OrganizationArchivePeer::MOBILE => 16, OrganizationArchivePeer::EMAIL => 17, OrganizationArchivePeer::WEBSITE => 18, OrganizationArchivePeer::LOGO => 19, OrganizationArchivePeer::STATUS => 20, OrganizationArchivePeer::CONFIRMATION => 21, OrganizationArchivePeer::SORTABLE_RANK => 22, OrganizationArchivePeer::CREATED_AT => 23, OrganizationArchivePeer::UPDATED_AT => 24, OrganizationArchivePeer::ARCHIVED_AT => 25, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'USER_ID' => 1, 'NAME' => 2, 'URL' => 3, 'DESCRIPTION' => 4, 'EXCERPT' => 5, 'GOVERMENT_LICENSE' => 6, 'ESTABLISH_AT' => 7, 'ADDRESS1' => 8, 'ADDRESS2' => 9, 'CITY' => 10, 'STATE_ID' => 11, 'ZIPCODE' => 12, 'COUNTRY_ID' => 13, 'PHONE' => 14, 'FAX' => 15, 'MOBILE' => 16, 'EMAIL' => 17, 'WEBSITE' => 18, 'LOGO' => 19, 'STATUS' => 20, 'CONFIRMATION' => 21, 'SORTABLE_RANK' => 22, 'CREATED_AT' => 23, 'UPDATED_AT' => 24, 'ARCHIVED_AT' => 25, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'name' => 2, 'url' => 3, 'description' => 4, 'excerpt' => 5, 'goverment_license' => 6, 'establish_at' => 7, 'address1' => 8, 'address2' => 9, 'city' => 10, 'state_id' => 11, 'zipcode' => 12, 'country_id' => 13, 'phone' => 14, 'fax' => 15, 'mobile' => 16, 'email' => 17, 'website' => 18, 'logo' => 19, 'status' => 20, 'confirmation' => 21, 'sortable_rank' => 22, 'created_at' => 23, 'updated_at' => 24, 'archived_at' => 25, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'Name' => 2, 'Url' => 3, 'Description' => 4, 'Excerpt' => 5, 'GovermentLicense' => 6, 'JoinAt' => 7, 'Address1' => 8, 'Address2' => 9, 'City' => 10, 'Zipcode' => 11, 'CountryId' => 12, 'StateId' => 13, 'RegionId' => 14, 'Phone' => 15, 'Fax' => 16, 'Mobile' => 17, 'Email' => 18, 'Website' => 19, 'Logo' => 20, 'Status' => 21, 'IsPrincipal' => 22, 'Confirmation' => 23, 'SortableRank' => 24, 'CreatedAt' => 25, 'UpdatedAt' => 26, 'ArchivedAt' => 27, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'userId' => 1, 'name' => 2, 'url' => 3, 'description' => 4, 'excerpt' => 5, 'govermentLicense' => 6, 'joinAt' => 7, 'address1' => 8, 'address2' => 9, 'city' => 10, 'zipcode' => 11, 'countryId' => 12, 'stateId' => 13, 'regionId' => 14, 'phone' => 15, 'fax' => 16, 'mobile' => 17, 'email' => 18, 'website' => 19, 'logo' => 20, 'status' => 21, 'isPrincipal' => 22, 'confirmation' => 23, 'sortableRank' => 24, 'createdAt' => 25, 'updatedAt' => 26, 'archivedAt' => 27, ),
+        BasePeer::TYPE_COLNAME => array (OrganizationArchivePeer::ID => 0, OrganizationArchivePeer::USER_ID => 1, OrganizationArchivePeer::NAME => 2, OrganizationArchivePeer::URL => 3, OrganizationArchivePeer::DESCRIPTION => 4, OrganizationArchivePeer::EXCERPT => 5, OrganizationArchivePeer::GOVERMENT_LICENSE => 6, OrganizationArchivePeer::JOIN_AT => 7, OrganizationArchivePeer::ADDRESS1 => 8, OrganizationArchivePeer::ADDRESS2 => 9, OrganizationArchivePeer::CITY => 10, OrganizationArchivePeer::ZIPCODE => 11, OrganizationArchivePeer::COUNTRY_ID => 12, OrganizationArchivePeer::STATE_ID => 13, OrganizationArchivePeer::REGION_ID => 14, OrganizationArchivePeer::PHONE => 15, OrganizationArchivePeer::FAX => 16, OrganizationArchivePeer::MOBILE => 17, OrganizationArchivePeer::EMAIL => 18, OrganizationArchivePeer::WEBSITE => 19, OrganizationArchivePeer::LOGO => 20, OrganizationArchivePeer::STATUS => 21, OrganizationArchivePeer::IS_PRINCIPAL => 22, OrganizationArchivePeer::CONFIRMATION => 23, OrganizationArchivePeer::SORTABLE_RANK => 24, OrganizationArchivePeer::CREATED_AT => 25, OrganizationArchivePeer::UPDATED_AT => 26, OrganizationArchivePeer::ARCHIVED_AT => 27, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'USER_ID' => 1, 'NAME' => 2, 'URL' => 3, 'DESCRIPTION' => 4, 'EXCERPT' => 5, 'GOVERMENT_LICENSE' => 6, 'JOIN_AT' => 7, 'ADDRESS1' => 8, 'ADDRESS2' => 9, 'CITY' => 10, 'ZIPCODE' => 11, 'COUNTRY_ID' => 12, 'STATE_ID' => 13, 'REGION_ID' => 14, 'PHONE' => 15, 'FAX' => 16, 'MOBILE' => 17, 'EMAIL' => 18, 'WEBSITE' => 19, 'LOGO' => 20, 'STATUS' => 21, 'IS_PRINCIPAL' => 22, 'CONFIRMATION' => 23, 'SORTABLE_RANK' => 24, 'CREATED_AT' => 25, 'UPDATED_AT' => 26, 'ARCHIVED_AT' => 27, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'name' => 2, 'url' => 3, 'description' => 4, 'excerpt' => 5, 'goverment_license' => 6, 'join_at' => 7, 'address1' => 8, 'address2' => 9, 'city' => 10, 'zipcode' => 11, 'country_id' => 12, 'state_id' => 13, 'region_id' => 14, 'phone' => 15, 'fax' => 16, 'mobile' => 17, 'email' => 18, 'website' => 19, 'logo' => 20, 'status' => 21, 'is_principal' => 22, 'confirmation' => 23, 'sortable_rank' => 24, 'created_at' => 25, 'updated_at' => 26, 'archived_at' => 27, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, )
     );
 
     /** The enumerated values for this table */
@@ -309,13 +315,14 @@ abstract class BaseOrganizationArchivePeer
             $criteria->addSelectColumn(OrganizationArchivePeer::DESCRIPTION);
             $criteria->addSelectColumn(OrganizationArchivePeer::EXCERPT);
             $criteria->addSelectColumn(OrganizationArchivePeer::GOVERMENT_LICENSE);
-            $criteria->addSelectColumn(OrganizationArchivePeer::ESTABLISH_AT);
+            $criteria->addSelectColumn(OrganizationArchivePeer::JOIN_AT);
             $criteria->addSelectColumn(OrganizationArchivePeer::ADDRESS1);
             $criteria->addSelectColumn(OrganizationArchivePeer::ADDRESS2);
             $criteria->addSelectColumn(OrganizationArchivePeer::CITY);
-            $criteria->addSelectColumn(OrganizationArchivePeer::STATE_ID);
             $criteria->addSelectColumn(OrganizationArchivePeer::ZIPCODE);
             $criteria->addSelectColumn(OrganizationArchivePeer::COUNTRY_ID);
+            $criteria->addSelectColumn(OrganizationArchivePeer::STATE_ID);
+            $criteria->addSelectColumn(OrganizationArchivePeer::REGION_ID);
             $criteria->addSelectColumn(OrganizationArchivePeer::PHONE);
             $criteria->addSelectColumn(OrganizationArchivePeer::FAX);
             $criteria->addSelectColumn(OrganizationArchivePeer::MOBILE);
@@ -323,6 +330,7 @@ abstract class BaseOrganizationArchivePeer
             $criteria->addSelectColumn(OrganizationArchivePeer::WEBSITE);
             $criteria->addSelectColumn(OrganizationArchivePeer::LOGO);
             $criteria->addSelectColumn(OrganizationArchivePeer::STATUS);
+            $criteria->addSelectColumn(OrganizationArchivePeer::IS_PRINCIPAL);
             $criteria->addSelectColumn(OrganizationArchivePeer::CONFIRMATION);
             $criteria->addSelectColumn(OrganizationArchivePeer::SORTABLE_RANK);
             $criteria->addSelectColumn(OrganizationArchivePeer::CREATED_AT);
@@ -336,13 +344,14 @@ abstract class BaseOrganizationArchivePeer
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.excerpt');
             $criteria->addSelectColumn($alias . '.goverment_license');
-            $criteria->addSelectColumn($alias . '.establish_at');
+            $criteria->addSelectColumn($alias . '.join_at');
             $criteria->addSelectColumn($alias . '.address1');
             $criteria->addSelectColumn($alias . '.address2');
             $criteria->addSelectColumn($alias . '.city');
-            $criteria->addSelectColumn($alias . '.state_id');
             $criteria->addSelectColumn($alias . '.zipcode');
             $criteria->addSelectColumn($alias . '.country_id');
+            $criteria->addSelectColumn($alias . '.state_id');
+            $criteria->addSelectColumn($alias . '.region_id');
             $criteria->addSelectColumn($alias . '.phone');
             $criteria->addSelectColumn($alias . '.fax');
             $criteria->addSelectColumn($alias . '.mobile');
@@ -350,6 +359,7 @@ abstract class BaseOrganizationArchivePeer
             $criteria->addSelectColumn($alias . '.website');
             $criteria->addSelectColumn($alias . '.logo');
             $criteria->addSelectColumn($alias . '.status');
+            $criteria->addSelectColumn($alias . '.is_principal');
             $criteria->addSelectColumn($alias . '.confirmation');
             $criteria->addSelectColumn($alias . '.sortable_rank');
             $criteria->addSelectColumn($alias . '.created_at');

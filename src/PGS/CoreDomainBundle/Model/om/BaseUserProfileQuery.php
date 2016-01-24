@@ -20,7 +20,6 @@ use PGS\CoreDomainBundle\Model\User;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
 
 /**
  * @method UserProfileQuery orderByPrefix($order = Criteria::ASC) Order by the prefix column
@@ -41,8 +40,6 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method UserProfileQuery orderByActivePreferences($order = Criteria::ASC) Order by the active_preferences column
  * @method UserProfileQuery orderByComplete($order = Criteria::ASC) Order by the complete column
  * @method UserProfileQuery orderById($order = Criteria::ASC) Order by the id column
- * @method UserProfileQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method UserProfileQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method UserProfileQuery groupByPrefix() Group by the prefix column
  * @method UserProfileQuery groupByOrganizationId() Group by the organization_id column
@@ -62,8 +59,6 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method UserProfileQuery groupByActivePreferences() Group by the active_preferences column
  * @method UserProfileQuery groupByComplete() Group by the complete column
  * @method UserProfileQuery groupById() Group by the id column
- * @method UserProfileQuery groupByCreatedAt() Group by the created_at column
- * @method UserProfileQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method UserProfileQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method UserProfileQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -76,10 +71,6 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method UserProfileQuery leftJoinCountry($relationAlias = null) Adds a LEFT JOIN clause to the query using the Country relation
  * @method UserProfileQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method UserProfileQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
- *
- * @method UserProfileQuery leftJoinOrganization($relationAlias = null) Adds a LEFT JOIN clause to the query using the Organization relation
- * @method UserProfileQuery rightJoinOrganization($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Organization relation
- * @method UserProfileQuery innerJoinOrganization($relationAlias = null) Adds a INNER JOIN clause to the query using the Organization relation
  *
  * @method UserProfileQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
  * @method UserProfileQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
@@ -105,8 +96,6 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method UserProfile findOneByCountryId(int $country_id) Return the first UserProfile filtered by the country_id column
  * @method UserProfile findOneByActivePreferences(string $active_preferences) Return the first UserProfile filtered by the active_preferences column
  * @method UserProfile findOneByComplete(boolean $complete) Return the first UserProfile filtered by the complete column
- * @method UserProfile findOneByCreatedAt(string $created_at) Return the first UserProfile filtered by the created_at column
- * @method UserProfile findOneByUpdatedAt(string $updated_at) Return the first UserProfile filtered by the updated_at column
  *
  * @method array findByPrefix(string $prefix) Return UserProfile objects filtered by the prefix column
  * @method array findByOrganizationId(int $organization_id) Return UserProfile objects filtered by the organization_id column
@@ -126,8 +115,6 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method array findByActivePreferences(string $active_preferences) Return UserProfile objects filtered by the active_preferences column
  * @method array findByComplete(boolean $complete) Return UserProfile objects filtered by the complete column
  * @method array findById(int $id) Return UserProfile objects filtered by the id column
- * @method array findByCreatedAt(string $created_at) Return UserProfile objects filtered by the created_at column
- * @method array findByUpdatedAt(string $updated_at) Return UserProfile objects filtered by the updated_at column
  */
 abstract class BaseUserProfileQuery extends ModelCriteria
 {
@@ -234,7 +221,7 @@ abstract class BaseUserProfileQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `prefix`, `organization_id`, `nick_name`, `first_name`, `middle_name`, `last_name`, `phone`, `mobile`, `address`, `business_address`, `occupation`, `city`, `state_id`, `zip`, `country_id`, `active_preferences`, `complete`, `id`, `created_at`, `updated_at` FROM `user_profile` WHERE `id` = :p0';
+        $sql = 'SELECT `prefix`, `organization_id`, `nick_name`, `first_name`, `middle_name`, `last_name`, `phone`, `mobile`, `address`, `business_address`, `occupation`, `city`, `state_id`, `zip`, `country_id`, `active_preferences`, `complete`, `id` FROM `user_profile` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -363,8 +350,6 @@ abstract class BaseUserProfileQuery extends ModelCriteria
      * $query->filterByOrganizationId(array('min' => 12)); // WHERE organization_id >= 12
      * $query->filterByOrganizationId(array('max' => 12)); // WHERE organization_id <= 12
      * </code>
-     *
-     * @see       filterByOrganization()
      *
      * @param     mixed $organizationId The value to use as filter.
      *              Use scalar values for equality.
@@ -905,92 +890,6 @@ abstract class BaseUserProfileQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return UserProfileQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(UserProfilePeer::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(UserProfilePeer::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserProfilePeer::CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return UserProfileQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
-    {
-        if (is_array($updatedAt)) {
-            $useMinMax = false;
-            if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(UserProfilePeer::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(UserProfilePeer::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserProfilePeer::UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
      * Filter the query by a related State object
      *
      * @param   State|PropelObjectCollection $state The related object(s) to use as filter
@@ -1140,82 +1039,6 @@ abstract class BaseUserProfileQuery extends ModelCriteria
         return $this
             ->joinCountry($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Country', '\PGS\CoreDomainBundle\Model\CountryQuery');
-    }
-
-    /**
-     * Filter the query by a related Organization object
-     *
-     * @param   Organization|PropelObjectCollection $organization The related object(s) to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 UserProfileQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByOrganization($organization, $comparison = null)
-    {
-        if ($organization instanceof Organization) {
-            return $this
-                ->addUsingAlias(UserProfilePeer::ORGANIZATION_ID, $organization->getId(), $comparison);
-        } elseif ($organization instanceof PropelObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(UserProfilePeer::ORGANIZATION_ID, $organization->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByOrganization() only accepts arguments of type Organization or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Organization relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return UserProfileQuery The current query, for fluid interface
-     */
-    public function joinOrganization($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Organization');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Organization');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Organization relation Organization object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \PGS\CoreDomainBundle\Model\Organization\OrganizationQuery A secondary query class using the current class as primary query
-     */
-    public function useOrganizationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinOrganization($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Organization', '\PGS\CoreDomainBundle\Model\Organization\OrganizationQuery');
     }
 
     /**
@@ -1380,71 +1203,6 @@ abstract class BaseUserProfileQuery extends ModelCriteria
         return $this->postUpdate($affectedRows, $con);
     }
 
-    // timestampable behavior
-
-    /**
-     * Filter by the latest updated
-     *
-     * @param      int $nbDays Maximum age of the latest update in days
-     *
-     * @return     UserProfileQuery The current query, for fluid interface
-     */
-    public function recentlyUpdated($nbDays = 7)
-    {
-        return $this->addUsingAlias(UserProfilePeer::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by update date desc
-     *
-     * @return     UserProfileQuery The current query, for fluid interface
-     */
-    public function lastUpdatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(UserProfilePeer::UPDATED_AT);
-    }
-
-    /**
-     * Order by update date asc
-     *
-     * @return     UserProfileQuery The current query, for fluid interface
-     */
-    public function firstUpdatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(UserProfilePeer::UPDATED_AT);
-    }
-
-    /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     UserProfileQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(UserProfilePeer::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by create date desc
-     *
-     * @return     UserProfileQuery The current query, for fluid interface
-     */
-    public function lastCreatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(UserProfilePeer::CREATED_AT);
-    }
-
-    /**
-     * Order by create date asc
-     *
-     * @return     UserProfileQuery The current query, for fluid interface
-     */
-    public function firstCreatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(UserProfilePeer::CREATED_AT);
-    }
     // extend behavior
     public function setFormatter($formatter)
     {

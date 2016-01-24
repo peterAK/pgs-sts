@@ -5,13 +5,11 @@ namespace PGS\CoreDomainBundle\Model\om;
 use \BaseObject;
 use \BasePeer;
 use \Criteria;
-use \DateTime;
 use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
 use \PropelCollection;
-use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
@@ -24,12 +22,8 @@ use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StateQuery;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
-use PGS\CoreDomainBundle\Model\Application\Application;
-use PGS\CoreDomainBundle\Model\Application\ApplicationQuery;
 use PGS\CoreDomainBundle\Model\Organization\Organization;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationQuery;
-use PGS\CoreDomainBundle\Model\School\School;
-use PGS\CoreDomainBundle\Model\School\SchoolQuery;
 
 abstract class BaseCountry extends BaseObject implements Persistent
 {
@@ -77,24 +71,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     protected $desscription;
 
     /**
-     * The value for the created_at field.
-     * @var        string
-     */
-    protected $created_at;
-
-    /**
-     * The value for the updated_at field.
-     * @var        string
-     */
-    protected $updated_at;
-
-    /**
-     * @var        PropelObjectCollection|Application[] Collection to store aggregation of Application objects.
-     */
-    protected $collApplications;
-    protected $collApplicationsPartial;
-
-    /**
      * @var        PropelObjectCollection|UserProfile[] Collection to store aggregation of UserProfile objects.
      */
     protected $collUserProfiles;
@@ -111,12 +87,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     protected $collOrganizations;
     protected $collOrganizationsPartial;
-
-    /**
-     * @var        PropelObjectCollection|School[] Collection to store aggregation of School objects.
-     */
-    protected $collSchools;
-    protected $collSchoolsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -142,12 +112,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $applicationsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
     protected $userProfilesScheduledForDeletion = null;
 
     /**
@@ -161,12 +125,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $organizationsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $schoolsScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -215,86 +173,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
 
         return $this->desscription;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [created_at] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreatedAt($format = null)
-    {
-        if ($this->created_at === null) {
-            return null;
-        }
-
-        if ($this->created_at === '0000-00-00 00:00:00') {
-            // while technically this is not a default value of null,
-            // this seems to be closest in meaning.
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->created_at);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [updated_at] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getUpdatedAt($format = null)
-    {
-        if ($this->updated_at === null) {
-            return null;
-        }
-
-        if ($this->updated_at === '0000-00-00 00:00:00') {
-            // while technically this is not a default value of null,
-            // this seems to be closest in meaning.
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->updated_at);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
     }
 
     /**
@@ -382,52 +260,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     } // setDescription()
 
     /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return Country The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->created_at !== null && $tmpDt = new DateTime($this->created_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->created_at = $newDateAsString;
-                $this->modifiedColumns[] = CountryPeer::CREATED_AT;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return Country The current object (for fluent API support)
-     */
-    public function setUpdatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->updated_at !== null && $tmpDt = new DateTime($this->updated_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->updated_at = $newDateAsString;
-                $this->modifiedColumns[] = CountryPeer::UPDATED_AT;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setUpdatedAt()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -463,8 +295,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->code = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->desscription = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->created_at = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->updated_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -474,7 +304,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 6; // 6 = CountryPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = CountryPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Country object", $e);
@@ -536,15 +366,11 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collApplications = null;
-
             $this->collUserProfiles = null;
 
             $this->collStates = null;
 
             $this->collOrganizations = null;
-
-            $this->collSchools = null;
 
         } // if (deep)
     }
@@ -623,21 +449,10 @@ abstract class BaseCountry extends BaseObject implements Persistent
             EventDispatcherProxy::trigger('model.save.pre', new ModelEvent($this));
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
-                // timestampable behavior
-                if (!$this->isColumnModified(CountryPeer::CREATED_AT)) {
-                    $this->setCreatedAt(time());
-                }
-                if (!$this->isColumnModified(CountryPeer::UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
                 // event behavior
                 EventDispatcherProxy::trigger('model.insert.pre', new ModelEvent($this));
             } else {
                 $ret = $ret && $this->preUpdate($con);
-                // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(CountryPeer::UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
                 // event behavior
                 EventDispatcherProxy::trigger(array('update.pre', 'model.update.pre'), new ModelEvent($this));
             }
@@ -696,23 +511,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->applicationsScheduledForDeletion !== null) {
-                if (!$this->applicationsScheduledForDeletion->isEmpty()) {
-                    ApplicationQuery::create()
-                        ->filterByPrimaryKeys($this->applicationsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->applicationsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collApplications !== null) {
-                foreach ($this->collApplications as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->userProfilesScheduledForDeletion !== null) {
                 if (!$this->userProfilesScheduledForDeletion->isEmpty()) {
                     UserProfileQuery::create()
@@ -765,23 +563,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->schoolsScheduledForDeletion !== null) {
-                if (!$this->schoolsScheduledForDeletion->isEmpty()) {
-                    SchoolQuery::create()
-                        ->filterByPrimaryKeys($this->schoolsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->schoolsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSchools !== null) {
-                foreach ($this->collSchools as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -820,12 +601,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         if ($this->isColumnModified(CountryPeer::DESSCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '`desscription`';
         }
-        if ($this->isColumnModified(CountryPeer::CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`created_at`';
-        }
-        if ($this->isColumnModified(CountryPeer::UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`updated_at`';
-        }
 
         $sql = sprintf(
             'INSERT INTO `country` (%s) VALUES (%s)',
@@ -848,12 +623,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
                         break;
                     case '`desscription`':
                         $stmt->bindValue($identifier, $this->desscription, PDO::PARAM_STR);
-                        break;
-                    case '`created_at`':
-                        $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
-                        break;
-                    case '`updated_at`':
-                        $stmt->bindValue($identifier, $this->updated_at, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -954,14 +723,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             }
 
 
-                if ($this->collApplications !== null) {
-                    foreach ($this->collApplications as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
                 if ($this->collUserProfiles !== null) {
                     foreach ($this->collUserProfiles as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -980,14 +741,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
                 if ($this->collOrganizations !== null) {
                     foreach ($this->collOrganizations as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
-                if ($this->collSchools !== null) {
-                    foreach ($this->collSchools as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -1041,12 +794,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             case 3:
                 return $this->getDescription();
                 break;
-            case 4:
-                return $this->getCreatedAt();
-                break;
-            case 5:
-                return $this->getUpdatedAt();
-                break;
             default:
                 return null;
                 break;
@@ -1080,8 +827,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $keys[1] => $this->getCode(),
             $keys[2] => $this->getName(),
             $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1089,9 +834,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collApplications) {
-                $result['Applications'] = $this->collApplications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collUserProfiles) {
                 $result['UserProfiles'] = $this->collUserProfiles->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1100,9 +842,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             }
             if (null !== $this->collOrganizations) {
                 $result['Organizations'] = $this->collOrganizations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collSchools) {
-                $result['Schools'] = $this->collSchools->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1150,12 +889,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             case 3:
                 $this->setDescription($value);
                 break;
-            case 4:
-                $this->setCreatedAt($value);
-                break;
-            case 5:
-                $this->setUpdatedAt($value);
-                break;
         } // switch()
     }
 
@@ -1184,8 +917,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setCode($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
     }
 
     /**
@@ -1201,8 +932,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         if ($this->isColumnModified(CountryPeer::CODE)) $criteria->add(CountryPeer::CODE, $this->code);
         if ($this->isColumnModified(CountryPeer::NAME)) $criteria->add(CountryPeer::NAME, $this->name);
         if ($this->isColumnModified(CountryPeer::DESSCRIPTION)) $criteria->add(CountryPeer::DESSCRIPTION, $this->desscription);
-        if ($this->isColumnModified(CountryPeer::CREATED_AT)) $criteria->add(CountryPeer::CREATED_AT, $this->created_at);
-        if ($this->isColumnModified(CountryPeer::UPDATED_AT)) $criteria->add(CountryPeer::UPDATED_AT, $this->updated_at);
 
         return $criteria;
     }
@@ -1269,8 +998,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         $copyObj->setCode($this->getCode());
         $copyObj->setName($this->getName());
         $copyObj->setDescription($this->getDescription());
-        $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpdatedAt($this->getUpdatedAt());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1278,12 +1005,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
-
-            foreach ($this->getApplications() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addApplication($relObj->copy($deepCopy));
-                }
-            }
 
             foreach ($this->getUserProfiles() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1300,12 +1021,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             foreach ($this->getOrganizations() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addOrganization($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getSchools() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSchool($relObj->copy($deepCopy));
                 }
             }
 
@@ -1370,9 +1085,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('Application' == $relationName) {
-            $this->initApplications();
-        }
         if ('UserProfile' == $relationName) {
             $this->initUserProfiles();
         }
@@ -1382,409 +1094,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         if ('Organization' == $relationName) {
             $this->initOrganizations();
         }
-        if ('School' == $relationName) {
-            $this->initSchools();
-        }
-    }
-
-    /**
-     * Clears out the collApplications collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Country The current object (for fluent API support)
-     * @see        addApplications()
-     */
-    public function clearApplications()
-    {
-        $this->collApplications = null; // important to set this to null since that means it is uninitialized
-        $this->collApplicationsPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collApplications collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialApplications($v = true)
-    {
-        $this->collApplicationsPartial = $v;
-    }
-
-    /**
-     * Initializes the collApplications collection.
-     *
-     * By default this just sets the collApplications collection to an empty array (like clearcollApplications());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initApplications($overrideExisting = true)
-    {
-        if (null !== $this->collApplications && !$overrideExisting) {
-            return;
-        }
-        $this->collApplications = new PropelObjectCollection();
-        $this->collApplications->setModel('Application');
-    }
-
-    /**
-     * Gets an array of Application objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Country is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Application[] List of Application objects
-     * @throws PropelException
-     */
-    public function getApplications($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collApplicationsPartial && !$this->isNew();
-        if (null === $this->collApplications || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collApplications) {
-                // return empty collection
-                $this->initApplications();
-            } else {
-                $collApplications = ApplicationQuery::create(null, $criteria)
-                    ->filterByCountry($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collApplicationsPartial && count($collApplications)) {
-                      $this->initApplications(false);
-
-                      foreach ($collApplications as $obj) {
-                        if (false == $this->collApplications->contains($obj)) {
-                          $this->collApplications->append($obj);
-                        }
-                      }
-
-                      $this->collApplicationsPartial = true;
-                    }
-
-                    $collApplications->getInternalIterator()->rewind();
-
-                    return $collApplications;
-                }
-
-                if ($partial && $this->collApplications) {
-                    foreach ($this->collApplications as $obj) {
-                        if ($obj->isNew()) {
-                            $collApplications[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collApplications = $collApplications;
-                $this->collApplicationsPartial = false;
-            }
-        }
-
-        return $this->collApplications;
-    }
-
-    /**
-     * Sets a collection of Application objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $applications A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Country The current object (for fluent API support)
-     */
-    public function setApplications(PropelCollection $applications, PropelPDO $con = null)
-    {
-        $applicationsToDelete = $this->getApplications(new Criteria(), $con)->diff($applications);
-
-
-        $this->applicationsScheduledForDeletion = $applicationsToDelete;
-
-        foreach ($applicationsToDelete as $applicationRemoved) {
-            $applicationRemoved->setCountry(null);
-        }
-
-        $this->collApplications = null;
-        foreach ($applications as $application) {
-            $this->addApplication($application);
-        }
-
-        $this->collApplications = $applications;
-        $this->collApplicationsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Application objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related Application objects.
-     * @throws PropelException
-     */
-    public function countApplications(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collApplicationsPartial && !$this->isNew();
-        if (null === $this->collApplications || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collApplications) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getApplications());
-            }
-            $query = ApplicationQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCountry($this)
-                ->count($con);
-        }
-
-        return count($this->collApplications);
-    }
-
-    /**
-     * Method called to associate a Application object to this object
-     * through the Application foreign key attribute.
-     *
-     * @param    Application $l Application
-     * @return Country The current object (for fluent API support)
-     */
-    public function addApplication(Application $l)
-    {
-        if ($this->collApplications === null) {
-            $this->initApplications();
-            $this->collApplicationsPartial = true;
-        }
-
-        if (!in_array($l, $this->collApplications->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddApplication($l);
-
-            if ($this->applicationsScheduledForDeletion and $this->applicationsScheduledForDeletion->contains($l)) {
-                $this->applicationsScheduledForDeletion->remove($this->applicationsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	Application $application The application object to add.
-     */
-    protected function doAddApplication($application)
-    {
-        $this->collApplications[]= $application;
-        $application->setCountry($this);
-    }
-
-    /**
-     * @param	Application $application The application object to remove.
-     * @return Country The current object (for fluent API support)
-     */
-    public function removeApplication($application)
-    {
-        if ($this->getApplications()->contains($application)) {
-            $this->collApplications->remove($this->collApplications->search($application));
-            if (null === $this->applicationsScheduledForDeletion) {
-                $this->applicationsScheduledForDeletion = clone $this->collApplications;
-                $this->applicationsScheduledForDeletion->clear();
-            }
-            $this->applicationsScheduledForDeletion[]= clone $application;
-            $application->setCountry(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('User', $join_behavior);
-
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinSchool($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('School', $join_behavior);
-
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinSchoolYear($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('SchoolYear', $join_behavior);
-
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinEthnicity($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('Ethnicity', $join_behavior);
-
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinGrade($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('Grade', $join_behavior);
-
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinLevel($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('Level', $join_behavior);
-
-        return $this->getApplications($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Applications from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Application[] List of Application objects
-     */
-    public function getApplicationsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = ApplicationQuery::create(null, $criteria);
-        $query->joinWith('State', $join_behavior);
-
-        return $this->getApplications($query, $con);
     }
 
     /**
@@ -2033,31 +1342,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
         $query = UserProfileQuery::create(null, $criteria);
         $query->joinWith('State', $join_behavior);
-
-        return $this->getUserProfiles($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related UserProfiles from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
-     */
-    public function getUserProfilesJoinOrganization($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = UserProfileQuery::create(null, $criteria);
-        $query->joinWith('Organization', $join_behavior);
 
         return $this->getUserProfiles($query, $con);
     }
@@ -2587,238 +1871,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
         return $this->getOrganizations($query, $con);
     }
 
-    /**
-     * Clears out the collSchools collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Country The current object (for fluent API support)
-     * @see        addSchools()
-     */
-    public function clearSchools()
-    {
-        $this->collSchools = null; // important to set this to null since that means it is uninitialized
-        $this->collSchoolsPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collSchools collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialSchools($v = true)
-    {
-        $this->collSchoolsPartial = $v;
-    }
-
-    /**
-     * Initializes the collSchools collection.
-     *
-     * By default this just sets the collSchools collection to an empty array (like clearcollSchools());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSchools($overrideExisting = true)
-    {
-        if (null !== $this->collSchools && !$overrideExisting) {
-            return;
-        }
-        $this->collSchools = new PropelObjectCollection();
-        $this->collSchools->setModel('School');
-    }
-
-    /**
-     * Gets an array of School objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Country is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|School[] List of School objects
-     * @throws PropelException
-     */
-    public function getSchools($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collSchoolsPartial && !$this->isNew();
-        if (null === $this->collSchools || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collSchools) {
-                // return empty collection
-                $this->initSchools();
-            } else {
-                $collSchools = SchoolQuery::create(null, $criteria)
-                    ->filterByCountry($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collSchoolsPartial && count($collSchools)) {
-                      $this->initSchools(false);
-
-                      foreach ($collSchools as $obj) {
-                        if (false == $this->collSchools->contains($obj)) {
-                          $this->collSchools->append($obj);
-                        }
-                      }
-
-                      $this->collSchoolsPartial = true;
-                    }
-
-                    $collSchools->getInternalIterator()->rewind();
-
-                    return $collSchools;
-                }
-
-                if ($partial && $this->collSchools) {
-                    foreach ($this->collSchools as $obj) {
-                        if ($obj->isNew()) {
-                            $collSchools[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSchools = $collSchools;
-                $this->collSchoolsPartial = false;
-            }
-        }
-
-        return $this->collSchools;
-    }
-
-    /**
-     * Sets a collection of School objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $schools A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Country The current object (for fluent API support)
-     */
-    public function setSchools(PropelCollection $schools, PropelPDO $con = null)
-    {
-        $schoolsToDelete = $this->getSchools(new Criteria(), $con)->diff($schools);
-
-
-        $this->schoolsScheduledForDeletion = $schoolsToDelete;
-
-        foreach ($schoolsToDelete as $schoolRemoved) {
-            $schoolRemoved->setCountry(null);
-        }
-
-        $this->collSchools = null;
-        foreach ($schools as $school) {
-            $this->addSchool($school);
-        }
-
-        $this->collSchools = $schools;
-        $this->collSchoolsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related School objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related School objects.
-     * @throws PropelException
-     */
-    public function countSchools(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collSchoolsPartial && !$this->isNew();
-        if (null === $this->collSchools || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSchools) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSchools());
-            }
-            $query = SchoolQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCountry($this)
-                ->count($con);
-        }
-
-        return count($this->collSchools);
-    }
-
-    /**
-     * Method called to associate a School object to this object
-     * through the School foreign key attribute.
-     *
-     * @param    School $l School
-     * @return Country The current object (for fluent API support)
-     */
-    public function addSchool(School $l)
-    {
-        if ($this->collSchools === null) {
-            $this->initSchools();
-            $this->collSchoolsPartial = true;
-        }
-
-        if (!in_array($l, $this->collSchools->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddSchool($l);
-
-            if ($this->schoolsScheduledForDeletion and $this->schoolsScheduledForDeletion->contains($l)) {
-                $this->schoolsScheduledForDeletion->remove($this->schoolsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	School $school The school object to add.
-     */
-    protected function doAddSchool($school)
-    {
-        $this->collSchools[]= $school;
-        $school->setCountry($this);
-    }
-
-    /**
-     * @param	School $school The school object to remove.
-     * @return Country The current object (for fluent API support)
-     */
-    public function removeSchool($school)
-    {
-        if ($this->getSchools()->contains($school)) {
-            $this->collSchools->remove($this->collSchools->search($school));
-            if (null === $this->schoolsScheduledForDeletion) {
-                $this->schoolsScheduledForDeletion = clone $this->collSchools;
-                $this->schoolsScheduledForDeletion->clear();
-            }
-            $this->schoolsScheduledForDeletion[]= clone $school;
-            $school->setCountry(null);
-        }
-
-        return $this;
-    }
-
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
      * Otherwise if this Country is new, it will return
      * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Schools from storage.
+     * been saved, it will retrieve related Organizations from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2827,64 +1886,14 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|School[] List of School objects
+     * @return PropelObjectCollection|Organization[] List of Organization objects
      */
-    public function getSchoolsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getOrganizationsJoinRegion($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = SchoolQuery::create(null, $criteria);
-        $query->joinWith('State', $join_behavior);
+        $query = OrganizationQuery::create(null, $criteria);
+        $query->joinWith('Region', $join_behavior);
 
-        return $this->getSchools($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Schools from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|School[] List of School objects
-     */
-    public function getSchoolsJoinOrganization($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = SchoolQuery::create(null, $criteria);
-        $query->joinWith('Organization', $join_behavior);
-
-        return $this->getSchools($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Country is new, it will return
-     * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Schools from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Country.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|School[] List of School objects
-     */
-    public function getSchoolsJoinLevel($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = SchoolQuery::create(null, $criteria);
-        $query->joinWith('Level', $join_behavior);
-
-        return $this->getSchools($query, $con);
+        return $this->getOrganizations($query, $con);
     }
 
     /**
@@ -2896,8 +1905,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
         $this->code = null;
         $this->name = null;
         $this->desscription = null;
-        $this->created_at = null;
-        $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -2920,11 +1927,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collApplications) {
-                foreach ($this->collApplications as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collUserProfiles) {
                 foreach ($this->collUserProfiles as $o) {
                     $o->clearAllReferences($deep);
@@ -2940,19 +1942,10 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collSchools) {
-                foreach ($this->collSchools as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collApplications instanceof PropelCollection) {
-            $this->collApplications->clearIterator();
-        }
-        $this->collApplications = null;
         if ($this->collUserProfiles instanceof PropelCollection) {
             $this->collUserProfiles->clearIterator();
         }
@@ -2965,10 +1958,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->collOrganizations->clearIterator();
         }
         $this->collOrganizations = null;
-        if ($this->collSchools instanceof PropelCollection) {
-            $this->collSchools->clearIterator();
-        }
-        $this->collSchools = null;
     }
 
     /**
@@ -2989,20 +1978,6 @@ abstract class BaseCountry extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
-    }
-
-    // timestampable behavior
-
-    /**
-     * Mark the current object so that the update date doesn't get updated during next save
-     *
-     * @return     Country The current object (for fluent API support)
-     */
-    public function keepUpdateDateUnchanged()
-    {
-        $this->modifiedColumns[] = CountryPeer::UPDATED_AT;
-
-        return $this;
     }
 
     // event behavior

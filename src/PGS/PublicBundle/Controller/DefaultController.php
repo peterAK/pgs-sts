@@ -22,21 +22,14 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends BaseController
 {
     /**
-     * @var OrganizationManager
-     *
-     * @Inject("pgs.core.manager.organization")
-     */
-    protected $organizationManager;
-
-    /**
      * @Template("PGSPublicBundle:Default:index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        $activeOrganizations = $this->organizationManager->countActive();
-
-        return [
-            'activeOrganizations' => $activeOrganizations
-        ];
+//        $activeOrganizations = $this->organizationManager->countActive();
+//
+//        return [
+//            'activeOrganizations' => $activeOrganizations
+//        ];
     }
 }

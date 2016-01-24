@@ -1,15 +1,3 @@
-pgs_principal:
-    resource: "@PGSPrincipalBundle/Resources/config/routing.yml"
-    prefix:   /
-
-pgs_sales:
-    resource: "@PGSSalesBundle/Resources/config/routing.yml"
-    prefix:   /
-
-pgs_office:
-    resource: "@PGSOfficeBundle/Resources/config/routing.yml"
-    prefix:   /
-
 homepage:
     pattern:  /
     defaults: { _controller: PGSPublicBundle:Default:index }
@@ -23,6 +11,18 @@ pgs_public:
 pgs_admin:
     resource: "@PGSAdminBundle/Resources/config/routing.yml"
     prefix:   /admin
+
+pgs_office:
+    resource: "@PGSOfficeBundle/Resources/config/routing.yml"
+    prefix:   /office
+
+pgs_principal:
+    resource: "@PGSPrincipalBundle/Resources/config/routing.yml"
+    prefix:   /principal
+
+pgs_sales:
+    resource: "@PGSSalesBundle/Resources/config/routing.yml"
+    prefix:   /sales
 
 pgs_core_domain:
     resource: "@PGSCoreDomainBundle/Resources/config/routing.yml"

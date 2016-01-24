@@ -3,7 +3,7 @@
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand logo-v1" href="{{ url('homepage') }}">
-                <img id="logoimg" alt="" src="/images/logo-small-gray.png">
+                SMP{#<img id="logoimg" alt="" src="/images/logo-small-gray.png">#}
             </a>
 
             <div class="navbar-collapse collapse pull-right">
@@ -16,12 +16,12 @@
                         <a href="">{{ 'contact'|trans|title }}</a>
                     </li>
 
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" data-delay="0" data-close-others="false" data-target="#" href="#">{{ 'schools'|trans|title }} <i class="fa fa-angle-down"></i></a>
-                        <!-- BEGIN DROPDOWN MENU - COLUMN -->
-                            {% include('PGSPublicBundle:Widget:school_list.html.twig') %}
-                        <!-- END DROPDOWN MENU -->
-                    </li>
+                    {#<li class="dropdown">#}
+                        {#<a class="dropdown-toggle" data-toggle="dropdown" data-delay="0" data-close-others="false" data-target="#" href="#">{{ 'schools'|trans|title }} <i class="fa fa-angle-down"></i></a>#}
+                        {#<!-- BEGIN DROPDOWN MENU - COLUMN -->#}
+                            {#&#123;&#35;{% include('PGSPublicBundle:Widget:school_list.html.twig') %}&#35;&#125;#}
+                        {#<!-- END DROPDOWN MENU -->#}
+                    {#</li>#}
 
                     <li>
                         {% if app.request.locale == 'en' %}

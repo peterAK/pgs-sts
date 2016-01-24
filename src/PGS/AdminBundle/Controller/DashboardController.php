@@ -16,7 +16,6 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use PGS\CoreDomainBundle\Controller\AbstractBaseController As CoreAbstractBaseController;
-use PGS\CoreDomainBundle\Repository\SchoolYearRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;

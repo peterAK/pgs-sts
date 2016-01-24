@@ -12,6 +12,8 @@ use \PropelPDO;
 use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
 use Glorpen\Propel\PropelBundle\Events\DetectOMClassEvent;
 use Glorpen\Propel\PropelBundle\Events\PeerEvent;
+use PGS\CoreDomainBundle\Model\AreaPeer;
+use PGS\CoreDomainBundle\Model\CityPeer;
 use PGS\CoreDomainBundle\Model\CountryPeer;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StatePeer;
@@ -33,13 +35,13 @@ abstract class BaseStatePeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\map\\StateTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'state.id';
@@ -52,12 +54,6 @@ abstract class BaseStatePeer
 
     /** the column name for the country_id field */
     const COUNTRY_ID = 'state.country_id';
-
-    /** the column name for the created_at field */
-    const CREATED_AT = 'state.created_at';
-
-    /** the column name for the updated_at field */
-    const UPDATED_AT = 'state.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -78,12 +74,12 @@ abstract class BaseStatePeer
      * e.g. StatePeer::$fieldNames[StatePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Code', 'Name', 'CountryId', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'code', 'name', 'countryId', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (StatePeer::ID, StatePeer::CODE, StatePeer::NAME, StatePeer::COUNTRY_ID, StatePeer::CREATED_AT, StatePeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CODE', 'NAME', 'COUNTRY_ID', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'code', 'name', 'country_id', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Code', 'Name', 'CountryId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'code', 'name', 'countryId', ),
+        BasePeer::TYPE_COLNAME => array (StatePeer::ID, StatePeer::CODE, StatePeer::NAME, StatePeer::COUNTRY_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CODE', 'NAME', 'COUNTRY_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'code', 'name', 'country_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -93,12 +89,12 @@ abstract class BaseStatePeer
      * e.g. StatePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Code' => 1, 'Name' => 2, 'CountryId' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'code' => 1, 'name' => 2, 'countryId' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        BasePeer::TYPE_COLNAME => array (StatePeer::ID => 0, StatePeer::CODE => 1, StatePeer::NAME => 2, StatePeer::COUNTRY_ID => 3, StatePeer::CREATED_AT => 4, StatePeer::UPDATED_AT => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CODE' => 1, 'NAME' => 2, 'COUNTRY_ID' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'code' => 1, 'name' => 2, 'country_id' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Code' => 1, 'Name' => 2, 'CountryId' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'code' => 1, 'name' => 2, 'countryId' => 3, ),
+        BasePeer::TYPE_COLNAME => array (StatePeer::ID => 0, StatePeer::CODE => 1, StatePeer::NAME => 2, StatePeer::COUNTRY_ID => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CODE' => 1, 'NAME' => 2, 'COUNTRY_ID' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'code' => 1, 'name' => 2, 'country_id' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -176,15 +172,11 @@ abstract class BaseStatePeer
             $criteria->addSelectColumn(StatePeer::CODE);
             $criteria->addSelectColumn(StatePeer::NAME);
             $criteria->addSelectColumn(StatePeer::COUNTRY_ID);
-            $criteria->addSelectColumn(StatePeer::CREATED_AT);
-            $criteria->addSelectColumn(StatePeer::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.code');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.country_id');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 
@@ -389,6 +381,12 @@ abstract class BaseStatePeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in CityPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CityPeer::clearInstancePool();
+        // Invalidate objects in AreaPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        AreaPeer::clearInstancePool();
     }
 
     /**

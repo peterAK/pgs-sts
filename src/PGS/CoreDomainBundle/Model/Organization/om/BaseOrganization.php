@@ -19,14 +19,12 @@ use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
 use Glorpen\Propel\PropelBundle\Events\ModelEvent;
 use PGS\CoreDomainBundle\Model\Country;
 use PGS\CoreDomainBundle\Model\CountryQuery;
+use PGS\CoreDomainBundle\Model\Region;
+use PGS\CoreDomainBundle\Model\RegionQuery;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StateQuery;
 use PGS\CoreDomainBundle\Model\User;
-use PGS\CoreDomainBundle\Model\UserProfile;
-use PGS\CoreDomainBundle\Model\UserProfileQuery;
 use PGS\CoreDomainBundle\Model\UserQuery;
-use PGS\CoreDomainBundle\Model\Employee\Employee;
-use PGS\CoreDomainBundle\Model\Employee\EmployeeQuery;
 use PGS\CoreDomainBundle\Model\Organization\Organization;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationArchive;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
@@ -34,8 +32,6 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationI18n;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationI18nQuery;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationPeer;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationQuery;
-use PGS\CoreDomainBundle\Model\School\School;
-use PGS\CoreDomainBundle\Model\School\SchoolQuery;
 
 abstract class BaseOrganization extends BaseObject implements Persistent
 {
@@ -89,10 +85,10 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     protected $goverment_license;
 
     /**
-     * The value for the establish_at field.
+     * The value for the join_at field.
      * @var        string
      */
-    protected $establish_at;
+    protected $join_at;
 
     /**
      * The value for the address1 field.
@@ -113,12 +109,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     protected $city;
 
     /**
-     * The value for the state_id field.
-     * @var        int
-     */
-    protected $state_id;
-
-    /**
      * The value for the zipcode field.
      * @var        string
      */
@@ -129,6 +119,18 @@ abstract class BaseOrganization extends BaseObject implements Persistent
      * @var        int
      */
     protected $country_id;
+
+    /**
+     * The value for the state_id field.
+     * @var        int
+     */
+    protected $state_id;
+
+    /**
+     * The value for the region_id field.
+     * @var        int
+     */
+    protected $region_id;
 
     /**
      * The value for the phone field.
@@ -174,6 +176,13 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     protected $status;
 
     /**
+     * The value for the is_principal field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $is_principal;
+
+    /**
      * The value for the confirmation field.
      * Note: this column has a database default value of: 0
      * @var        int
@@ -214,22 +223,9 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     protected $aCountry;
 
     /**
-     * @var        PropelObjectCollection|UserProfile[] Collection to store aggregation of UserProfile objects.
+     * @var        Region
      */
-    protected $collUserProfiles;
-    protected $collUserProfilesPartial;
-
-    /**
-     * @var        PropelObjectCollection|Employee[] Collection to store aggregation of Employee objects.
-     */
-    protected $collEmployees;
-    protected $collEmployeesPartial;
-
-    /**
-     * @var        PropelObjectCollection|School[] Collection to store aggregation of School objects.
-     */
-    protected $collSchools;
-    protected $collSchoolsPartial;
+    protected $aRegion;
 
     /**
      * @var        PropelObjectCollection|OrganizationI18n[] Collection to store aggregation of OrganizationI18n objects.
@@ -286,24 +282,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $userProfilesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $employeesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $schoolsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
     protected $organizationI18nsScheduledForDeletion = null;
 
     /**
@@ -315,6 +293,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     public function applyDefaultValues()
     {
         $this->status = 0;
+        $this->is_principal = false;
         $this->confirmation = 0;
     }
 
@@ -385,7 +364,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [optionally formatted] temporal [establish_at] column value.
+     * Get the [optionally formatted] temporal [join_at] column value.
      *
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
@@ -393,22 +372,22 @@ abstract class BaseOrganization extends BaseObject implements Persistent
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getEstablishAt($format = null)
+    public function getJoinAt($format = null)
     {
-        if ($this->establish_at === null) {
+        if ($this->join_at === null) {
             return null;
         }
 
-        if ($this->establish_at === '0000-00-00') {
+        if ($this->join_at === '0000-00-00') {
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
         }
 
         try {
-            $dt = new DateTime($this->establish_at);
+            $dt = new DateTime($this->join_at);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->establish_at, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->join_at, true), $x);
         }
 
         if ($format === null) {
@@ -458,17 +437,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [state_id] column value.
-     *
-     * @return int
-     */
-    public function getStateId()
-    {
-
-        return $this->state_id;
-    }
-
-    /**
      * Get the [zipcode] column value.
      *
      * @return string
@@ -488,6 +456,28 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     {
 
         return $this->country_id;
+    }
+
+    /**
+     * Get the [state_id] column value.
+     *
+     * @return int
+     */
+    public function getStateId()
+    {
+
+        return $this->state_id;
+    }
+
+    /**
+     * Get the [region_id] column value.
+     *
+     * @return int
+     */
+    public function getRegionId()
+    {
+
+        return $this->region_id;
     }
 
     /**
@@ -573,6 +563,17 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         }
 
         return $valueSet[$this->status];
+    }
+
+    /**
+     * Get the [is_principal] column value.
+     *
+     * @return boolean
+     */
+    public function getIsPrincipal()
+    {
+
+        return $this->is_principal;
     }
 
     /**
@@ -795,27 +796,27 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     } // setGovermentLicense()
 
     /**
-     * Sets the value of [establish_at] column to a normalized version of the date/time value specified.
+     * Sets the value of [join_at] column to a normalized version of the date/time value specified.
      *
      * @param mixed $v string, integer (timestamp), or DateTime value.
      *               Empty strings are treated as null.
      * @return Organization The current object (for fluent API support)
      */
-    public function setEstablishAt($v)
+    public function setJoinAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->establish_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->establish_at !== null && $tmpDt = new DateTime($this->establish_at)) ? $tmpDt->format('Y-m-d') : null;
+        if ($this->join_at !== null || $dt !== null) {
+            $currentDateAsString = ($this->join_at !== null && $tmpDt = new DateTime($this->join_at)) ? $tmpDt->format('Y-m-d') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
             if ($currentDateAsString !== $newDateAsString) {
-                $this->establish_at = $newDateAsString;
-                $this->modifiedColumns[] = OrganizationPeer::ESTABLISH_AT;
+                $this->join_at = $newDateAsString;
+                $this->modifiedColumns[] = OrganizationPeer::JOIN_AT;
             }
         } // if either are not null
 
 
         return $this;
-    } // setEstablishAt()
+    } // setJoinAt()
 
     /**
      * Set the value of [address1] column.
@@ -881,31 +882,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     } // setCity()
 
     /**
-     * Set the value of [state_id] column.
-     *
-     * @param  int $v new value
-     * @return Organization The current object (for fluent API support)
-     */
-    public function setStateId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->state_id !== $v) {
-            $this->state_id = $v;
-            $this->modifiedColumns[] = OrganizationPeer::STATE_ID;
-        }
-
-        if ($this->aState !== null && $this->aState->getId() !== $v) {
-            $this->aState = null;
-        }
-
-
-        return $this;
-    } // setStateId()
-
-    /**
      * Set the value of [zipcode] column.
      *
      * @param  string $v new value
@@ -950,6 +926,56 @@ abstract class BaseOrganization extends BaseObject implements Persistent
 
         return $this;
     } // setCountryId()
+
+    /**
+     * Set the value of [state_id] column.
+     *
+     * @param  int $v new value
+     * @return Organization The current object (for fluent API support)
+     */
+    public function setStateId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->state_id !== $v) {
+            $this->state_id = $v;
+            $this->modifiedColumns[] = OrganizationPeer::STATE_ID;
+        }
+
+        if ($this->aState !== null && $this->aState->getId() !== $v) {
+            $this->aState = null;
+        }
+
+
+        return $this;
+    } // setStateId()
+
+    /**
+     * Set the value of [region_id] column.
+     *
+     * @param  int $v new value
+     * @return Organization The current object (for fluent API support)
+     */
+    public function setRegionId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->region_id !== $v) {
+            $this->region_id = $v;
+            $this->modifiedColumns[] = OrganizationPeer::REGION_ID;
+        }
+
+        if ($this->aRegion !== null && $this->aRegion->getId() !== $v) {
+            $this->aRegion = null;
+        }
+
+
+        return $this;
+    } // setRegionId()
 
     /**
      * Set the value of [phone] column.
@@ -1104,6 +1130,35 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     } // setStatus()
 
     /**
+     * Sets the value of the [is_principal] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return Organization The current object (for fluent API support)
+     */
+    public function setIsPrincipal($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_principal !== $v) {
+            $this->is_principal = $v;
+            $this->modifiedColumns[] = OrganizationPeer::IS_PRINCIPAL;
+        }
+
+
+        return $this;
+    } // setIsPrincipal()
+
+    /**
      * Set the value of [confirmation] column.
      *
      * @param  int $v new value
@@ -1210,6 +1265,10 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->is_principal !== false) {
+                return false;
+            }
+
             if ($this->confirmation !== 0) {
                 return false;
             }
@@ -1241,24 +1300,26 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->url = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->goverment_license = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->establish_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->join_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->address1 = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->address2 = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->city = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->state_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
-            $this->zipcode = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->country_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
-            $this->phone = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->fax = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
-            $this->mobile = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->email = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
-            $this->website = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
-            $this->logo = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
-            $this->status = ($row[$startcol + 18] !== null) ? (int) $row[$startcol + 18] : null;
-            $this->confirmation = ($row[$startcol + 19] !== null) ? (int) $row[$startcol + 19] : null;
-            $this->sortable_rank = ($row[$startcol + 20] !== null) ? (int) $row[$startcol + 20] : null;
-            $this->created_at = ($row[$startcol + 21] !== null) ? (string) $row[$startcol + 21] : null;
-            $this->updated_at = ($row[$startcol + 22] !== null) ? (string) $row[$startcol + 22] : null;
+            $this->zipcode = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->country_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
+            $this->state_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+            $this->region_id = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
+            $this->phone = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
+            $this->fax = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->mobile = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->email = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
+            $this->website = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
+            $this->logo = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
+            $this->status = ($row[$startcol + 19] !== null) ? (int) $row[$startcol + 19] : null;
+            $this->is_principal = ($row[$startcol + 20] !== null) ? (boolean) $row[$startcol + 20] : null;
+            $this->confirmation = ($row[$startcol + 21] !== null) ? (int) $row[$startcol + 21] : null;
+            $this->sortable_rank = ($row[$startcol + 22] !== null) ? (int) $row[$startcol + 22] : null;
+            $this->created_at = ($row[$startcol + 23] !== null) ? (string) $row[$startcol + 23] : null;
+            $this->updated_at = ($row[$startcol + 24] !== null) ? (string) $row[$startcol + 24] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1268,7 +1329,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 23; // 23 = OrganizationPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 25; // 25 = OrganizationPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Organization object", $e);
@@ -1294,11 +1355,14 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
             $this->aUser = null;
         }
+        if ($this->aCountry !== null && $this->country_id !== $this->aCountry->getId()) {
+            $this->aCountry = null;
+        }
         if ($this->aState !== null && $this->state_id !== $this->aState->getId()) {
             $this->aState = null;
         }
-        if ($this->aCountry !== null && $this->country_id !== $this->aCountry->getId()) {
-            $this->aCountry = null;
+        if ($this->aRegion !== null && $this->region_id !== $this->aRegion->getId()) {
+            $this->aRegion = null;
         }
     } // ensureConsistency
 
@@ -1342,12 +1406,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             $this->aUser = null;
             $this->aState = null;
             $this->aCountry = null;
-            $this->collUserProfiles = null;
-
-            $this->collEmployees = null;
-
-            $this->collSchools = null;
-
+            $this->aRegion = null;
             $this->collOrganizationI18ns = null;
 
         } // if (deep)
@@ -1544,6 +1603,13 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 $this->setCountry($this->aCountry);
             }
 
+            if ($this->aRegion !== null) {
+                if ($this->aRegion->isModified() || $this->aRegion->isNew()) {
+                    $affectedRows += $this->aRegion->save($con);
+                }
+                $this->setRegion($this->aRegion);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1553,59 +1619,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->userProfilesScheduledForDeletion !== null) {
-                if (!$this->userProfilesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->userProfilesScheduledForDeletion as $userProfile) {
-                        // need to save related object because we set the relation to null
-                        $userProfile->save($con);
-                    }
-                    $this->userProfilesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collUserProfiles !== null) {
-                foreach ($this->collUserProfiles as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->employeesScheduledForDeletion !== null) {
-                if (!$this->employeesScheduledForDeletion->isEmpty()) {
-                    EmployeeQuery::create()
-                        ->filterByPrimaryKeys($this->employeesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->employeesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collEmployees !== null) {
-                foreach ($this->collEmployees as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->schoolsScheduledForDeletion !== null) {
-                if (!$this->schoolsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->schoolsScheduledForDeletion as $school) {
-                        // need to save related object because we set the relation to null
-                        $school->save($con);
-                    }
-                    $this->schoolsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSchools !== null) {
-                foreach ($this->collSchools as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             if ($this->organizationI18nsScheduledForDeletion !== null) {
@@ -1666,8 +1679,8 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationPeer::GOVERMENT_LICENSE)) {
             $modifiedColumns[':p' . $index++]  = '`goverment_license`';
         }
-        if ($this->isColumnModified(OrganizationPeer::ESTABLISH_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`establish_at`';
+        if ($this->isColumnModified(OrganizationPeer::JOIN_AT)) {
+            $modifiedColumns[':p' . $index++]  = '`join_at`';
         }
         if ($this->isColumnModified(OrganizationPeer::ADDRESS1)) {
             $modifiedColumns[':p' . $index++]  = '`address1`';
@@ -1678,14 +1691,17 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationPeer::CITY)) {
             $modifiedColumns[':p' . $index++]  = '`city`';
         }
-        if ($this->isColumnModified(OrganizationPeer::STATE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`state_id`';
-        }
         if ($this->isColumnModified(OrganizationPeer::ZIPCODE)) {
             $modifiedColumns[':p' . $index++]  = '`zipcode`';
         }
         if ($this->isColumnModified(OrganizationPeer::COUNTRY_ID)) {
             $modifiedColumns[':p' . $index++]  = '`country_id`';
+        }
+        if ($this->isColumnModified(OrganizationPeer::STATE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`state_id`';
+        }
+        if ($this->isColumnModified(OrganizationPeer::REGION_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`region_id`';
         }
         if ($this->isColumnModified(OrganizationPeer::PHONE)) {
             $modifiedColumns[':p' . $index++]  = '`phone`';
@@ -1707,6 +1723,9 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         }
         if ($this->isColumnModified(OrganizationPeer::STATUS)) {
             $modifiedColumns[':p' . $index++]  = '`status`';
+        }
+        if ($this->isColumnModified(OrganizationPeer::IS_PRINCIPAL)) {
+            $modifiedColumns[':p' . $index++]  = '`is_principal`';
         }
         if ($this->isColumnModified(OrganizationPeer::CONFIRMATION)) {
             $modifiedColumns[':p' . $index++]  = '`confirmation`';
@@ -1746,8 +1765,8 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                     case '`goverment_license`':
                         $stmt->bindValue($identifier, $this->goverment_license, PDO::PARAM_STR);
                         break;
-                    case '`establish_at`':
-                        $stmt->bindValue($identifier, $this->establish_at, PDO::PARAM_STR);
+                    case '`join_at`':
+                        $stmt->bindValue($identifier, $this->join_at, PDO::PARAM_STR);
                         break;
                     case '`address1`':
                         $stmt->bindValue($identifier, $this->address1, PDO::PARAM_STR);
@@ -1758,14 +1777,17 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                     case '`city`':
                         $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
                         break;
-                    case '`state_id`':
-                        $stmt->bindValue($identifier, $this->state_id, PDO::PARAM_INT);
-                        break;
                     case '`zipcode`':
                         $stmt->bindValue($identifier, $this->zipcode, PDO::PARAM_STR);
                         break;
                     case '`country_id`':
                         $stmt->bindValue($identifier, $this->country_id, PDO::PARAM_INT);
+                        break;
+                    case '`state_id`':
+                        $stmt->bindValue($identifier, $this->state_id, PDO::PARAM_INT);
+                        break;
+                    case '`region_id`':
+                        $stmt->bindValue($identifier, $this->region_id, PDO::PARAM_INT);
                         break;
                     case '`phone`':
                         $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
@@ -1787,6 +1809,9 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                         break;
                     case '`status`':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_INT);
+                        break;
+                    case '`is_principal`':
+                        $stmt->bindValue($identifier, (int) $this->is_principal, PDO::PARAM_INT);
                         break;
                     case '`confirmation`':
                         $stmt->bindValue($identifier, $this->confirmation, PDO::PARAM_INT);
@@ -1917,35 +1942,17 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->aRegion !== null) {
+                if (!$this->aRegion->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aRegion->getValidationFailures());
+                }
+            }
+
 
             if (($retval = OrganizationPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
-
-                if ($this->collUserProfiles !== null) {
-                    foreach ($this->collUserProfiles as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
-                if ($this->collEmployees !== null) {
-                    foreach ($this->collEmployees as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
-                if ($this->collSchools !== null) {
-                    foreach ($this->collSchools as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
 
                 if ($this->collOrganizationI18ns !== null) {
                     foreach ($this->collOrganizationI18ns as $referrerFK) {
@@ -2006,7 +2013,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 return $this->getGovermentLicense();
                 break;
             case 5:
-                return $this->getEstablishAt();
+                return $this->getJoinAt();
                 break;
             case 6:
                 return $this->getAddress1();
@@ -2018,45 +2025,51 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 return $this->getCity();
                 break;
             case 9:
-                return $this->getStateId();
-                break;
-            case 10:
                 return $this->getZipcode();
                 break;
-            case 11:
+            case 10:
                 return $this->getCountryId();
                 break;
+            case 11:
+                return $this->getStateId();
+                break;
             case 12:
-                return $this->getPhone();
+                return $this->getRegionId();
                 break;
             case 13:
-                return $this->getFax();
+                return $this->getPhone();
                 break;
             case 14:
-                return $this->getMobile();
+                return $this->getFax();
                 break;
             case 15:
-                return $this->getEmail();
+                return $this->getMobile();
                 break;
             case 16:
-                return $this->getWebsite();
+                return $this->getEmail();
                 break;
             case 17:
-                return $this->getLogo();
+                return $this->getWebsite();
                 break;
             case 18:
-                return $this->getStatus();
+                return $this->getLogo();
                 break;
             case 19:
-                return $this->getConfirmation();
+                return $this->getStatus();
                 break;
             case 20:
-                return $this->getSortableRank();
+                return $this->getIsPrincipal();
                 break;
             case 21:
-                return $this->getCreatedAt();
+                return $this->getConfirmation();
                 break;
             case 22:
+                return $this->getSortableRank();
+                break;
+            case 23:
+                return $this->getCreatedAt();
+                break;
+            case 24:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -2093,24 +2106,26 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             $keys[2] => $this->getName(),
             $keys[3] => $this->getUrl(),
             $keys[4] => $this->getGovermentLicense(),
-            $keys[5] => $this->getEstablishAt(),
+            $keys[5] => $this->getJoinAt(),
             $keys[6] => $this->getAddress1(),
             $keys[7] => $this->getAddress2(),
             $keys[8] => $this->getCity(),
-            $keys[9] => $this->getStateId(),
-            $keys[10] => $this->getZipcode(),
-            $keys[11] => $this->getCountryId(),
-            $keys[12] => $this->getPhone(),
-            $keys[13] => $this->getFax(),
-            $keys[14] => $this->getMobile(),
-            $keys[15] => $this->getEmail(),
-            $keys[16] => $this->getWebsite(),
-            $keys[17] => $this->getLogo(),
-            $keys[18] => $this->getStatus(),
-            $keys[19] => $this->getConfirmation(),
-            $keys[20] => $this->getSortableRank(),
-            $keys[21] => $this->getCreatedAt(),
-            $keys[22] => $this->getUpdatedAt(),
+            $keys[9] => $this->getZipcode(),
+            $keys[10] => $this->getCountryId(),
+            $keys[11] => $this->getStateId(),
+            $keys[12] => $this->getRegionId(),
+            $keys[13] => $this->getPhone(),
+            $keys[14] => $this->getFax(),
+            $keys[15] => $this->getMobile(),
+            $keys[16] => $this->getEmail(),
+            $keys[17] => $this->getWebsite(),
+            $keys[18] => $this->getLogo(),
+            $keys[19] => $this->getStatus(),
+            $keys[20] => $this->getIsPrincipal(),
+            $keys[21] => $this->getConfirmation(),
+            $keys[22] => $this->getSortableRank(),
+            $keys[23] => $this->getCreatedAt(),
+            $keys[24] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -2127,14 +2142,8 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             if (null !== $this->aCountry) {
                 $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collUserProfiles) {
-                $result['UserProfiles'] = $this->collUserProfiles->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collEmployees) {
-                $result['Employees'] = $this->collEmployees->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collSchools) {
-                $result['Schools'] = $this->collSchools->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aRegion) {
+                $result['Region'] = $this->aRegion->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collOrganizationI18ns) {
                 $result['OrganizationI18ns'] = $this->collOrganizationI18ns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -2189,7 +2198,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 $this->setGovermentLicense($value);
                 break;
             case 5:
-                $this->setEstablishAt($value);
+                $this->setJoinAt($value);
                 break;
             case 6:
                 $this->setAddress1($value);
@@ -2201,53 +2210,59 @@ abstract class BaseOrganization extends BaseObject implements Persistent
                 $this->setCity($value);
                 break;
             case 9:
-                $this->setStateId($value);
-                break;
-            case 10:
                 $this->setZipcode($value);
                 break;
-            case 11:
+            case 10:
                 $this->setCountryId($value);
                 break;
+            case 11:
+                $this->setStateId($value);
+                break;
             case 12:
-                $this->setPhone($value);
+                $this->setRegionId($value);
                 break;
             case 13:
-                $this->setFax($value);
+                $this->setPhone($value);
                 break;
             case 14:
-                $this->setMobile($value);
+                $this->setFax($value);
                 break;
             case 15:
-                $this->setEmail($value);
+                $this->setMobile($value);
                 break;
             case 16:
-                $this->setWebsite($value);
+                $this->setEmail($value);
                 break;
             case 17:
-                $this->setLogo($value);
+                $this->setWebsite($value);
                 break;
             case 18:
+                $this->setLogo($value);
+                break;
+            case 19:
                 $valueSet = OrganizationPeer::getValueSet(OrganizationPeer::STATUS);
                 if (isset($valueSet[$value])) {
                     $value = $valueSet[$value];
                 }
                 $this->setStatus($value);
                 break;
-            case 19:
+            case 20:
+                $this->setIsPrincipal($value);
+                break;
+            case 21:
                 $valueSet = OrganizationPeer::getValueSet(OrganizationPeer::CONFIRMATION);
                 if (isset($valueSet[$value])) {
                     $value = $valueSet[$value];
                 }
                 $this->setConfirmation($value);
                 break;
-            case 20:
+            case 22:
                 $this->setSortableRank($value);
                 break;
-            case 21:
+            case 23:
                 $this->setCreatedAt($value);
                 break;
-            case 22:
+            case 24:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -2279,24 +2294,26 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setUrl($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setGovermentLicense($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setEstablishAt($arr[$keys[5]]);
+        if (array_key_exists($keys[5], $arr)) $this->setJoinAt($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setAddress1($arr[$keys[6]]);
         if (array_key_exists($keys[7], $arr)) $this->setAddress2($arr[$keys[7]]);
         if (array_key_exists($keys[8], $arr)) $this->setCity($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setStateId($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setZipcode($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setCountryId($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setPhone($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setFax($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setMobile($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setEmail($arr[$keys[15]]);
-        if (array_key_exists($keys[16], $arr)) $this->setWebsite($arr[$keys[16]]);
-        if (array_key_exists($keys[17], $arr)) $this->setLogo($arr[$keys[17]]);
-        if (array_key_exists($keys[18], $arr)) $this->setStatus($arr[$keys[18]]);
-        if (array_key_exists($keys[19], $arr)) $this->setConfirmation($arr[$keys[19]]);
-        if (array_key_exists($keys[20], $arr)) $this->setSortableRank($arr[$keys[20]]);
-        if (array_key_exists($keys[21], $arr)) $this->setCreatedAt($arr[$keys[21]]);
-        if (array_key_exists($keys[22], $arr)) $this->setUpdatedAt($arr[$keys[22]]);
+        if (array_key_exists($keys[9], $arr)) $this->setZipcode($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setCountryId($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setStateId($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setRegionId($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setPhone($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setFax($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setMobile($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setEmail($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setWebsite($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setLogo($arr[$keys[18]]);
+        if (array_key_exists($keys[19], $arr)) $this->setStatus($arr[$keys[19]]);
+        if (array_key_exists($keys[20], $arr)) $this->setIsPrincipal($arr[$keys[20]]);
+        if (array_key_exists($keys[21], $arr)) $this->setConfirmation($arr[$keys[21]]);
+        if (array_key_exists($keys[22], $arr)) $this->setSortableRank($arr[$keys[22]]);
+        if (array_key_exists($keys[23], $arr)) $this->setCreatedAt($arr[$keys[23]]);
+        if (array_key_exists($keys[24], $arr)) $this->setUpdatedAt($arr[$keys[24]]);
     }
 
     /**
@@ -2313,13 +2330,14 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationPeer::NAME)) $criteria->add(OrganizationPeer::NAME, $this->name);
         if ($this->isColumnModified(OrganizationPeer::URL)) $criteria->add(OrganizationPeer::URL, $this->url);
         if ($this->isColumnModified(OrganizationPeer::GOVERMENT_LICENSE)) $criteria->add(OrganizationPeer::GOVERMENT_LICENSE, $this->goverment_license);
-        if ($this->isColumnModified(OrganizationPeer::ESTABLISH_AT)) $criteria->add(OrganizationPeer::ESTABLISH_AT, $this->establish_at);
+        if ($this->isColumnModified(OrganizationPeer::JOIN_AT)) $criteria->add(OrganizationPeer::JOIN_AT, $this->join_at);
         if ($this->isColumnModified(OrganizationPeer::ADDRESS1)) $criteria->add(OrganizationPeer::ADDRESS1, $this->address1);
         if ($this->isColumnModified(OrganizationPeer::ADDRESS2)) $criteria->add(OrganizationPeer::ADDRESS2, $this->address2);
         if ($this->isColumnModified(OrganizationPeer::CITY)) $criteria->add(OrganizationPeer::CITY, $this->city);
-        if ($this->isColumnModified(OrganizationPeer::STATE_ID)) $criteria->add(OrganizationPeer::STATE_ID, $this->state_id);
         if ($this->isColumnModified(OrganizationPeer::ZIPCODE)) $criteria->add(OrganizationPeer::ZIPCODE, $this->zipcode);
         if ($this->isColumnModified(OrganizationPeer::COUNTRY_ID)) $criteria->add(OrganizationPeer::COUNTRY_ID, $this->country_id);
+        if ($this->isColumnModified(OrganizationPeer::STATE_ID)) $criteria->add(OrganizationPeer::STATE_ID, $this->state_id);
+        if ($this->isColumnModified(OrganizationPeer::REGION_ID)) $criteria->add(OrganizationPeer::REGION_ID, $this->region_id);
         if ($this->isColumnModified(OrganizationPeer::PHONE)) $criteria->add(OrganizationPeer::PHONE, $this->phone);
         if ($this->isColumnModified(OrganizationPeer::FAX)) $criteria->add(OrganizationPeer::FAX, $this->fax);
         if ($this->isColumnModified(OrganizationPeer::MOBILE)) $criteria->add(OrganizationPeer::MOBILE, $this->mobile);
@@ -2327,6 +2345,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationPeer::WEBSITE)) $criteria->add(OrganizationPeer::WEBSITE, $this->website);
         if ($this->isColumnModified(OrganizationPeer::LOGO)) $criteria->add(OrganizationPeer::LOGO, $this->logo);
         if ($this->isColumnModified(OrganizationPeer::STATUS)) $criteria->add(OrganizationPeer::STATUS, $this->status);
+        if ($this->isColumnModified(OrganizationPeer::IS_PRINCIPAL)) $criteria->add(OrganizationPeer::IS_PRINCIPAL, $this->is_principal);
         if ($this->isColumnModified(OrganizationPeer::CONFIRMATION)) $criteria->add(OrganizationPeer::CONFIRMATION, $this->confirmation);
         if ($this->isColumnModified(OrganizationPeer::SORTABLE_RANK)) $criteria->add(OrganizationPeer::SORTABLE_RANK, $this->sortable_rank);
         if ($this->isColumnModified(OrganizationPeer::CREATED_AT)) $criteria->add(OrganizationPeer::CREATED_AT, $this->created_at);
@@ -2398,13 +2417,14 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $copyObj->setName($this->getName());
         $copyObj->setUrl($this->getUrl());
         $copyObj->setGovermentLicense($this->getGovermentLicense());
-        $copyObj->setEstablishAt($this->getEstablishAt());
+        $copyObj->setJoinAt($this->getJoinAt());
         $copyObj->setAddress1($this->getAddress1());
         $copyObj->setAddress2($this->getAddress2());
         $copyObj->setCity($this->getCity());
-        $copyObj->setStateId($this->getStateId());
         $copyObj->setZipcode($this->getZipcode());
         $copyObj->setCountryId($this->getCountryId());
+        $copyObj->setStateId($this->getStateId());
+        $copyObj->setRegionId($this->getRegionId());
         $copyObj->setPhone($this->getPhone());
         $copyObj->setFax($this->getFax());
         $copyObj->setMobile($this->getMobile());
@@ -2412,6 +2432,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $copyObj->setWebsite($this->getWebsite());
         $copyObj->setLogo($this->getLogo());
         $copyObj->setStatus($this->getStatus());
+        $copyObj->setIsPrincipal($this->getIsPrincipal());
         $copyObj->setConfirmation($this->getConfirmation());
         $copyObj->setSortableRank($this->getSortableRank());
         $copyObj->setCreatedAt($this->getCreatedAt());
@@ -2423,24 +2444,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
-
-            foreach ($this->getUserProfiles() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUserProfile($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getEmployees() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addEmployee($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getSchools() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSchool($relObj->copy($deepCopy));
-                }
-            }
 
             foreach ($this->getOrganizationI18ns() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -2654,6 +2657,58 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         return $this->aCountry;
     }
 
+    /**
+     * Declares an association between this object and a Region object.
+     *
+     * @param                  Region $v
+     * @return Organization The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setRegion(Region $v = null)
+    {
+        if ($v === null) {
+            $this->setRegionId(NULL);
+        } else {
+            $this->setRegionId($v->getId());
+        }
+
+        $this->aRegion = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Region object, it will not be re-added.
+        if ($v !== null) {
+            $v->addOrganization($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Region object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Region The associated Region object.
+     * @throws PropelException
+     */
+    public function getRegion(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aRegion === null && ($this->region_id !== null) && $doQuery) {
+            $this->aRegion = RegionQuery::create()->findPk($this->region_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aRegion->addOrganizations($this);
+             */
+        }
+
+        return $this->aRegion;
+    }
+
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -2665,893 +2720,9 @@ abstract class BaseOrganization extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('UserProfile' == $relationName) {
-            $this->initUserProfiles();
-        }
-        if ('Employee' == $relationName) {
-            $this->initEmployees();
-        }
-        if ('School' == $relationName) {
-            $this->initSchools();
-        }
         if ('OrganizationI18n' == $relationName) {
             $this->initOrganizationI18ns();
         }
-    }
-
-    /**
-     * Clears out the collUserProfiles collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Organization The current object (for fluent API support)
-     * @see        addUserProfiles()
-     */
-    public function clearUserProfiles()
-    {
-        $this->collUserProfiles = null; // important to set this to null since that means it is uninitialized
-        $this->collUserProfilesPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collUserProfiles collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialUserProfiles($v = true)
-    {
-        $this->collUserProfilesPartial = $v;
-    }
-
-    /**
-     * Initializes the collUserProfiles collection.
-     *
-     * By default this just sets the collUserProfiles collection to an empty array (like clearcollUserProfiles());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initUserProfiles($overrideExisting = true)
-    {
-        if (null !== $this->collUserProfiles && !$overrideExisting) {
-            return;
-        }
-        $this->collUserProfiles = new PropelObjectCollection();
-        $this->collUserProfiles->setModel('UserProfile');
-    }
-
-    /**
-     * Gets an array of UserProfile objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Organization is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
-     * @throws PropelException
-     */
-    public function getUserProfiles($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collUserProfilesPartial && !$this->isNew();
-        if (null === $this->collUserProfiles || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUserProfiles) {
-                // return empty collection
-                $this->initUserProfiles();
-            } else {
-                $collUserProfiles = UserProfileQuery::create(null, $criteria)
-                    ->filterByOrganization($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collUserProfilesPartial && count($collUserProfiles)) {
-                      $this->initUserProfiles(false);
-
-                      foreach ($collUserProfiles as $obj) {
-                        if (false == $this->collUserProfiles->contains($obj)) {
-                          $this->collUserProfiles->append($obj);
-                        }
-                      }
-
-                      $this->collUserProfilesPartial = true;
-                    }
-
-                    $collUserProfiles->getInternalIterator()->rewind();
-
-                    return $collUserProfiles;
-                }
-
-                if ($partial && $this->collUserProfiles) {
-                    foreach ($this->collUserProfiles as $obj) {
-                        if ($obj->isNew()) {
-                            $collUserProfiles[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collUserProfiles = $collUserProfiles;
-                $this->collUserProfilesPartial = false;
-            }
-        }
-
-        return $this->collUserProfiles;
-    }
-
-    /**
-     * Sets a collection of UserProfile objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $userProfiles A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Organization The current object (for fluent API support)
-     */
-    public function setUserProfiles(PropelCollection $userProfiles, PropelPDO $con = null)
-    {
-        $userProfilesToDelete = $this->getUserProfiles(new Criteria(), $con)->diff($userProfiles);
-
-
-        $this->userProfilesScheduledForDeletion = $userProfilesToDelete;
-
-        foreach ($userProfilesToDelete as $userProfileRemoved) {
-            $userProfileRemoved->setOrganization(null);
-        }
-
-        $this->collUserProfiles = null;
-        foreach ($userProfiles as $userProfile) {
-            $this->addUserProfile($userProfile);
-        }
-
-        $this->collUserProfiles = $userProfiles;
-        $this->collUserProfilesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related UserProfile objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related UserProfile objects.
-     * @throws PropelException
-     */
-    public function countUserProfiles(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collUserProfilesPartial && !$this->isNew();
-        if (null === $this->collUserProfiles || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUserProfiles) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getUserProfiles());
-            }
-            $query = UserProfileQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByOrganization($this)
-                ->count($con);
-        }
-
-        return count($this->collUserProfiles);
-    }
-
-    /**
-     * Method called to associate a UserProfile object to this object
-     * through the UserProfile foreign key attribute.
-     *
-     * @param    UserProfile $l UserProfile
-     * @return Organization The current object (for fluent API support)
-     */
-    public function addUserProfile(UserProfile $l)
-    {
-        if ($this->collUserProfiles === null) {
-            $this->initUserProfiles();
-            $this->collUserProfilesPartial = true;
-        }
-
-        if (!in_array($l, $this->collUserProfiles->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddUserProfile($l);
-
-            if ($this->userProfilesScheduledForDeletion and $this->userProfilesScheduledForDeletion->contains($l)) {
-                $this->userProfilesScheduledForDeletion->remove($this->userProfilesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	UserProfile $userProfile The userProfile object to add.
-     */
-    protected function doAddUserProfile($userProfile)
-    {
-        $this->collUserProfiles[]= $userProfile;
-        $userProfile->setOrganization($this);
-    }
-
-    /**
-     * @param	UserProfile $userProfile The userProfile object to remove.
-     * @return Organization The current object (for fluent API support)
-     */
-    public function removeUserProfile($userProfile)
-    {
-        if ($this->getUserProfiles()->contains($userProfile)) {
-            $this->collUserProfiles->remove($this->collUserProfiles->search($userProfile));
-            if (null === $this->userProfilesScheduledForDeletion) {
-                $this->userProfilesScheduledForDeletion = clone $this->collUserProfiles;
-                $this->userProfilesScheduledForDeletion->clear();
-            }
-            $this->userProfilesScheduledForDeletion[]= $userProfile;
-            $userProfile->setOrganization(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related UserProfiles from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
-     */
-    public function getUserProfilesJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = UserProfileQuery::create(null, $criteria);
-        $query->joinWith('State', $join_behavior);
-
-        return $this->getUserProfiles($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related UserProfiles from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
-     */
-    public function getUserProfilesJoinCountry($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = UserProfileQuery::create(null, $criteria);
-        $query->joinWith('Country', $join_behavior);
-
-        return $this->getUserProfiles($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related UserProfiles from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
-     */
-    public function getUserProfilesJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = UserProfileQuery::create(null, $criteria);
-        $query->joinWith('User', $join_behavior);
-
-        return $this->getUserProfiles($query, $con);
-    }
-
-    /**
-     * Clears out the collEmployees collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Organization The current object (for fluent API support)
-     * @see        addEmployees()
-     */
-    public function clearEmployees()
-    {
-        $this->collEmployees = null; // important to set this to null since that means it is uninitialized
-        $this->collEmployeesPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collEmployees collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialEmployees($v = true)
-    {
-        $this->collEmployeesPartial = $v;
-    }
-
-    /**
-     * Initializes the collEmployees collection.
-     *
-     * By default this just sets the collEmployees collection to an empty array (like clearcollEmployees());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initEmployees($overrideExisting = true)
-    {
-        if (null !== $this->collEmployees && !$overrideExisting) {
-            return;
-        }
-        $this->collEmployees = new PropelObjectCollection();
-        $this->collEmployees->setModel('Employee');
-    }
-
-    /**
-     * Gets an array of Employee objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Organization is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Employee[] List of Employee objects
-     * @throws PropelException
-     */
-    public function getEmployees($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collEmployeesPartial && !$this->isNew();
-        if (null === $this->collEmployees || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collEmployees) {
-                // return empty collection
-                $this->initEmployees();
-            } else {
-                $collEmployees = EmployeeQuery::create(null, $criteria)
-                    ->filterByOrganization($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collEmployeesPartial && count($collEmployees)) {
-                      $this->initEmployees(false);
-
-                      foreach ($collEmployees as $obj) {
-                        if (false == $this->collEmployees->contains($obj)) {
-                          $this->collEmployees->append($obj);
-                        }
-                      }
-
-                      $this->collEmployeesPartial = true;
-                    }
-
-                    $collEmployees->getInternalIterator()->rewind();
-
-                    return $collEmployees;
-                }
-
-                if ($partial && $this->collEmployees) {
-                    foreach ($this->collEmployees as $obj) {
-                        if ($obj->isNew()) {
-                            $collEmployees[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collEmployees = $collEmployees;
-                $this->collEmployeesPartial = false;
-            }
-        }
-
-        return $this->collEmployees;
-    }
-
-    /**
-     * Sets a collection of Employee objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $employees A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Organization The current object (for fluent API support)
-     */
-    public function setEmployees(PropelCollection $employees, PropelPDO $con = null)
-    {
-        $employeesToDelete = $this->getEmployees(new Criteria(), $con)->diff($employees);
-
-
-        $this->employeesScheduledForDeletion = $employeesToDelete;
-
-        foreach ($employeesToDelete as $employeeRemoved) {
-            $employeeRemoved->setOrganization(null);
-        }
-
-        $this->collEmployees = null;
-        foreach ($employees as $employee) {
-            $this->addEmployee($employee);
-        }
-
-        $this->collEmployees = $employees;
-        $this->collEmployeesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Employee objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related Employee objects.
-     * @throws PropelException
-     */
-    public function countEmployees(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collEmployeesPartial && !$this->isNew();
-        if (null === $this->collEmployees || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collEmployees) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getEmployees());
-            }
-            $query = EmployeeQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByOrganization($this)
-                ->count($con);
-        }
-
-        return count($this->collEmployees);
-    }
-
-    /**
-     * Method called to associate a Employee object to this object
-     * through the Employee foreign key attribute.
-     *
-     * @param    Employee $l Employee
-     * @return Organization The current object (for fluent API support)
-     */
-    public function addEmployee(Employee $l)
-    {
-        if ($this->collEmployees === null) {
-            $this->initEmployees();
-            $this->collEmployeesPartial = true;
-        }
-
-        if (!in_array($l, $this->collEmployees->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddEmployee($l);
-
-            if ($this->employeesScheduledForDeletion and $this->employeesScheduledForDeletion->contains($l)) {
-                $this->employeesScheduledForDeletion->remove($this->employeesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	Employee $employee The employee object to add.
-     */
-    protected function doAddEmployee($employee)
-    {
-        $this->collEmployees[]= $employee;
-        $employee->setOrganization($this);
-    }
-
-    /**
-     * @param	Employee $employee The employee object to remove.
-     * @return Organization The current object (for fluent API support)
-     */
-    public function removeEmployee($employee)
-    {
-        if ($this->getEmployees()->contains($employee)) {
-            $this->collEmployees->remove($this->collEmployees->search($employee));
-            if (null === $this->employeesScheduledForDeletion) {
-                $this->employeesScheduledForDeletion = clone $this->collEmployees;
-                $this->employeesScheduledForDeletion->clear();
-            }
-            $this->employeesScheduledForDeletion[]= clone $employee;
-            $employee->setOrganization(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related Employees from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Employee[] List of Employee objects
-     */
-    public function getEmployeesJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = EmployeeQuery::create(null, $criteria);
-        $query->joinWith('User', $join_behavior);
-
-        return $this->getEmployees($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related Employees from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Employee[] List of Employee objects
-     */
-    public function getEmployeesJoinSchool($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = EmployeeQuery::create(null, $criteria);
-        $query->joinWith('School', $join_behavior);
-
-        return $this->getEmployees($query, $con);
-    }
-
-    /**
-     * Clears out the collSchools collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Organization The current object (for fluent API support)
-     * @see        addSchools()
-     */
-    public function clearSchools()
-    {
-        $this->collSchools = null; // important to set this to null since that means it is uninitialized
-        $this->collSchoolsPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collSchools collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialSchools($v = true)
-    {
-        $this->collSchoolsPartial = $v;
-    }
-
-    /**
-     * Initializes the collSchools collection.
-     *
-     * By default this just sets the collSchools collection to an empty array (like clearcollSchools());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSchools($overrideExisting = true)
-    {
-        if (null !== $this->collSchools && !$overrideExisting) {
-            return;
-        }
-        $this->collSchools = new PropelObjectCollection();
-        $this->collSchools->setModel('School');
-    }
-
-    /**
-     * Gets an array of School objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Organization is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|School[] List of School objects
-     * @throws PropelException
-     */
-    public function getSchools($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collSchoolsPartial && !$this->isNew();
-        if (null === $this->collSchools || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collSchools) {
-                // return empty collection
-                $this->initSchools();
-            } else {
-                $collSchools = SchoolQuery::create(null, $criteria)
-                    ->filterByOrganization($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collSchoolsPartial && count($collSchools)) {
-                      $this->initSchools(false);
-
-                      foreach ($collSchools as $obj) {
-                        if (false == $this->collSchools->contains($obj)) {
-                          $this->collSchools->append($obj);
-                        }
-                      }
-
-                      $this->collSchoolsPartial = true;
-                    }
-
-                    $collSchools->getInternalIterator()->rewind();
-
-                    return $collSchools;
-                }
-
-                if ($partial && $this->collSchools) {
-                    foreach ($this->collSchools as $obj) {
-                        if ($obj->isNew()) {
-                            $collSchools[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSchools = $collSchools;
-                $this->collSchoolsPartial = false;
-            }
-        }
-
-        return $this->collSchools;
-    }
-
-    /**
-     * Sets a collection of School objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $schools A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Organization The current object (for fluent API support)
-     */
-    public function setSchools(PropelCollection $schools, PropelPDO $con = null)
-    {
-        $schoolsToDelete = $this->getSchools(new Criteria(), $con)->diff($schools);
-
-
-        $this->schoolsScheduledForDeletion = $schoolsToDelete;
-
-        foreach ($schoolsToDelete as $schoolRemoved) {
-            $schoolRemoved->setOrganization(null);
-        }
-
-        $this->collSchools = null;
-        foreach ($schools as $school) {
-            $this->addSchool($school);
-        }
-
-        $this->collSchools = $schools;
-        $this->collSchoolsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related School objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related School objects.
-     * @throws PropelException
-     */
-    public function countSchools(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collSchoolsPartial && !$this->isNew();
-        if (null === $this->collSchools || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSchools) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSchools());
-            }
-            $query = SchoolQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByOrganization($this)
-                ->count($con);
-        }
-
-        return count($this->collSchools);
-    }
-
-    /**
-     * Method called to associate a School object to this object
-     * through the School foreign key attribute.
-     *
-     * @param    School $l School
-     * @return Organization The current object (for fluent API support)
-     */
-    public function addSchool(School $l)
-    {
-        if ($this->collSchools === null) {
-            $this->initSchools();
-            $this->collSchoolsPartial = true;
-        }
-
-        if (!in_array($l, $this->collSchools->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddSchool($l);
-
-            if ($this->schoolsScheduledForDeletion and $this->schoolsScheduledForDeletion->contains($l)) {
-                $this->schoolsScheduledForDeletion->remove($this->schoolsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	School $school The school object to add.
-     */
-    protected function doAddSchool($school)
-    {
-        $this->collSchools[]= $school;
-        $school->setOrganization($this);
-    }
-
-    /**
-     * @param	School $school The school object to remove.
-     * @return Organization The current object (for fluent API support)
-     */
-    public function removeSchool($school)
-    {
-        if ($this->getSchools()->contains($school)) {
-            $this->collSchools->remove($this->collSchools->search($school));
-            if (null === $this->schoolsScheduledForDeletion) {
-                $this->schoolsScheduledForDeletion = clone $this->collSchools;
-                $this->schoolsScheduledForDeletion->clear();
-            }
-            $this->schoolsScheduledForDeletion[]= $school;
-            $school->setOrganization(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related Schools from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|School[] List of School objects
-     */
-    public function getSchoolsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = SchoolQuery::create(null, $criteria);
-        $query->joinWith('State', $join_behavior);
-
-        return $this->getSchools($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related Schools from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|School[] List of School objects
-     */
-    public function getSchoolsJoinCountry($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = SchoolQuery::create(null, $criteria);
-        $query->joinWith('Country', $join_behavior);
-
-        return $this->getSchools($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Organization is new, it will return
-     * an empty collection; or if this Organization has previously
-     * been saved, it will retrieve related Schools from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Organization.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|School[] List of School objects
-     */
-    public function getSchoolsJoinLevel($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = SchoolQuery::create(null, $criteria);
-        $query->joinWith('Level', $join_behavior);
-
-        return $this->getSchools($query, $con);
     }
 
     /**
@@ -3796,13 +2967,14 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $this->name = null;
         $this->url = null;
         $this->goverment_license = null;
-        $this->establish_at = null;
+        $this->join_at = null;
         $this->address1 = null;
         $this->address2 = null;
         $this->city = null;
-        $this->state_id = null;
         $this->zipcode = null;
         $this->country_id = null;
+        $this->state_id = null;
+        $this->region_id = null;
         $this->phone = null;
         $this->fax = null;
         $this->mobile = null;
@@ -3810,6 +2982,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $this->website = null;
         $this->logo = null;
         $this->status = null;
+        $this->is_principal = null;
         $this->confirmation = null;
         $this->sortable_rank = null;
         $this->created_at = null;
@@ -3837,21 +3010,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collUserProfiles) {
-                foreach ($this->collUserProfiles as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collEmployees) {
-                foreach ($this->collEmployees as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collSchools) {
-                foreach ($this->collSchools as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collOrganizationI18ns) {
                 foreach ($this->collOrganizationI18ns as $o) {
                     $o->clearAllReferences($deep);
@@ -3866,6 +3024,9 @@ abstract class BaseOrganization extends BaseObject implements Persistent
             if ($this->aCountry instanceof Persistent) {
               $this->aCountry->clearAllReferences($deep);
             }
+            if ($this->aRegion instanceof Persistent) {
+              $this->aRegion->clearAllReferences($deep);
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
@@ -3874,18 +3035,6 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $this->currentLocale = 'en_US';
         $this->currentTranslations = null;
 
-        if ($this->collUserProfiles instanceof PropelCollection) {
-            $this->collUserProfiles->clearIterator();
-        }
-        $this->collUserProfiles = null;
-        if ($this->collEmployees instanceof PropelCollection) {
-            $this->collEmployees->clearIterator();
-        }
-        $this->collEmployees = null;
-        if ($this->collSchools instanceof PropelCollection) {
-            $this->collSchools->clearIterator();
-        }
-        $this->collSchools = null;
         if ($this->collOrganizationI18ns instanceof PropelCollection) {
             $this->collOrganizationI18ns->clearIterator();
         }
@@ -3893,6 +3042,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $this->aUser = null;
         $this->aState = null;
         $this->aCountry = null;
+        $this->aRegion = null;
     }
 
     /**
@@ -4666,13 +3816,14 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $this->setName($archive->getName());
         $this->setUrl($archive->getUrl());
         $this->setGovermentLicense($archive->getGovermentLicense());
-        $this->setEstablishAt($archive->getEstablishAt());
+        $this->setJoinAt($archive->getJoinAt());
         $this->setAddress1($archive->getAddress1());
         $this->setAddress2($archive->getAddress2());
         $this->setCity($archive->getCity());
-        $this->setStateId($archive->getStateId());
         $this->setZipcode($archive->getZipcode());
         $this->setCountryId($archive->getCountryId());
+        $this->setStateId($archive->getStateId());
+        $this->setRegionId($archive->getRegionId());
         $this->setPhone($archive->getPhone());
         $this->setFax($archive->getFax());
         $this->setMobile($archive->getMobile());
@@ -4680,6 +3831,7 @@ abstract class BaseOrganization extends BaseObject implements Persistent
         $this->setWebsite($archive->getWebsite());
         $this->setLogo($archive->getLogo());
         $this->setStatus($archive->getStatus());
+        $this->setIsPrincipal($archive->getIsPrincipal());
         $this->setConfirmation($archive->getConfirmation());
         $this->setSortableRank($archive->getSortableRank());
         $this->setCreatedAt($archive->getCreatedAt());

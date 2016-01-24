@@ -7,13 +7,14 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * Created by Peter on 1/20/2015.
  */
+
 
 namespace PGS\CoreDomainBundle\Controller;
 
-use PGS\CoreDomainBundle\Container\OldActivePreferenceContainer;
-use PGS\CoreDomainBundle\Model\User;
-use PGS\CoreDomainBundle\Model\UserProfile;
+use PGS\CoreDomainBundle\Container\ActivePreferenceContainer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,9 +22,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use PGS\CoreDomainBundle\Model\User;
+
 
 abstract class AbstractBaseController extends Controller implements ContainerAwareInterface
 {
@@ -56,6 +59,14 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
     protected function getLocales()
     {
         return $this->container->getParameter('locales');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPagesOn()
+    {
+        return $this->container->getParameter('site_pages');
     }
 
     /**
@@ -102,7 +113,7 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
     }
 
     /**
-     * @return OldActivePreferenceContainer
+     * @return ActivePreferenceContainer
      */
     protected function getActivePreference()
     {
@@ -121,12 +132,12 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
     {
         $user = $this->getSecurityContext()->getToken()->getUser();
 
-        return $this->getUserManager()->findOneById($user->getId());
+        return $user;
     }
 
     /**
      * @param array|string $data
-     * @param int          $statusz
+     * @param int          $status
      * @param array        $headers
      *
      * @return JsonResponse
@@ -137,14 +148,9 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
     }
 
 
-    /**
-     * @param string $message
-     *
-     * @return AccessDeniedException
-     */
-    protected function createAccessDeniedException($message)
+    public function createAccessDeniedException($message = 'Access Denied', \Exception $previous = null)
     {
-        return new AccessDeniedException($message);
+        return new AccessDeniedException($message, $previous);
     }
 
     /**
@@ -159,10 +165,6 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
     {
         $this->securityContext = $this->getSecurityContext();
 
-        if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            return new RedirectResponse($this->container->get('router')->generate('sonata_admin_dashboard'));
-        }
-
         if ($this->securityContext->isGranted('ROLE_ADMIN')) {
             return new RedirectResponse($this->container->get('router')->generate('pgs_admin_dashboard'));
         }
@@ -172,7 +174,7 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
         }
 
         if ($this->securityContext->isGranted('ROLE_PRINCIPAL')) {
-            return new RedirectResponse($this->generateUrl('pgs_principal_dashboard'));
+            return new RedirectResponse($this->container->get('router')->generate('pgs_principal_dashboard'));
         }
 
         if ($this->securityContext->isGranted('ROLE_STUDENT')) {
@@ -194,6 +196,8 @@ abstract class AbstractBaseController extends Controller implements ContainerAwa
         if ($this->securityContext->isGranted('ROLE_USER')) {
             return new RedirectResponse($this->container->get('router')->generate('homepage'));
         }
+
+        return new RedirectResponse($this->container->get('router')->generate('homepage'));
     }
 
     /**

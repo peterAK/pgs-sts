@@ -12,25 +12,11 @@ use \PropelPDO;
 use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
 use Glorpen\Propel\PropelBundle\Events\DetectOMClassEvent;
 use Glorpen\Propel\PropelBundle\Events\PeerEvent;
-use PGS\CoreDomainBundle\Model\PagePeer;
 use PGS\CoreDomainBundle\Model\User;
 use PGS\CoreDomainBundle\Model\UserLogPeer;
 use PGS\CoreDomainBundle\Model\UserPeer;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
-use PGS\CoreDomainBundle\Model\Announcement\AnnouncementPeer;
-use PGS\CoreDomainBundle\Model\Application\ApplicationPeer;
-use PGS\CoreDomainBundle\Model\Behavior\BehaviorPeer;
-use PGS\CoreDomainBundle\Model\Category\CategoryPeer;
-use PGS\CoreDomainBundle\Model\Employee\EmployeePeer;
-use PGS\CoreDomainBundle\Model\Ethnicity\EthnicityPeer;
-use PGS\CoreDomainBundle\Model\Message\MessagePeer;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationPeer;
-use PGS\CoreDomainBundle\Model\ParentStudent\ParentStudentPeer;
-use PGS\CoreDomainBundle\Model\Religion\ReligionPeer;
-use PGS\CoreDomainBundle\Model\SchoolClassCourse\SchoolClassCoursePeer;
-use PGS\CoreDomainBundle\Model\Student\StudentPeer;
-use PGS\CoreDomainBundle\Model\StudentAvatar\StudentAvatarPeer;
-use PGS\CoreDomainBundle\Model\Test\TestPeer;
 use PGS\CoreDomainBundle\Model\map\UserTableMap;
 
 abstract class BaseUserPeer
@@ -555,60 +541,12 @@ abstract class BaseUserPeer
      */
     public static function clearRelatedInstancePool()
     {
-        // Invalidate objects in AnnouncementPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        AnnouncementPeer::clearInstancePool();
-        // Invalidate objects in ApplicationPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        ApplicationPeer::clearInstancePool();
-        // Invalidate objects in BehaviorPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        BehaviorPeer::clearInstancePool();
-        // Invalidate objects in CategoryPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CategoryPeer::clearInstancePool();
         // Invalidate objects in UserLogPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         UserLogPeer::clearInstancePool();
-        // Invalidate objects in PagePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        PagePeer::clearInstancePool();
-        // Invalidate objects in EmployeePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        EmployeePeer::clearInstancePool();
-        // Invalidate objects in EthnicityPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        EthnicityPeer::clearInstancePool();
-        // Invalidate objects in MessagePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        MessagePeer::clearInstancePool();
-        // Invalidate objects in MessagePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        MessagePeer::clearInstancePool();
         // Invalidate objects in OrganizationPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         OrganizationPeer::clearInstancePool();
-        // Invalidate objects in ParentStudentPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        ParentStudentPeer::clearInstancePool();
-        // Invalidate objects in ReligionPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        ReligionPeer::clearInstancePool();
-        // Invalidate objects in SchoolClassCoursePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        SchoolClassCoursePeer::clearInstancePool();
-        // Invalidate objects in SchoolClassCoursePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        SchoolClassCoursePeer::clearInstancePool();
-        // Invalidate objects in StudentPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        StudentPeer::clearInstancePool();
-        // Invalidate objects in StudentAvatarPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        StudentAvatarPeer::clearInstancePool();
-        // Invalidate objects in TestPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        TestPeer::clearInstancePool();
         // Invalidate objects in UserProfilePeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         UserProfilePeer::clearInstancePool();

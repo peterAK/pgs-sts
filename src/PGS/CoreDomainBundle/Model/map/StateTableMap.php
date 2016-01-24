@@ -46,8 +46,6 @@ class StateTableMap extends TableMap
         $this->addColumn('code', 'Code', 'VARCHAR', true, 10, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 100, null);
         $this->addForeignKey('country_id', 'CountryId', 'INTEGER', 'country', 'id', false, null, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -57,10 +55,11 @@ class StateTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Country', 'PGS\\CoreDomainBundle\\Model\\Country', RelationMap::MANY_TO_ONE, array('country_id' => 'id', ), 'SET NULL', 'CASCADE');
-        $this->addRelation('Application', 'PGS\\CoreDomainBundle\\Model\\Application\\Application', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'Applications');
+        $this->addRelation('BranchCoverage', 'PGS\\CoreDomainBundle\\Model\\BranchCoverage\\BranchCoverage', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'BranchCoverages');
         $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'UserProfiles');
+        $this->addRelation('City', 'PGS\\CoreDomainBundle\\Model\\City', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), 'SET NULL', 'CASCADE', 'Cities');
+        $this->addRelation('Area', 'PGS\\CoreDomainBundle\\Model\\Area', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), 'SET NULL', 'CASCADE', 'Areas');
         $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'Organizations');
-        $this->addRelation('School', 'PGS\\CoreDomainBundle\\Model\\School\\School', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'Schools');
     } // buildRelations()
 
     /**
@@ -74,11 +73,6 @@ class StateTableMap extends TableMap
         return array(
             'delegate' =>  array (
   'to' => 'country',
-),
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
 ),
             'event' =>  array (
 ),

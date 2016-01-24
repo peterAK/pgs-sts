@@ -24,13 +24,14 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method OrganizationArchiveQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method OrganizationArchiveQuery orderByExcerpt($order = Criteria::ASC) Order by the excerpt column
  * @method OrganizationArchiveQuery orderByGovermentLicense($order = Criteria::ASC) Order by the goverment_license column
- * @method OrganizationArchiveQuery orderByEstablishAt($order = Criteria::ASC) Order by the establish_at column
+ * @method OrganizationArchiveQuery orderByJoinAt($order = Criteria::ASC) Order by the join_at column
  * @method OrganizationArchiveQuery orderByAddress1($order = Criteria::ASC) Order by the address1 column
  * @method OrganizationArchiveQuery orderByAddress2($order = Criteria::ASC) Order by the address2 column
  * @method OrganizationArchiveQuery orderByCity($order = Criteria::ASC) Order by the city column
- * @method OrganizationArchiveQuery orderByStateId($order = Criteria::ASC) Order by the state_id column
  * @method OrganizationArchiveQuery orderByZipcode($order = Criteria::ASC) Order by the zipcode column
  * @method OrganizationArchiveQuery orderByCountryId($order = Criteria::ASC) Order by the country_id column
+ * @method OrganizationArchiveQuery orderByStateId($order = Criteria::ASC) Order by the state_id column
+ * @method OrganizationArchiveQuery orderByRegionId($order = Criteria::ASC) Order by the region_id column
  * @method OrganizationArchiveQuery orderByPhone($order = Criteria::ASC) Order by the phone column
  * @method OrganizationArchiveQuery orderByFax($order = Criteria::ASC) Order by the fax column
  * @method OrganizationArchiveQuery orderByMobile($order = Criteria::ASC) Order by the mobile column
@@ -38,6 +39,7 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method OrganizationArchiveQuery orderByWebsite($order = Criteria::ASC) Order by the website column
  * @method OrganizationArchiveQuery orderByLogo($order = Criteria::ASC) Order by the logo column
  * @method OrganizationArchiveQuery orderByStatus($order = Criteria::ASC) Order by the status column
+ * @method OrganizationArchiveQuery orderByIsPrincipal($order = Criteria::ASC) Order by the is_principal column
  * @method OrganizationArchiveQuery orderByConfirmation($order = Criteria::ASC) Order by the confirmation column
  * @method OrganizationArchiveQuery orderBySortableRank($order = Criteria::ASC) Order by the sortable_rank column
  * @method OrganizationArchiveQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
@@ -51,13 +53,14 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method OrganizationArchiveQuery groupByDescription() Group by the description column
  * @method OrganizationArchiveQuery groupByExcerpt() Group by the excerpt column
  * @method OrganizationArchiveQuery groupByGovermentLicense() Group by the goverment_license column
- * @method OrganizationArchiveQuery groupByEstablishAt() Group by the establish_at column
+ * @method OrganizationArchiveQuery groupByJoinAt() Group by the join_at column
  * @method OrganizationArchiveQuery groupByAddress1() Group by the address1 column
  * @method OrganizationArchiveQuery groupByAddress2() Group by the address2 column
  * @method OrganizationArchiveQuery groupByCity() Group by the city column
- * @method OrganizationArchiveQuery groupByStateId() Group by the state_id column
  * @method OrganizationArchiveQuery groupByZipcode() Group by the zipcode column
  * @method OrganizationArchiveQuery groupByCountryId() Group by the country_id column
+ * @method OrganizationArchiveQuery groupByStateId() Group by the state_id column
+ * @method OrganizationArchiveQuery groupByRegionId() Group by the region_id column
  * @method OrganizationArchiveQuery groupByPhone() Group by the phone column
  * @method OrganizationArchiveQuery groupByFax() Group by the fax column
  * @method OrganizationArchiveQuery groupByMobile() Group by the mobile column
@@ -65,6 +68,7 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method OrganizationArchiveQuery groupByWebsite() Group by the website column
  * @method OrganizationArchiveQuery groupByLogo() Group by the logo column
  * @method OrganizationArchiveQuery groupByStatus() Group by the status column
+ * @method OrganizationArchiveQuery groupByIsPrincipal() Group by the is_principal column
  * @method OrganizationArchiveQuery groupByConfirmation() Group by the confirmation column
  * @method OrganizationArchiveQuery groupBySortableRank() Group by the sortable_rank column
  * @method OrganizationArchiveQuery groupByCreatedAt() Group by the created_at column
@@ -84,13 +88,14 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method OrganizationArchive findOneByDescription(string $description) Return the first OrganizationArchive filtered by the description column
  * @method OrganizationArchive findOneByExcerpt(string $excerpt) Return the first OrganizationArchive filtered by the excerpt column
  * @method OrganizationArchive findOneByGovermentLicense(string $goverment_license) Return the first OrganizationArchive filtered by the goverment_license column
- * @method OrganizationArchive findOneByEstablishAt(string $establish_at) Return the first OrganizationArchive filtered by the establish_at column
+ * @method OrganizationArchive findOneByJoinAt(string $join_at) Return the first OrganizationArchive filtered by the join_at column
  * @method OrganizationArchive findOneByAddress1(string $address1) Return the first OrganizationArchive filtered by the address1 column
  * @method OrganizationArchive findOneByAddress2(string $address2) Return the first OrganizationArchive filtered by the address2 column
  * @method OrganizationArchive findOneByCity(string $city) Return the first OrganizationArchive filtered by the city column
- * @method OrganizationArchive findOneByStateId(int $state_id) Return the first OrganizationArchive filtered by the state_id column
  * @method OrganizationArchive findOneByZipcode(string $zipcode) Return the first OrganizationArchive filtered by the zipcode column
  * @method OrganizationArchive findOneByCountryId(int $country_id) Return the first OrganizationArchive filtered by the country_id column
+ * @method OrganizationArchive findOneByStateId(int $state_id) Return the first OrganizationArchive filtered by the state_id column
+ * @method OrganizationArchive findOneByRegionId(int $region_id) Return the first OrganizationArchive filtered by the region_id column
  * @method OrganizationArchive findOneByPhone(string $phone) Return the first OrganizationArchive filtered by the phone column
  * @method OrganizationArchive findOneByFax(string $fax) Return the first OrganizationArchive filtered by the fax column
  * @method OrganizationArchive findOneByMobile(string $mobile) Return the first OrganizationArchive filtered by the mobile column
@@ -98,6 +103,7 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method OrganizationArchive findOneByWebsite(string $website) Return the first OrganizationArchive filtered by the website column
  * @method OrganizationArchive findOneByLogo(string $logo) Return the first OrganizationArchive filtered by the logo column
  * @method OrganizationArchive findOneByStatus(int $status) Return the first OrganizationArchive filtered by the status column
+ * @method OrganizationArchive findOneByIsPrincipal(boolean $is_principal) Return the first OrganizationArchive filtered by the is_principal column
  * @method OrganizationArchive findOneByConfirmation(int $confirmation) Return the first OrganizationArchive filtered by the confirmation column
  * @method OrganizationArchive findOneBySortableRank(int $sortable_rank) Return the first OrganizationArchive filtered by the sortable_rank column
  * @method OrganizationArchive findOneByCreatedAt(string $created_at) Return the first OrganizationArchive filtered by the created_at column
@@ -111,13 +117,14 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method array findByDescription(string $description) Return OrganizationArchive objects filtered by the description column
  * @method array findByExcerpt(string $excerpt) Return OrganizationArchive objects filtered by the excerpt column
  * @method array findByGovermentLicense(string $goverment_license) Return OrganizationArchive objects filtered by the goverment_license column
- * @method array findByEstablishAt(string $establish_at) Return OrganizationArchive objects filtered by the establish_at column
+ * @method array findByJoinAt(string $join_at) Return OrganizationArchive objects filtered by the join_at column
  * @method array findByAddress1(string $address1) Return OrganizationArchive objects filtered by the address1 column
  * @method array findByAddress2(string $address2) Return OrganizationArchive objects filtered by the address2 column
  * @method array findByCity(string $city) Return OrganizationArchive objects filtered by the city column
- * @method array findByStateId(int $state_id) Return OrganizationArchive objects filtered by the state_id column
  * @method array findByZipcode(string $zipcode) Return OrganizationArchive objects filtered by the zipcode column
  * @method array findByCountryId(int $country_id) Return OrganizationArchive objects filtered by the country_id column
+ * @method array findByStateId(int $state_id) Return OrganizationArchive objects filtered by the state_id column
+ * @method array findByRegionId(int $region_id) Return OrganizationArchive objects filtered by the region_id column
  * @method array findByPhone(string $phone) Return OrganizationArchive objects filtered by the phone column
  * @method array findByFax(string $fax) Return OrganizationArchive objects filtered by the fax column
  * @method array findByMobile(string $mobile) Return OrganizationArchive objects filtered by the mobile column
@@ -125,6 +132,7 @@ use PGS\CoreDomainBundle\Model\Organization\OrganizationArchiveQuery;
  * @method array findByWebsite(string $website) Return OrganizationArchive objects filtered by the website column
  * @method array findByLogo(string $logo) Return OrganizationArchive objects filtered by the logo column
  * @method array findByStatus(int $status) Return OrganizationArchive objects filtered by the status column
+ * @method array findByIsPrincipal(boolean $is_principal) Return OrganizationArchive objects filtered by the is_principal column
  * @method array findByConfirmation(int $confirmation) Return OrganizationArchive objects filtered by the confirmation column
  * @method array findBySortableRank(int $sortable_rank) Return OrganizationArchive objects filtered by the sortable_rank column
  * @method array findByCreatedAt(string $created_at) Return OrganizationArchive objects filtered by the created_at column
@@ -236,7 +244,7 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `user_id`, `name`, `url`, `description`, `excerpt`, `goverment_license`, `establish_at`, `address1`, `address2`, `city`, `state_id`, `zipcode`, `country_id`, `phone`, `fax`, `mobile`, `email`, `website`, `logo`, `status`, `confirmation`, `sortable_rank`, `created_at`, `updated_at`, `archived_at` FROM `organization_archive` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `user_id`, `name`, `url`, `description`, `excerpt`, `goverment_license`, `join_at`, `address1`, `address2`, `city`, `zipcode`, `country_id`, `state_id`, `region_id`, `phone`, `fax`, `mobile`, `email`, `website`, `logo`, `status`, `is_principal`, `confirmation`, `sortable_rank`, `created_at`, `updated_at`, `archived_at` FROM `organization_archive` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -556,16 +564,16 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the establish_at column
+     * Filter the query on the join_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByEstablishAt('2011-03-14'); // WHERE establish_at = '2011-03-14'
-     * $query->filterByEstablishAt('now'); // WHERE establish_at = '2011-03-14'
-     * $query->filterByEstablishAt(array('max' => 'yesterday')); // WHERE establish_at < '2011-03-13'
+     * $query->filterByJoinAt('2011-03-14'); // WHERE join_at = '2011-03-14'
+     * $query->filterByJoinAt('now'); // WHERE join_at = '2011-03-14'
+     * $query->filterByJoinAt(array('max' => 'yesterday')); // WHERE join_at < '2011-03-13'
      * </code>
      *
-     * @param     mixed $establishAt The value to use as filter.
+     * @param     mixed $joinAt The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -575,16 +583,16 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
      *
      * @return OrganizationArchiveQuery The current query, for fluid interface
      */
-    public function filterByEstablishAt($establishAt = null, $comparison = null)
+    public function filterByJoinAt($joinAt = null, $comparison = null)
     {
-        if (is_array($establishAt)) {
+        if (is_array($joinAt)) {
             $useMinMax = false;
-            if (isset($establishAt['min'])) {
-                $this->addUsingAlias(OrganizationArchivePeer::ESTABLISH_AT, $establishAt['min'], Criteria::GREATER_EQUAL);
+            if (isset($joinAt['min'])) {
+                $this->addUsingAlias(OrganizationArchivePeer::JOIN_AT, $joinAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($establishAt['max'])) {
-                $this->addUsingAlias(OrganizationArchivePeer::ESTABLISH_AT, $establishAt['max'], Criteria::LESS_EQUAL);
+            if (isset($joinAt['max'])) {
+                $this->addUsingAlias(OrganizationArchivePeer::JOIN_AT, $joinAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -595,7 +603,7 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(OrganizationArchivePeer::ESTABLISH_AT, $establishAt, $comparison);
+        return $this->addUsingAlias(OrganizationArchivePeer::JOIN_AT, $joinAt, $comparison);
     }
 
     /**
@@ -686,48 +694,6 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the state_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByStateId(1234); // WHERE state_id = 1234
-     * $query->filterByStateId(array(12, 34)); // WHERE state_id IN (12, 34)
-     * $query->filterByStateId(array('min' => 12)); // WHERE state_id >= 12
-     * $query->filterByStateId(array('max' => 12)); // WHERE state_id <= 12
-     * </code>
-     *
-     * @param     mixed $stateId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function filterByStateId($stateId = null, $comparison = null)
-    {
-        if (is_array($stateId)) {
-            $useMinMax = false;
-            if (isset($stateId['min'])) {
-                $this->addUsingAlias(OrganizationArchivePeer::STATE_ID, $stateId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($stateId['max'])) {
-                $this->addUsingAlias(OrganizationArchivePeer::STATE_ID, $stateId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(OrganizationArchivePeer::STATE_ID, $stateId, $comparison);
-    }
-
-    /**
      * Filter the query on the zipcode column
      *
      * Example usage:
@@ -796,6 +762,90 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(OrganizationArchivePeer::COUNTRY_ID, $countryId, $comparison);
+    }
+
+    /**
+     * Filter the query on the state_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStateId(1234); // WHERE state_id = 1234
+     * $query->filterByStateId(array(12, 34)); // WHERE state_id IN (12, 34)
+     * $query->filterByStateId(array('min' => 12)); // WHERE state_id >= 12
+     * $query->filterByStateId(array('max' => 12)); // WHERE state_id <= 12
+     * </code>
+     *
+     * @param     mixed $stateId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return OrganizationArchiveQuery The current query, for fluid interface
+     */
+    public function filterByStateId($stateId = null, $comparison = null)
+    {
+        if (is_array($stateId)) {
+            $useMinMax = false;
+            if (isset($stateId['min'])) {
+                $this->addUsingAlias(OrganizationArchivePeer::STATE_ID, $stateId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($stateId['max'])) {
+                $this->addUsingAlias(OrganizationArchivePeer::STATE_ID, $stateId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(OrganizationArchivePeer::STATE_ID, $stateId, $comparison);
+    }
+
+    /**
+     * Filter the query on the region_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRegionId(1234); // WHERE region_id = 1234
+     * $query->filterByRegionId(array(12, 34)); // WHERE region_id IN (12, 34)
+     * $query->filterByRegionId(array('min' => 12)); // WHERE region_id >= 12
+     * $query->filterByRegionId(array('max' => 12)); // WHERE region_id <= 12
+     * </code>
+     *
+     * @param     mixed $regionId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return OrganizationArchiveQuery The current query, for fluid interface
+     */
+    public function filterByRegionId($regionId = null, $comparison = null)
+    {
+        if (is_array($regionId)) {
+            $useMinMax = false;
+            if (isset($regionId['min'])) {
+                $this->addUsingAlias(OrganizationArchivePeer::REGION_ID, $regionId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($regionId['max'])) {
+                $this->addUsingAlias(OrganizationArchivePeer::REGION_ID, $regionId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(OrganizationArchivePeer::REGION_ID, $regionId, $comparison);
     }
 
     /**
@@ -997,6 +1047,33 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(OrganizationArchivePeer::STATUS, $status, $comparison);
+    }
+
+    /**
+     * Filter the query on the is_principal column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsPrincipal(true); // WHERE is_principal = true
+     * $query->filterByIsPrincipal('yes'); // WHERE is_principal = true
+     * </code>
+     *
+     * @param     boolean|string $isPrincipal The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return OrganizationArchiveQuery The current query, for fluid interface
+     */
+    public function filterByIsPrincipal($isPrincipal = null, $comparison = null)
+    {
+        if (is_string($isPrincipal)) {
+            $isPrincipal = in_array(strtolower($isPrincipal), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(OrganizationArchivePeer::IS_PRINCIPAL, $isPrincipal, $comparison);
     }
 
     /**
@@ -1283,71 +1360,6 @@ abstract class BaseOrganizationArchiveQuery extends ModelCriteria
         return $this->postUpdate($affectedRows, $con);
     }
 
-    // timestampable behavior
-
-    /**
-     * Filter by the latest updated
-     *
-     * @param      int $nbDays Maximum age of the latest update in days
-     *
-     * @return     OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function recentlyUpdated($nbDays = 7)
-    {
-        return $this->addUsingAlias(OrganizationArchivePeer::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by update date desc
-     *
-     * @return     OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function lastUpdatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(OrganizationArchivePeer::UPDATED_AT);
-    }
-
-    /**
-     * Order by update date asc
-     *
-     * @return     OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function firstUpdatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(OrganizationArchivePeer::UPDATED_AT);
-    }
-
-    /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(OrganizationArchivePeer::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by create date desc
-     *
-     * @return     OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function lastCreatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(OrganizationArchivePeer::CREATED_AT);
-    }
-
-    /**
-     * Order by create date asc
-     *
-     * @return     OrganizationArchiveQuery The current query, for fluid interface
-     */
-    public function firstCreatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(OrganizationArchivePeer::CREATED_AT);
-    }
     // extend behavior
     public function setFormatter($formatter)
     {

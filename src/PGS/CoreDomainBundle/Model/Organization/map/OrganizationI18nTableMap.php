@@ -46,8 +46,6 @@ class OrganizationI18nTableMap extends TableMap
         $this->addPrimaryKey('locale', 'Locale', 'VARCHAR', true, 5, 'en_US');
         $this->addColumn('description', 'Description', 'CLOB', false, null, null);
         $this->addColumn('excerpt', 'Excerpt', 'VARCHAR', false, 250, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -68,11 +66,6 @@ class OrganizationI18nTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
-),
             'event' =>  array (
 ),
             'extend' =>  array (

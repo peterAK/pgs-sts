@@ -33,13 +33,13 @@ abstract class BaseOrganizationI18nPeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\Organization\\map\\OrganizationI18nTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'organization_i18n.id';
@@ -52,12 +52,6 @@ abstract class BaseOrganizationI18nPeer
 
     /** the column name for the excerpt field */
     const EXCERPT = 'organization_i18n.excerpt';
-
-    /** the column name for the created_at field */
-    const CREATED_AT = 'organization_i18n.created_at';
-
-    /** the column name for the updated_at field */
-    const UPDATED_AT = 'organization_i18n.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -78,12 +72,12 @@ abstract class BaseOrganizationI18nPeer
      * e.g. OrganizationI18nPeer::$fieldNames[OrganizationI18nPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Locale', 'Description', 'Excerpt', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'locale', 'description', 'excerpt', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (OrganizationI18nPeer::ID, OrganizationI18nPeer::LOCALE, OrganizationI18nPeer::DESCRIPTION, OrganizationI18nPeer::EXCERPT, OrganizationI18nPeer::CREATED_AT, OrganizationI18nPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOCALE', 'DESCRIPTION', 'EXCERPT', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'locale', 'description', 'excerpt', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Locale', 'Description', 'Excerpt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'locale', 'description', 'excerpt', ),
+        BasePeer::TYPE_COLNAME => array (OrganizationI18nPeer::ID, OrganizationI18nPeer::LOCALE, OrganizationI18nPeer::DESCRIPTION, OrganizationI18nPeer::EXCERPT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOCALE', 'DESCRIPTION', 'EXCERPT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'locale', 'description', 'excerpt', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -93,12 +87,12 @@ abstract class BaseOrganizationI18nPeer
      * e.g. OrganizationI18nPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Locale' => 1, 'Description' => 2, 'Excerpt' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'locale' => 1, 'description' => 2, 'excerpt' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        BasePeer::TYPE_COLNAME => array (OrganizationI18nPeer::ID => 0, OrganizationI18nPeer::LOCALE => 1, OrganizationI18nPeer::DESCRIPTION => 2, OrganizationI18nPeer::EXCERPT => 3, OrganizationI18nPeer::CREATED_AT => 4, OrganizationI18nPeer::UPDATED_AT => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOCALE' => 1, 'DESCRIPTION' => 2, 'EXCERPT' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'locale' => 1, 'description' => 2, 'excerpt' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Locale' => 1, 'Description' => 2, 'Excerpt' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'locale' => 1, 'description' => 2, 'excerpt' => 3, ),
+        BasePeer::TYPE_COLNAME => array (OrganizationI18nPeer::ID => 0, OrganizationI18nPeer::LOCALE => 1, OrganizationI18nPeer::DESCRIPTION => 2, OrganizationI18nPeer::EXCERPT => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOCALE' => 1, 'DESCRIPTION' => 2, 'EXCERPT' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'locale' => 1, 'description' => 2, 'excerpt' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -176,15 +170,11 @@ abstract class BaseOrganizationI18nPeer
             $criteria->addSelectColumn(OrganizationI18nPeer::LOCALE);
             $criteria->addSelectColumn(OrganizationI18nPeer::DESCRIPTION);
             $criteria->addSelectColumn(OrganizationI18nPeer::EXCERPT);
-            $criteria->addSelectColumn(OrganizationI18nPeer::CREATED_AT);
-            $criteria->addSelectColumn(OrganizationI18nPeer::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.locale');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.excerpt');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

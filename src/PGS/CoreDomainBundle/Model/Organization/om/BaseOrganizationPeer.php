@@ -13,10 +13,9 @@ use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
 use Glorpen\Propel\PropelBundle\Events\DetectOMClassEvent;
 use Glorpen\Propel\PropelBundle\Events\PeerEvent;
 use PGS\CoreDomainBundle\Model\CountryPeer;
+use PGS\CoreDomainBundle\Model\RegionPeer;
 use PGS\CoreDomainBundle\Model\StatePeer;
 use PGS\CoreDomainBundle\Model\UserPeer;
-use PGS\CoreDomainBundle\Model\UserProfilePeer;
-use PGS\CoreDomainBundle\Model\Employee\EmployeePeer;
 use PGS\CoreDomainBundle\Model\Organization\Organization;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationI18nPeer;
 use PGS\CoreDomainBundle\Model\Organization\OrganizationPeer;
@@ -39,13 +38,13 @@ abstract class BaseOrganizationPeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\Organization\\map\\OrganizationTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 23;
+    const NUM_COLUMNS = 25;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 23;
+    const NUM_HYDRATE_COLUMNS = 25;
 
     /** the column name for the id field */
     const ID = 'organization.id';
@@ -62,8 +61,8 @@ abstract class BaseOrganizationPeer
     /** the column name for the goverment_license field */
     const GOVERMENT_LICENSE = 'organization.goverment_license';
 
-    /** the column name for the establish_at field */
-    const ESTABLISH_AT = 'organization.establish_at';
+    /** the column name for the join_at field */
+    const JOIN_AT = 'organization.join_at';
 
     /** the column name for the address1 field */
     const ADDRESS1 = 'organization.address1';
@@ -74,14 +73,17 @@ abstract class BaseOrganizationPeer
     /** the column name for the city field */
     const CITY = 'organization.city';
 
-    /** the column name for the state_id field */
-    const STATE_ID = 'organization.state_id';
-
     /** the column name for the zipcode field */
     const ZIPCODE = 'organization.zipcode';
 
     /** the column name for the country_id field */
     const COUNTRY_ID = 'organization.country_id';
+
+    /** the column name for the state_id field */
+    const STATE_ID = 'organization.state_id';
+
+    /** the column name for the region_id field */
+    const REGION_ID = 'organization.region_id';
 
     /** the column name for the phone field */
     const PHONE = 'organization.phone';
@@ -103,6 +105,9 @@ abstract class BaseOrganizationPeer
 
     /** the column name for the status field */
     const STATUS = 'organization.status';
+
+    /** the column name for the is_principal field */
+    const IS_PRINCIPAL = 'organization.is_principal';
 
     /** the column name for the confirmation field */
     const CONFIRMATION = 'organization.confirmation';
@@ -160,12 +165,12 @@ abstract class BaseOrganizationPeer
      * e.g. OrganizationPeer::$fieldNames[OrganizationPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'Name', 'Url', 'GovermentLicense', 'EstablishAt', 'Address1', 'Address2', 'City', 'StateId', 'Zipcode', 'CountryId', 'Phone', 'Fax', 'Mobile', 'Email', 'Website', 'Logo', 'Status', 'Confirmation', 'SortableRank', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'userId', 'name', 'url', 'govermentLicense', 'establishAt', 'address1', 'address2', 'city', 'stateId', 'zipcode', 'countryId', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'confirmation', 'sortableRank', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (OrganizationPeer::ID, OrganizationPeer::USER_ID, OrganizationPeer::NAME, OrganizationPeer::URL, OrganizationPeer::GOVERMENT_LICENSE, OrganizationPeer::ESTABLISH_AT, OrganizationPeer::ADDRESS1, OrganizationPeer::ADDRESS2, OrganizationPeer::CITY, OrganizationPeer::STATE_ID, OrganizationPeer::ZIPCODE, OrganizationPeer::COUNTRY_ID, OrganizationPeer::PHONE, OrganizationPeer::FAX, OrganizationPeer::MOBILE, OrganizationPeer::EMAIL, OrganizationPeer::WEBSITE, OrganizationPeer::LOGO, OrganizationPeer::STATUS, OrganizationPeer::CONFIRMATION, OrganizationPeer::SORTABLE_RANK, OrganizationPeer::CREATED_AT, OrganizationPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'USER_ID', 'NAME', 'URL', 'GOVERMENT_LICENSE', 'ESTABLISH_AT', 'ADDRESS1', 'ADDRESS2', 'CITY', 'STATE_ID', 'ZIPCODE', 'COUNTRY_ID', 'PHONE', 'FAX', 'MOBILE', 'EMAIL', 'WEBSITE', 'LOGO', 'STATUS', 'CONFIRMATION', 'SORTABLE_RANK', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'name', 'url', 'goverment_license', 'establish_at', 'address1', 'address2', 'city', 'state_id', 'zipcode', 'country_id', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'confirmation', 'sortable_rank', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'Name', 'Url', 'GovermentLicense', 'JoinAt', 'Address1', 'Address2', 'City', 'Zipcode', 'CountryId', 'StateId', 'RegionId', 'Phone', 'Fax', 'Mobile', 'Email', 'Website', 'Logo', 'Status', 'IsPrincipal', 'Confirmation', 'SortableRank', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'userId', 'name', 'url', 'govermentLicense', 'joinAt', 'address1', 'address2', 'city', 'zipcode', 'countryId', 'stateId', 'regionId', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'isPrincipal', 'confirmation', 'sortableRank', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (OrganizationPeer::ID, OrganizationPeer::USER_ID, OrganizationPeer::NAME, OrganizationPeer::URL, OrganizationPeer::GOVERMENT_LICENSE, OrganizationPeer::JOIN_AT, OrganizationPeer::ADDRESS1, OrganizationPeer::ADDRESS2, OrganizationPeer::CITY, OrganizationPeer::ZIPCODE, OrganizationPeer::COUNTRY_ID, OrganizationPeer::STATE_ID, OrganizationPeer::REGION_ID, OrganizationPeer::PHONE, OrganizationPeer::FAX, OrganizationPeer::MOBILE, OrganizationPeer::EMAIL, OrganizationPeer::WEBSITE, OrganizationPeer::LOGO, OrganizationPeer::STATUS, OrganizationPeer::IS_PRINCIPAL, OrganizationPeer::CONFIRMATION, OrganizationPeer::SORTABLE_RANK, OrganizationPeer::CREATED_AT, OrganizationPeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'USER_ID', 'NAME', 'URL', 'GOVERMENT_LICENSE', 'JOIN_AT', 'ADDRESS1', 'ADDRESS2', 'CITY', 'ZIPCODE', 'COUNTRY_ID', 'STATE_ID', 'REGION_ID', 'PHONE', 'FAX', 'MOBILE', 'EMAIL', 'WEBSITE', 'LOGO', 'STATUS', 'IS_PRINCIPAL', 'CONFIRMATION', 'SORTABLE_RANK', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'name', 'url', 'goverment_license', 'join_at', 'address1', 'address2', 'city', 'zipcode', 'country_id', 'state_id', 'region_id', 'phone', 'fax', 'mobile', 'email', 'website', 'logo', 'status', 'is_principal', 'confirmation', 'sortable_rank', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, )
     );
 
     /**
@@ -175,12 +180,12 @@ abstract class BaseOrganizationPeer
      * e.g. OrganizationPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'Name' => 2, 'Url' => 3, 'GovermentLicense' => 4, 'EstablishAt' => 5, 'Address1' => 6, 'Address2' => 7, 'City' => 8, 'StateId' => 9, 'Zipcode' => 10, 'CountryId' => 11, 'Phone' => 12, 'Fax' => 13, 'Mobile' => 14, 'Email' => 15, 'Website' => 16, 'Logo' => 17, 'Status' => 18, 'Confirmation' => 19, 'SortableRank' => 20, 'CreatedAt' => 21, 'UpdatedAt' => 22, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'userId' => 1, 'name' => 2, 'url' => 3, 'govermentLicense' => 4, 'establishAt' => 5, 'address1' => 6, 'address2' => 7, 'city' => 8, 'stateId' => 9, 'zipcode' => 10, 'countryId' => 11, 'phone' => 12, 'fax' => 13, 'mobile' => 14, 'email' => 15, 'website' => 16, 'logo' => 17, 'status' => 18, 'confirmation' => 19, 'sortableRank' => 20, 'createdAt' => 21, 'updatedAt' => 22, ),
-        BasePeer::TYPE_COLNAME => array (OrganizationPeer::ID => 0, OrganizationPeer::USER_ID => 1, OrganizationPeer::NAME => 2, OrganizationPeer::URL => 3, OrganizationPeer::GOVERMENT_LICENSE => 4, OrganizationPeer::ESTABLISH_AT => 5, OrganizationPeer::ADDRESS1 => 6, OrganizationPeer::ADDRESS2 => 7, OrganizationPeer::CITY => 8, OrganizationPeer::STATE_ID => 9, OrganizationPeer::ZIPCODE => 10, OrganizationPeer::COUNTRY_ID => 11, OrganizationPeer::PHONE => 12, OrganizationPeer::FAX => 13, OrganizationPeer::MOBILE => 14, OrganizationPeer::EMAIL => 15, OrganizationPeer::WEBSITE => 16, OrganizationPeer::LOGO => 17, OrganizationPeer::STATUS => 18, OrganizationPeer::CONFIRMATION => 19, OrganizationPeer::SORTABLE_RANK => 20, OrganizationPeer::CREATED_AT => 21, OrganizationPeer::UPDATED_AT => 22, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'USER_ID' => 1, 'NAME' => 2, 'URL' => 3, 'GOVERMENT_LICENSE' => 4, 'ESTABLISH_AT' => 5, 'ADDRESS1' => 6, 'ADDRESS2' => 7, 'CITY' => 8, 'STATE_ID' => 9, 'ZIPCODE' => 10, 'COUNTRY_ID' => 11, 'PHONE' => 12, 'FAX' => 13, 'MOBILE' => 14, 'EMAIL' => 15, 'WEBSITE' => 16, 'LOGO' => 17, 'STATUS' => 18, 'CONFIRMATION' => 19, 'SORTABLE_RANK' => 20, 'CREATED_AT' => 21, 'UPDATED_AT' => 22, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'name' => 2, 'url' => 3, 'goverment_license' => 4, 'establish_at' => 5, 'address1' => 6, 'address2' => 7, 'city' => 8, 'state_id' => 9, 'zipcode' => 10, 'country_id' => 11, 'phone' => 12, 'fax' => 13, 'mobile' => 14, 'email' => 15, 'website' => 16, 'logo' => 17, 'status' => 18, 'confirmation' => 19, 'sortable_rank' => 20, 'created_at' => 21, 'updated_at' => 22, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'Name' => 2, 'Url' => 3, 'GovermentLicense' => 4, 'JoinAt' => 5, 'Address1' => 6, 'Address2' => 7, 'City' => 8, 'Zipcode' => 9, 'CountryId' => 10, 'StateId' => 11, 'RegionId' => 12, 'Phone' => 13, 'Fax' => 14, 'Mobile' => 15, 'Email' => 16, 'Website' => 17, 'Logo' => 18, 'Status' => 19, 'IsPrincipal' => 20, 'Confirmation' => 21, 'SortableRank' => 22, 'CreatedAt' => 23, 'UpdatedAt' => 24, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'userId' => 1, 'name' => 2, 'url' => 3, 'govermentLicense' => 4, 'joinAt' => 5, 'address1' => 6, 'address2' => 7, 'city' => 8, 'zipcode' => 9, 'countryId' => 10, 'stateId' => 11, 'regionId' => 12, 'phone' => 13, 'fax' => 14, 'mobile' => 15, 'email' => 16, 'website' => 17, 'logo' => 18, 'status' => 19, 'isPrincipal' => 20, 'confirmation' => 21, 'sortableRank' => 22, 'createdAt' => 23, 'updatedAt' => 24, ),
+        BasePeer::TYPE_COLNAME => array (OrganizationPeer::ID => 0, OrganizationPeer::USER_ID => 1, OrganizationPeer::NAME => 2, OrganizationPeer::URL => 3, OrganizationPeer::GOVERMENT_LICENSE => 4, OrganizationPeer::JOIN_AT => 5, OrganizationPeer::ADDRESS1 => 6, OrganizationPeer::ADDRESS2 => 7, OrganizationPeer::CITY => 8, OrganizationPeer::ZIPCODE => 9, OrganizationPeer::COUNTRY_ID => 10, OrganizationPeer::STATE_ID => 11, OrganizationPeer::REGION_ID => 12, OrganizationPeer::PHONE => 13, OrganizationPeer::FAX => 14, OrganizationPeer::MOBILE => 15, OrganizationPeer::EMAIL => 16, OrganizationPeer::WEBSITE => 17, OrganizationPeer::LOGO => 18, OrganizationPeer::STATUS => 19, OrganizationPeer::IS_PRINCIPAL => 20, OrganizationPeer::CONFIRMATION => 21, OrganizationPeer::SORTABLE_RANK => 22, OrganizationPeer::CREATED_AT => 23, OrganizationPeer::UPDATED_AT => 24, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'USER_ID' => 1, 'NAME' => 2, 'URL' => 3, 'GOVERMENT_LICENSE' => 4, 'JOIN_AT' => 5, 'ADDRESS1' => 6, 'ADDRESS2' => 7, 'CITY' => 8, 'ZIPCODE' => 9, 'COUNTRY_ID' => 10, 'STATE_ID' => 11, 'REGION_ID' => 12, 'PHONE' => 13, 'FAX' => 14, 'MOBILE' => 15, 'EMAIL' => 16, 'WEBSITE' => 17, 'LOGO' => 18, 'STATUS' => 19, 'IS_PRINCIPAL' => 20, 'CONFIRMATION' => 21, 'SORTABLE_RANK' => 22, 'CREATED_AT' => 23, 'UPDATED_AT' => 24, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'name' => 2, 'url' => 3, 'goverment_license' => 4, 'join_at' => 5, 'address1' => 6, 'address2' => 7, 'city' => 8, 'zipcode' => 9, 'country_id' => 10, 'state_id' => 11, 'region_id' => 12, 'phone' => 13, 'fax' => 14, 'mobile' => 15, 'email' => 16, 'website' => 17, 'logo' => 18, 'status' => 19, 'is_principal' => 20, 'confirmation' => 21, 'sortable_rank' => 22, 'created_at' => 23, 'updated_at' => 24, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, )
     );
 
     /** The enumerated values for this table */
@@ -319,13 +324,14 @@ abstract class BaseOrganizationPeer
             $criteria->addSelectColumn(OrganizationPeer::NAME);
             $criteria->addSelectColumn(OrganizationPeer::URL);
             $criteria->addSelectColumn(OrganizationPeer::GOVERMENT_LICENSE);
-            $criteria->addSelectColumn(OrganizationPeer::ESTABLISH_AT);
+            $criteria->addSelectColumn(OrganizationPeer::JOIN_AT);
             $criteria->addSelectColumn(OrganizationPeer::ADDRESS1);
             $criteria->addSelectColumn(OrganizationPeer::ADDRESS2);
             $criteria->addSelectColumn(OrganizationPeer::CITY);
-            $criteria->addSelectColumn(OrganizationPeer::STATE_ID);
             $criteria->addSelectColumn(OrganizationPeer::ZIPCODE);
             $criteria->addSelectColumn(OrganizationPeer::COUNTRY_ID);
+            $criteria->addSelectColumn(OrganizationPeer::STATE_ID);
+            $criteria->addSelectColumn(OrganizationPeer::REGION_ID);
             $criteria->addSelectColumn(OrganizationPeer::PHONE);
             $criteria->addSelectColumn(OrganizationPeer::FAX);
             $criteria->addSelectColumn(OrganizationPeer::MOBILE);
@@ -333,6 +339,7 @@ abstract class BaseOrganizationPeer
             $criteria->addSelectColumn(OrganizationPeer::WEBSITE);
             $criteria->addSelectColumn(OrganizationPeer::LOGO);
             $criteria->addSelectColumn(OrganizationPeer::STATUS);
+            $criteria->addSelectColumn(OrganizationPeer::IS_PRINCIPAL);
             $criteria->addSelectColumn(OrganizationPeer::CONFIRMATION);
             $criteria->addSelectColumn(OrganizationPeer::SORTABLE_RANK);
             $criteria->addSelectColumn(OrganizationPeer::CREATED_AT);
@@ -343,13 +350,14 @@ abstract class BaseOrganizationPeer
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.goverment_license');
-            $criteria->addSelectColumn($alias . '.establish_at');
+            $criteria->addSelectColumn($alias . '.join_at');
             $criteria->addSelectColumn($alias . '.address1');
             $criteria->addSelectColumn($alias . '.address2');
             $criteria->addSelectColumn($alias . '.city');
-            $criteria->addSelectColumn($alias . '.state_id');
             $criteria->addSelectColumn($alias . '.zipcode');
             $criteria->addSelectColumn($alias . '.country_id');
+            $criteria->addSelectColumn($alias . '.state_id');
+            $criteria->addSelectColumn($alias . '.region_id');
             $criteria->addSelectColumn($alias . '.phone');
             $criteria->addSelectColumn($alias . '.fax');
             $criteria->addSelectColumn($alias . '.mobile');
@@ -357,6 +365,7 @@ abstract class BaseOrganizationPeer
             $criteria->addSelectColumn($alias . '.website');
             $criteria->addSelectColumn($alias . '.logo');
             $criteria->addSelectColumn($alias . '.status');
+            $criteria->addSelectColumn($alias . '.is_principal');
             $criteria->addSelectColumn($alias . '.confirmation');
             $criteria->addSelectColumn($alias . '.sortable_rank');
             $criteria->addSelectColumn($alias . '.created_at');
@@ -565,12 +574,6 @@ abstract class BaseOrganizationPeer
      */
     public static function clearRelatedInstancePool()
     {
-        // Invalidate objects in UserProfilePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        UserProfilePeer::clearInstancePool();
-        // Invalidate objects in EmployeePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        EmployeePeer::clearInstancePool();
         // Invalidate objects in OrganizationI18nPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         OrganizationI18nPeer::clearInstancePool();
@@ -847,6 +850,57 @@ abstract class BaseOrganizationPeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related Region table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinRegion(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(OrganizationPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            OrganizationPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(OrganizationPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(OrganizationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Selects a collection of Organization objects pre-filled with their User objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -1048,6 +1102,73 @@ abstract class BaseOrganizationPeer
 
 
     /**
+     * Selects a collection of Organization objects pre-filled with their Region objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Organization objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinRegion(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(OrganizationPeer::DATABASE_NAME);
+        }
+
+        OrganizationPeer::addSelectColumns($criteria);
+        $startcol = OrganizationPeer::NUM_HYDRATE_COLUMNS;
+        RegionPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = OrganizationPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = OrganizationPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = OrganizationPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                OrganizationPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = RegionPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = RegionPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = RegionPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    RegionPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Organization) to $obj2 (Region)
+                $obj2->addOrganization($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining all related tables
      *
      * @param      Criteria $criteria
@@ -1088,6 +1209,8 @@ abstract class BaseOrganizationPeer
         $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1132,11 +1255,16 @@ abstract class BaseOrganizationPeer
         CountryPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + CountryPeer::NUM_HYDRATE_COLUMNS;
 
+        RegionPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + RegionPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(OrganizationPeer::USER_ID, UserPeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -1209,6 +1337,24 @@ abstract class BaseOrganizationPeer
                 $obj4->addOrganization($obj1);
             } // if joined row not null
 
+            // Add objects for joined Region rows
+
+            $key5 = RegionPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+            if ($key5 !== null) {
+                $obj5 = RegionPeer::getInstanceFromPool($key5);
+                if (!$obj5) {
+
+                    $cls = RegionPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    RegionPeer::addInstanceToPool($obj5, $key5);
+                } // if obj5 loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj5 (Region)
+                $obj5->addOrganization($obj1);
+            } // if joined row not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1256,6 +1402,8 @@ abstract class BaseOrganizationPeer
         $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1310,6 +1458,8 @@ abstract class BaseOrganizationPeer
 
         $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
 
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -1363,6 +1513,63 @@ abstract class BaseOrganizationPeer
 
         $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
 
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Region table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptRegion(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(OrganizationPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            OrganizationPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(OrganizationPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(OrganizationPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(OrganizationPeer::USER_ID, UserPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -1406,9 +1613,14 @@ abstract class BaseOrganizationPeer
         CountryPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CountryPeer::NUM_HYDRATE_COLUMNS;
 
+        RegionPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + RegionPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1466,6 +1678,25 @@ abstract class BaseOrganizationPeer
 
             } // if joined row is not null
 
+                // Add objects for joined Region rows
+
+                $key4 = RegionPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = RegionPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = RegionPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    RegionPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj4 (Region)
+                $obj4->addOrganization($obj1);
+
+            } // if joined row is not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1504,9 +1735,14 @@ abstract class BaseOrganizationPeer
         CountryPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CountryPeer::NUM_HYDRATE_COLUMNS;
 
+        RegionPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + RegionPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(OrganizationPeer::USER_ID, UserPeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1564,6 +1800,25 @@ abstract class BaseOrganizationPeer
 
             } // if joined row is not null
 
+                // Add objects for joined Region rows
+
+                $key4 = RegionPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = RegionPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = RegionPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    RegionPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj4 (Region)
+                $obj4->addOrganization($obj1);
+
+            } // if joined row is not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1602,9 +1857,14 @@ abstract class BaseOrganizationPeer
         StatePeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + StatePeer::NUM_HYDRATE_COLUMNS;
 
+        RegionPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + RegionPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(OrganizationPeer::USER_ID, UserPeer::ID, $join_behavior);
 
         $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::REGION_ID, RegionPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1659,6 +1919,147 @@ abstract class BaseOrganizationPeer
 
                 // Add the $obj1 (Organization) to the collection in $obj3 (State)
                 $obj3->addOrganization($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Region rows
+
+                $key4 = RegionPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = RegionPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = RegionPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    RegionPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj4 (Region)
+                $obj4->addOrganization($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Organization objects pre-filled with all related objects except Region.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Organization objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptRegion(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(OrganizationPeer::DATABASE_NAME);
+        }
+
+        OrganizationPeer::addSelectColumns($criteria);
+        $startcol2 = OrganizationPeer::NUM_HYDRATE_COLUMNS;
+
+        UserPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + UserPeer::NUM_HYDRATE_COLUMNS;
+
+        StatePeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + StatePeer::NUM_HYDRATE_COLUMNS;
+
+        CountryPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + CountryPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(OrganizationPeer::USER_ID, UserPeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(OrganizationPeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = OrganizationPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = OrganizationPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = OrganizationPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                OrganizationPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined User rows
+
+                $key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = UserPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = UserPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    UserPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj2 (User)
+                $obj2->addOrganization($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined State rows
+
+                $key3 = StatePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = StatePeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = StatePeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    StatePeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj3 (State)
+                $obj3->addOrganization($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Country rows
+
+                $key4 = CountryPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = CountryPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = CountryPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    CountryPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Organization) to the collection in $obj4 (Country)
+                $obj4->addOrganization($obj1);
 
             } // if joined row is not null
 

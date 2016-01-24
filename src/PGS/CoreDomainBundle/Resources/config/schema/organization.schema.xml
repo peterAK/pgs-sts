@@ -8,13 +8,14 @@
         <column name="description" phpName="Description" type="CLOB" required="false"/>
         <column name="excerpt" type="VARCHAR" size="250"/>
         <column name="goverment_license" type="VARCHAR" size="30" />
-        <column name="establish_at" type="DATE" />
+        <column name="join_at" type="DATE" />
         <column name="address1" phpName="Address1" type="VARCHAR" size="100" required="true"/>
         <column name="address2" phpName="Address2" type="VARCHAR" size="100" required="false"/>
         <column name="city" phpName="City" type="VARCHAR" size="100" required="false"/>
-        <column name="state_id" phpName="StateId" type="INTEGER" required="true"/>
         <column name="zipcode" phpName="Zipcode" type="VARCHAR" size="5" required="false"/>
         <column name="country_id" phpName="CountryId" type="INTEGER" required="true"/>
+        <column name="state_id" phpName="StateId" type="INTEGER" required="true"/>
+        <column name="region_id" phpName="RegionId" type="INTEGER" required="false"/>
         <column name="phone" phpName="Phone" type="VARCHAR" size="15" required="false"/>
         <column name="fax" phpName="Fax" type="VARCHAR" size="15" required="false"/>
         <column name="mobile" phpName="Mobile" type="VARCHAR" size="15" required="false"/>
@@ -22,6 +23,7 @@
         <column name="website" phpName="Website" type="VARCHAR" size="100" required="false"/>
         <column name="logo" type="LONGVARCHAR" required="false"/>
         <column name="status" type="ENUM" valueSet="new, active, inactive, banned" defaultValue="new"/>
+        <column name="is_principal" type="boolean" defaultValue="false" />
         <column name="confirmation" type="ENUM" valueSet="new, phone, letters" defaultValue="new"/>
 
         <!-- Relations -->
@@ -33,6 +35,9 @@
         </foreign-key>
         <foreign-key foreignTable="country" onDelete="RESTRICT" onUpdate="RESTRICT">
             <reference local="country_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="region" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="region_id" foreign="id"/>
         </foreign-key>
 
         <!-- Behavior-->

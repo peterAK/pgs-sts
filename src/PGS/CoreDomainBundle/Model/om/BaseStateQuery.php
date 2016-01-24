@@ -14,29 +14,26 @@ use \PropelObjectCollection;
 use \PropelPDO;
 use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
 use Glorpen\Propel\PropelBundle\Events\QueryEvent;
+use PGS\CoreDomainBundle\Model\Area;
+use PGS\CoreDomainBundle\Model\City;
 use PGS\CoreDomainBundle\Model\Country;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StatePeer;
 use PGS\CoreDomainBundle\Model\StateQuery;
 use PGS\CoreDomainBundle\Model\UserProfile;
-use PGS\CoreDomainBundle\Model\Application\Application;
+use PGS\CoreDomainBundle\Model\BranchCoverage\BranchCoverage;
 use PGS\CoreDomainBundle\Model\Organization\Organization;
-use PGS\CoreDomainBundle\Model\School\School;
 
 /**
  * @method StateQuery orderById($order = Criteria::ASC) Order by the id column
  * @method StateQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method StateQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method StateQuery orderByCountryId($order = Criteria::ASC) Order by the country_id column
- * @method StateQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method StateQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method StateQuery groupById() Group by the id column
  * @method StateQuery groupByCode() Group by the code column
  * @method StateQuery groupByName() Group by the name column
  * @method StateQuery groupByCountryId() Group by the country_id column
- * @method StateQuery groupByCreatedAt() Group by the created_at column
- * @method StateQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method StateQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method StateQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,21 +43,25 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method StateQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method StateQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
  *
- * @method StateQuery leftJoinApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Application relation
- * @method StateQuery rightJoinApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Application relation
- * @method StateQuery innerJoinApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the Application relation
+ * @method StateQuery leftJoinBranchCoverage($relationAlias = null) Adds a LEFT JOIN clause to the query using the BranchCoverage relation
+ * @method StateQuery rightJoinBranchCoverage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BranchCoverage relation
+ * @method StateQuery innerJoinBranchCoverage($relationAlias = null) Adds a INNER JOIN clause to the query using the BranchCoverage relation
  *
  * @method StateQuery leftJoinUserProfile($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserProfile relation
  * @method StateQuery rightJoinUserProfile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserProfile relation
  * @method StateQuery innerJoinUserProfile($relationAlias = null) Adds a INNER JOIN clause to the query using the UserProfile relation
  *
+ * @method StateQuery leftJoinCity($relationAlias = null) Adds a LEFT JOIN clause to the query using the City relation
+ * @method StateQuery rightJoinCity($relationAlias = null) Adds a RIGHT JOIN clause to the query using the City relation
+ * @method StateQuery innerJoinCity($relationAlias = null) Adds a INNER JOIN clause to the query using the City relation
+ *
+ * @method StateQuery leftJoinArea($relationAlias = null) Adds a LEFT JOIN clause to the query using the Area relation
+ * @method StateQuery rightJoinArea($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Area relation
+ * @method StateQuery innerJoinArea($relationAlias = null) Adds a INNER JOIN clause to the query using the Area relation
+ *
  * @method StateQuery leftJoinOrganization($relationAlias = null) Adds a LEFT JOIN clause to the query using the Organization relation
  * @method StateQuery rightJoinOrganization($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Organization relation
  * @method StateQuery innerJoinOrganization($relationAlias = null) Adds a INNER JOIN clause to the query using the Organization relation
- *
- * @method StateQuery leftJoinSchool($relationAlias = null) Adds a LEFT JOIN clause to the query using the School relation
- * @method StateQuery rightJoinSchool($relationAlias = null) Adds a RIGHT JOIN clause to the query using the School relation
- * @method StateQuery innerJoinSchool($relationAlias = null) Adds a INNER JOIN clause to the query using the School relation
  *
  * @method State findOne(PropelPDO $con = null) Return the first State matching the query
  * @method State findOneOrCreate(PropelPDO $con = null) Return the first State matching the query, or a new State object populated from the query conditions when no match is found
@@ -68,15 +69,11 @@ use PGS\CoreDomainBundle\Model\School\School;
  * @method State findOneByCode(string $code) Return the first State filtered by the code column
  * @method State findOneByName(string $name) Return the first State filtered by the name column
  * @method State findOneByCountryId(int $country_id) Return the first State filtered by the country_id column
- * @method State findOneByCreatedAt(string $created_at) Return the first State filtered by the created_at column
- * @method State findOneByUpdatedAt(string $updated_at) Return the first State filtered by the updated_at column
  *
  * @method array findById(int $id) Return State objects filtered by the id column
  * @method array findByCode(string $code) Return State objects filtered by the code column
  * @method array findByName(string $name) Return State objects filtered by the name column
  * @method array findByCountryId(int $country_id) Return State objects filtered by the country_id column
- * @method array findByCreatedAt(string $created_at) Return State objects filtered by the created_at column
- * @method array findByUpdatedAt(string $updated_at) Return State objects filtered by the updated_at column
  */
 abstract class BaseStateQuery extends ModelCriteria
 {
@@ -183,7 +180,7 @@ abstract class BaseStateQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `code`, `name`, `country_id`, `created_at`, `updated_at` FROM `state` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `code`, `name`, `country_id` FROM `state` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -418,92 +415,6 @@ abstract class BaseStateQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return StateQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(StatePeer::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(StatePeer::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(StatePeer::CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return StateQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
-    {
-        if (is_array($updatedAt)) {
-            $useMinMax = false;
-            if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(StatePeer::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(StatePeer::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(StatePeer::UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
      * Filter the query by a related Country object
      *
      * @param   Country|PropelObjectCollection $country The related object(s) to use as filter
@@ -580,41 +491,41 @@ abstract class BaseStateQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related Application object
+     * Filter the query by a related BranchCoverage object
      *
-     * @param   Application|PropelObjectCollection $application  the related object to use as filter
+     * @param   BranchCoverage|PropelObjectCollection $branchCoverage  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 StateQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByApplication($application, $comparison = null)
+    public function filterByBranchCoverage($branchCoverage, $comparison = null)
     {
-        if ($application instanceof Application) {
+        if ($branchCoverage instanceof BranchCoverage) {
             return $this
-                ->addUsingAlias(StatePeer::ID, $application->getStateId(), $comparison);
-        } elseif ($application instanceof PropelObjectCollection) {
+                ->addUsingAlias(StatePeer::ID, $branchCoverage->getStateId(), $comparison);
+        } elseif ($branchCoverage instanceof PropelObjectCollection) {
             return $this
-                ->useApplicationQuery()
-                ->filterByPrimaryKeys($application->getPrimaryKeys())
+                ->useBranchCoverageQuery()
+                ->filterByPrimaryKeys($branchCoverage->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByApplication() only accepts arguments of type Application or PropelCollection');
+            throw new PropelException('filterByBranchCoverage() only accepts arguments of type BranchCoverage or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Application relation
+     * Adds a JOIN clause to the query using the BranchCoverage relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return StateQuery The current query, for fluid interface
      */
-    public function joinApplication($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinBranchCoverage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Application');
+        $relationMap = $tableMap->getRelation('BranchCoverage');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -629,14 +540,14 @@ abstract class BaseStateQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Application');
+            $this->addJoinObject($join, 'BranchCoverage');
         }
 
         return $this;
     }
 
     /**
-     * Use the Application relation Application object
+     * Use the BranchCoverage relation BranchCoverage object
      *
      * @see       useQuery()
      *
@@ -644,13 +555,13 @@ abstract class BaseStateQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \PGS\CoreDomainBundle\Model\Application\ApplicationQuery A secondary query class using the current class as primary query
+     * @return   \PGS\CoreDomainBundle\Model\BranchCoverage\BranchCoverageQuery A secondary query class using the current class as primary query
      */
-    public function useApplicationQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useBranchCoverageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinApplication($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Application', '\PGS\CoreDomainBundle\Model\Application\ApplicationQuery');
+            ->joinBranchCoverage($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BranchCoverage', '\PGS\CoreDomainBundle\Model\BranchCoverage\BranchCoverageQuery');
     }
 
     /**
@@ -728,6 +639,154 @@ abstract class BaseStateQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related City object
+     *
+     * @param   City|PropelObjectCollection $city  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 StateQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCity($city, $comparison = null)
+    {
+        if ($city instanceof City) {
+            return $this
+                ->addUsingAlias(StatePeer::ID, $city->getStateId(), $comparison);
+        } elseif ($city instanceof PropelObjectCollection) {
+            return $this
+                ->useCityQuery()
+                ->filterByPrimaryKeys($city->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCity() only accepts arguments of type City or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the City relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return StateQuery The current query, for fluid interface
+     */
+    public function joinCity($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('City');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'City');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the City relation City object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\CityQuery A secondary query class using the current class as primary query
+     */
+    public function useCityQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCity($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'City', '\PGS\CoreDomainBundle\Model\CityQuery');
+    }
+
+    /**
+     * Filter the query by a related Area object
+     *
+     * @param   Area|PropelObjectCollection $area  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 StateQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByArea($area, $comparison = null)
+    {
+        if ($area instanceof Area) {
+            return $this
+                ->addUsingAlias(StatePeer::ID, $area->getStateId(), $comparison);
+        } elseif ($area instanceof PropelObjectCollection) {
+            return $this
+                ->useAreaQuery()
+                ->filterByPrimaryKeys($area->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByArea() only accepts arguments of type Area or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Area relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return StateQuery The current query, for fluid interface
+     */
+    public function joinArea($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Area');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Area');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Area relation Area object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\AreaQuery A secondary query class using the current class as primary query
+     */
+    public function useAreaQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinArea($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Area', '\PGS\CoreDomainBundle\Model\AreaQuery');
+    }
+
+    /**
      * Filter the query by a related Organization object
      *
      * @param   Organization|PropelObjectCollection $organization  the related object to use as filter
@@ -799,80 +858,6 @@ abstract class BaseStateQuery extends ModelCriteria
         return $this
             ->joinOrganization($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Organization', '\PGS\CoreDomainBundle\Model\Organization\OrganizationQuery');
-    }
-
-    /**
-     * Filter the query by a related School object
-     *
-     * @param   School|PropelObjectCollection $school  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 StateQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterBySchool($school, $comparison = null)
-    {
-        if ($school instanceof School) {
-            return $this
-                ->addUsingAlias(StatePeer::ID, $school->getStateId(), $comparison);
-        } elseif ($school instanceof PropelObjectCollection) {
-            return $this
-                ->useSchoolQuery()
-                ->filterByPrimaryKeys($school->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySchool() only accepts arguments of type School or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the School relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return StateQuery The current query, for fluid interface
-     */
-    public function joinSchool($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('School');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'School');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the School relation School object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \PGS\CoreDomainBundle\Model\School\SchoolQuery A secondary query class using the current class as primary query
-     */
-    public function useSchoolQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinSchool($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'School', '\PGS\CoreDomainBundle\Model\School\SchoolQuery');
     }
 
     /**
@@ -961,71 +946,6 @@ abstract class BaseStateQuery extends ModelCriteria
         return $this->postUpdate($affectedRows, $con);
     }
 
-    // timestampable behavior
-
-    /**
-     * Filter by the latest updated
-     *
-     * @param      int $nbDays Maximum age of the latest update in days
-     *
-     * @return     StateQuery The current query, for fluid interface
-     */
-    public function recentlyUpdated($nbDays = 7)
-    {
-        return $this->addUsingAlias(StatePeer::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by update date desc
-     *
-     * @return     StateQuery The current query, for fluid interface
-     */
-    public function lastUpdatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(StatePeer::UPDATED_AT);
-    }
-
-    /**
-     * Order by update date asc
-     *
-     * @return     StateQuery The current query, for fluid interface
-     */
-    public function firstUpdatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(StatePeer::UPDATED_AT);
-    }
-
-    /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     StateQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(StatePeer::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by create date desc
-     *
-     * @return     StateQuery The current query, for fluid interface
-     */
-    public function lastCreatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(StatePeer::CREATED_AT);
-    }
-
-    /**
-     * Order by create date asc
-     *
-     * @return     StateQuery The current query, for fluid interface
-     */
-    public function firstCreatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(StatePeer::CREATED_AT);
-    }
     // extend behavior
     public function setFormatter($formatter)
     {

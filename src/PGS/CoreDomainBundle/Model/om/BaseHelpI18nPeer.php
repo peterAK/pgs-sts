@@ -33,13 +33,13 @@ abstract class BaseHelpI18nPeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\map\\HelpI18nTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'help_i18n.id';
@@ -52,12 +52,6 @@ abstract class BaseHelpI18nPeer
 
     /** the column name for the content field */
     const CONTENT = 'help_i18n.content';
-
-    /** the column name for the created_at field */
-    const CREATED_AT = 'help_i18n.created_at';
-
-    /** the column name for the updated_at field */
-    const UPDATED_AT = 'help_i18n.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -78,12 +72,12 @@ abstract class BaseHelpI18nPeer
      * e.g. HelpI18nPeer::$fieldNames[HelpI18nPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Locale', 'Title', 'Content', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'locale', 'title', 'content', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (HelpI18nPeer::ID, HelpI18nPeer::LOCALE, HelpI18nPeer::TITLE, HelpI18nPeer::CONTENT, HelpI18nPeer::CREATED_AT, HelpI18nPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOCALE', 'TITLE', 'CONTENT', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'locale', 'title', 'content', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Locale', 'Title', 'Content', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'locale', 'title', 'content', ),
+        BasePeer::TYPE_COLNAME => array (HelpI18nPeer::ID, HelpI18nPeer::LOCALE, HelpI18nPeer::TITLE, HelpI18nPeer::CONTENT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOCALE', 'TITLE', 'CONTENT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'locale', 'title', 'content', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -93,12 +87,12 @@ abstract class BaseHelpI18nPeer
      * e.g. HelpI18nPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Locale' => 1, 'Title' => 2, 'Content' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'locale' => 1, 'title' => 2, 'content' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        BasePeer::TYPE_COLNAME => array (HelpI18nPeer::ID => 0, HelpI18nPeer::LOCALE => 1, HelpI18nPeer::TITLE => 2, HelpI18nPeer::CONTENT => 3, HelpI18nPeer::CREATED_AT => 4, HelpI18nPeer::UPDATED_AT => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOCALE' => 1, 'TITLE' => 2, 'CONTENT' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'locale' => 1, 'title' => 2, 'content' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Locale' => 1, 'Title' => 2, 'Content' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'locale' => 1, 'title' => 2, 'content' => 3, ),
+        BasePeer::TYPE_COLNAME => array (HelpI18nPeer::ID => 0, HelpI18nPeer::LOCALE => 1, HelpI18nPeer::TITLE => 2, HelpI18nPeer::CONTENT => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOCALE' => 1, 'TITLE' => 2, 'CONTENT' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'locale' => 1, 'title' => 2, 'content' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -176,15 +170,11 @@ abstract class BaseHelpI18nPeer
             $criteria->addSelectColumn(HelpI18nPeer::LOCALE);
             $criteria->addSelectColumn(HelpI18nPeer::TITLE);
             $criteria->addSelectColumn(HelpI18nPeer::CONTENT);
-            $criteria->addSelectColumn(HelpI18nPeer::CREATED_AT);
-            $criteria->addSelectColumn(HelpI18nPeer::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.locale');
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.content');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

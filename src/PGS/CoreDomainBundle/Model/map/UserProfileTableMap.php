@@ -43,7 +43,7 @@ class UserProfileTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addColumn('prefix', 'Prefix', 'VARCHAR', false, 10, null);
-        $this->addForeignKey('organization_id', 'OrganizationId', 'INTEGER', 'organization', 'id', false, null, null);
+        $this->addColumn('organization_id', 'OrganizationId', 'INTEGER', false, null, null);
         $this->addColumn('nick_name', 'NickName', 'VARCHAR', false, 30, null);
         $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 30, null);
         $this->addColumn('middle_name', 'MiddleName', 'VARCHAR', false, 30, null);
@@ -60,8 +60,6 @@ class UserProfileTableMap extends TableMap
         $this->addColumn('active_preferences', 'ActivePreferences', 'LONGVARCHAR', false, null, null);
         $this->addColumn('complete', 'Complete', 'BOOLEAN', false, 1, false);
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'fos_user', 'id', true, null, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -72,7 +70,6 @@ class UserProfileTableMap extends TableMap
     {
         $this->addRelation('State', 'PGS\\CoreDomainBundle\\Model\\State', RelationMap::MANY_TO_ONE, array('state_id' => 'id', ), null, null);
         $this->addRelation('Country', 'PGS\\CoreDomainBundle\\Model\\Country', RelationMap::MANY_TO_ONE, array('country_id' => 'id', ), null, null);
-        $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::MANY_TO_ONE, array('organization_id' => 'id', ), 'SET NULL', 'CASCADE');
         $this->addRelation('User', 'PGS\\CoreDomainBundle\\Model\\User', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
@@ -85,11 +82,6 @@ class UserProfileTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
-),
             'event' =>  array (
 ),
             'extend' =>  array (

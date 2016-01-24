@@ -34,25 +34,19 @@ abstract class BaseUserGroupPeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\map\\UserGroupTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 2;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 2;
 
     /** the column name for the fos_user_id field */
     const FOS_USER_ID = 'fos_user_group.fos_user_id';
 
     /** the column name for the fos_group_id field */
     const FOS_GROUP_ID = 'fos_user_group.fos_group_id';
-
-    /** the column name for the created_at field */
-    const CREATED_AT = 'fos_user_group.created_at';
-
-    /** the column name for the updated_at field */
-    const UPDATED_AT = 'fos_user_group.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -73,12 +67,12 @@ abstract class BaseUserGroupPeer
      * e.g. UserGroupPeer::$fieldNames[UserGroupPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('FosUserId', 'FosGroupId', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('fosUserId', 'fosGroupId', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (UserGroupPeer::FOS_USER_ID, UserGroupPeer::FOS_GROUP_ID, UserGroupPeer::CREATED_AT, UserGroupPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('FOS_USER_ID', 'FOS_GROUP_ID', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('fos_user_id', 'fos_group_id', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('FosUserId', 'FosGroupId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('fosUserId', 'fosGroupId', ),
+        BasePeer::TYPE_COLNAME => array (UserGroupPeer::FOS_USER_ID, UserGroupPeer::FOS_GROUP_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('FOS_USER_ID', 'FOS_GROUP_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('fos_user_id', 'fos_group_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, )
     );
 
     /**
@@ -88,12 +82,12 @@ abstract class BaseUserGroupPeer
      * e.g. UserGroupPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('FosUserId' => 0, 'FosGroupId' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('fosUserId' => 0, 'fosGroupId' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
-        BasePeer::TYPE_COLNAME => array (UserGroupPeer::FOS_USER_ID => 0, UserGroupPeer::FOS_GROUP_ID => 1, UserGroupPeer::CREATED_AT => 2, UserGroupPeer::UPDATED_AT => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('FOS_USER_ID' => 0, 'FOS_GROUP_ID' => 1, 'CREATED_AT' => 2, 'UPDATED_AT' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('fos_user_id' => 0, 'fos_group_id' => 1, 'created_at' => 2, 'updated_at' => 3, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('FosUserId' => 0, 'FosGroupId' => 1, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('fosUserId' => 0, 'fosGroupId' => 1, ),
+        BasePeer::TYPE_COLNAME => array (UserGroupPeer::FOS_USER_ID => 0, UserGroupPeer::FOS_GROUP_ID => 1, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('FOS_USER_ID' => 0, 'FOS_GROUP_ID' => 1, ),
+        BasePeer::TYPE_FIELDNAME => array ('fos_user_id' => 0, 'fos_group_id' => 1, ),
+        BasePeer::TYPE_NUM => array (0, 1, )
     );
 
     /**
@@ -169,13 +163,9 @@ abstract class BaseUserGroupPeer
         if (null === $alias) {
             $criteria->addSelectColumn(UserGroupPeer::FOS_USER_ID);
             $criteria->addSelectColumn(UserGroupPeer::FOS_GROUP_ID);
-            $criteria->addSelectColumn(UserGroupPeer::CREATED_AT);
-            $criteria->addSelectColumn(UserGroupPeer::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.fos_user_id');
             $criteria->addSelectColumn($alias . '.fos_group_id');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

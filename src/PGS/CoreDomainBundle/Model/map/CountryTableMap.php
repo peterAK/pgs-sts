@@ -46,8 +46,6 @@ class CountryTableMap extends TableMap
         $this->addColumn('code', 'Code', 'VARCHAR', true, 10, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 100, null);
         $this->addColumn('desscription', 'Description', 'VARCHAR', true, 100, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -56,11 +54,9 @@ class CountryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Application', 'PGS\\CoreDomainBundle\\Model\\Application\\Application', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), null, null, 'Applications');
         $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), null, null, 'UserProfiles');
         $this->addRelation('State', 'PGS\\CoreDomainBundle\\Model\\State', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), 'SET NULL', 'CASCADE', 'States');
         $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), null, null, 'Organizations');
-        $this->addRelation('School', 'PGS\\CoreDomainBundle\\Model\\School\\School', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), null, null, 'Schools');
     } // buildRelations()
 
     /**
@@ -72,11 +68,6 @@ class CountryTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
-),
             'event' =>  array (
 ),
             'extend' =>  array (

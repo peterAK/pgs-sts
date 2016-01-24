@@ -32,13 +32,13 @@ abstract class BaseGroupPeer
     const TM_CLASS = 'PGS\\CoreDomainBundle\\Model\\map\\GroupTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 3;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 3;
 
     /** the column name for the id field */
     const ID = 'fos_group.id';
@@ -48,12 +48,6 @@ abstract class BaseGroupPeer
 
     /** the column name for the roles field */
     const ROLES = 'fos_group.roles';
-
-    /** the column name for the created_at field */
-    const CREATED_AT = 'fos_group.created_at';
-
-    /** the column name for the updated_at field */
-    const UPDATED_AT = 'fos_group.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -74,12 +68,12 @@ abstract class BaseGroupPeer
      * e.g. GroupPeer::$fieldNames[GroupPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Roles', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'roles', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (GroupPeer::ID, GroupPeer::NAME, GroupPeer::ROLES, GroupPeer::CREATED_AT, GroupPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'ROLES', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'roles', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Roles', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'roles', ),
+        BasePeer::TYPE_COLNAME => array (GroupPeer::ID, GroupPeer::NAME, GroupPeer::ROLES, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'ROLES', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'roles', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, )
     );
 
     /**
@@ -89,12 +83,12 @@ abstract class BaseGroupPeer
      * e.g. GroupPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Roles' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'roles' => 2, 'createdAt' => 3, 'updatedAt' => 4, ),
-        BasePeer::TYPE_COLNAME => array (GroupPeer::ID => 0, GroupPeer::NAME => 1, GroupPeer::ROLES => 2, GroupPeer::CREATED_AT => 3, GroupPeer::UPDATED_AT => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'ROLES' => 2, 'CREATED_AT' => 3, 'UPDATED_AT' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'roles' => 2, 'created_at' => 3, 'updated_at' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Roles' => 2, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'roles' => 2, ),
+        BasePeer::TYPE_COLNAME => array (GroupPeer::ID => 0, GroupPeer::NAME => 1, GroupPeer::ROLES => 2, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'ROLES' => 2, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'roles' => 2, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, )
     );
 
     /**
@@ -171,14 +165,10 @@ abstract class BaseGroupPeer
             $criteria->addSelectColumn(GroupPeer::ID);
             $criteria->addSelectColumn(GroupPeer::NAME);
             $criteria->addSelectColumn(GroupPeer::ROLES);
-            $criteria->addSelectColumn(GroupPeer::CREATED_AT);
-            $criteria->addSelectColumn(GroupPeer::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.roles');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

@@ -5,12 +5,10 @@ namespace PGS\CoreDomainBundle\Model\om;
 use \BaseObject;
 use \BasePeer;
 use \Criteria;
-use \DateTime;
 use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
-use \PropelDateTime;
 use \PropelException;
 use \PropelPDO;
 use Glorpen\Propel\PropelBundle\Dispatcher\EventDispatcherProxy;
@@ -24,8 +22,6 @@ use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
 use PGS\CoreDomainBundle\Model\UserQuery;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
-use PGS\CoreDomainBundle\Model\Organization\OrganizationQuery;
 
 abstract class BaseUserProfile extends BaseObject implements Persistent
 {
@@ -159,18 +155,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the created_at field.
-     * @var        string
-     */
-    protected $created_at;
-
-    /**
-     * The value for the updated_at field.
-     * @var        string
-     */
-    protected $updated_at;
-
-    /**
      * @var        State
      */
     protected $aState;
@@ -179,11 +163,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
      * @var        Country
      */
     protected $aCountry;
-
-    /**
-     * @var        Organization
-     */
-    protected $aOrganization;
 
     /**
      * @var        User
@@ -432,86 +411,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [optionally formatted] temporal [created_at] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreatedAt($format = null)
-    {
-        if ($this->created_at === null) {
-            return null;
-        }
-
-        if ($this->created_at === '0000-00-00 00:00:00') {
-            // while technically this is not a default value of null,
-            // this seems to be closest in meaning.
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->created_at);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [updated_at] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getUpdatedAt($format = null)
-    {
-        if ($this->updated_at === null) {
-            return null;
-        }
-
-        if ($this->updated_at === '0000-00-00 00:00:00') {
-            // while technically this is not a default value of null,
-            // this seems to be closest in meaning.
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->updated_at);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
-    }
-
-    /**
      * Set the value of [prefix] column.
      *
      * @param  string $v new value
@@ -547,10 +446,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         if ($this->organization_id !== $v) {
             $this->organization_id = $v;
             $this->modifiedColumns[] = UserProfilePeer::ORGANIZATION_ID;
-        }
-
-        if ($this->aOrganization !== null && $this->aOrganization->getId() !== $v) {
-            $this->aOrganization = null;
         }
 
 
@@ -914,52 +809,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return UserProfile The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->created_at !== null && $tmpDt = new DateTime($this->created_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->created_at = $newDateAsString;
-                $this->modifiedColumns[] = UserProfilePeer::CREATED_AT;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return UserProfile The current object (for fluent API support)
-     */
-    public function setUpdatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->updated_at !== null && $tmpDt = new DateTime($this->updated_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->updated_at = $newDateAsString;
-                $this->modifiedColumns[] = UserProfilePeer::UPDATED_AT;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setUpdatedAt()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -1017,8 +866,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             $this->active_preferences = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
             $this->complete = ($row[$startcol + 16] !== null) ? (boolean) $row[$startcol + 16] : null;
             $this->id = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
-            $this->created_at = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
-            $this->updated_at = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1028,7 +875,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 20; // 20 = UserProfilePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 18; // 18 = UserProfilePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating UserProfile object", $e);
@@ -1051,9 +898,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aOrganization !== null && $this->organization_id !== $this->aOrganization->getId()) {
-            $this->aOrganization = null;
-        }
         if ($this->aState !== null && $this->state_id !== $this->aState->getId()) {
             $this->aState = null;
         }
@@ -1104,7 +948,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
 
             $this->aState = null;
             $this->aCountry = null;
-            $this->aOrganization = null;
             $this->aUser = null;
         } // if (deep)
     }
@@ -1183,21 +1026,10 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             EventDispatcherProxy::trigger('model.save.pre', new ModelEvent($this));
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
-                // timestampable behavior
-                if (!$this->isColumnModified(UserProfilePeer::CREATED_AT)) {
-                    $this->setCreatedAt(time());
-                }
-                if (!$this->isColumnModified(UserProfilePeer::UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
                 // event behavior
                 EventDispatcherProxy::trigger('model.insert.pre', new ModelEvent($this));
             } else {
                 $ret = $ret && $this->preUpdate($con);
-                // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(UserProfilePeer::UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
                 // event behavior
                 EventDispatcherProxy::trigger(array('update.pre', 'model.update.pre'), new ModelEvent($this));
             }
@@ -1262,13 +1094,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                     $affectedRows += $this->aCountry->save($con);
                 }
                 $this->setCountry($this->aCountry);
-            }
-
-            if ($this->aOrganization !== null) {
-                if ($this->aOrganization->isModified() || $this->aOrganization->isNew()) {
-                    $affectedRows += $this->aOrganization->save($con);
-                }
-                $this->setOrganization($this->aOrganization);
             }
 
             if ($this->aUser !== null) {
@@ -1365,12 +1190,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         if ($this->isColumnModified(UserProfilePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(UserProfilePeer::CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`created_at`';
-        }
-        if ($this->isColumnModified(UserProfilePeer::UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`updated_at`';
-        }
 
         $sql = sprintf(
             'INSERT INTO `user_profile` (%s) VALUES (%s)',
@@ -1435,12 +1254,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                         break;
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case '`created_at`':
-                        $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
-                        break;
-                    case '`updated_at`':
-                        $stmt->bindValue($identifier, $this->updated_at, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1546,12 +1359,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->aOrganization !== null) {
-                if (!$this->aOrganization->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aOrganization->getValidationFailures());
-                }
-            }
-
             if ($this->aUser !== null) {
                 if (!$this->aUser->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
@@ -1653,12 +1460,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             case 17:
                 return $this->getId();
                 break;
-            case 18:
-                return $this->getCreatedAt();
-                break;
-            case 19:
-                return $this->getUpdatedAt();
-                break;
             default:
                 return null;
                 break;
@@ -1706,8 +1507,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             $keys[15] => $this->getActivePreferences(),
             $keys[16] => $this->getComplete(),
             $keys[17] => $this->getId(),
-            $keys[18] => $this->getCreatedAt(),
-            $keys[19] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1720,9 +1519,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             }
             if (null !== $this->aCountry) {
                 $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aOrganization) {
-                $result['Organization'] = $this->aOrganization->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUser) {
                 $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1815,12 +1611,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             case 17:
                 $this->setId($value);
                 break;
-            case 18:
-                $this->setCreatedAt($value);
-                break;
-            case 19:
-                $this->setUpdatedAt($value);
-                break;
         } // switch()
     }
 
@@ -1863,8 +1653,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         if (array_key_exists($keys[15], $arr)) $this->setActivePreferences($arr[$keys[15]]);
         if (array_key_exists($keys[16], $arr)) $this->setComplete($arr[$keys[16]]);
         if (array_key_exists($keys[17], $arr)) $this->setId($arr[$keys[17]]);
-        if (array_key_exists($keys[18], $arr)) $this->setCreatedAt($arr[$keys[18]]);
-        if (array_key_exists($keys[19], $arr)) $this->setUpdatedAt($arr[$keys[19]]);
     }
 
     /**
@@ -1894,8 +1682,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         if ($this->isColumnModified(UserProfilePeer::ACTIVE_PREFERENCES)) $criteria->add(UserProfilePeer::ACTIVE_PREFERENCES, $this->active_preferences);
         if ($this->isColumnModified(UserProfilePeer::COMPLETE)) $criteria->add(UserProfilePeer::COMPLETE, $this->complete);
         if ($this->isColumnModified(UserProfilePeer::ID)) $criteria->add(UserProfilePeer::ID, $this->id);
-        if ($this->isColumnModified(UserProfilePeer::CREATED_AT)) $criteria->add(UserProfilePeer::CREATED_AT, $this->created_at);
-        if ($this->isColumnModified(UserProfilePeer::UPDATED_AT)) $criteria->add(UserProfilePeer::UPDATED_AT, $this->updated_at);
 
         return $criteria;
     }
@@ -1976,8 +1762,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         $copyObj->setCountryId($this->getCountryId());
         $copyObj->setActivePreferences($this->getActivePreferences());
         $copyObj->setComplete($this->getComplete());
-        $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpdatedAt($this->getUpdatedAt());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2146,58 +1930,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     }
 
     /**
-     * Declares an association between this object and a Organization object.
-     *
-     * @param                  Organization $v
-     * @return UserProfile The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setOrganization(Organization $v = null)
-    {
-        if ($v === null) {
-            $this->setOrganizationId(NULL);
-        } else {
-            $this->setOrganizationId($v->getId());
-        }
-
-        $this->aOrganization = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Organization object, it will not be re-added.
-        if ($v !== null) {
-            $v->addUserProfile($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated Organization object
-     *
-     * @param PropelPDO $con Optional Connection object.
-     * @param $doQuery Executes a query to get the object if required
-     * @return Organization The associated Organization object.
-     * @throws PropelException
-     */
-    public function getOrganization(PropelPDO $con = null, $doQuery = true)
-    {
-        if ($this->aOrganization === null && ($this->organization_id !== null) && $doQuery) {
-            $this->aOrganization = OrganizationQuery::create()->findPk($this->organization_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aOrganization->addUserProfiles($this);
-             */
-        }
-
-        return $this->aOrganization;
-    }
-
-    /**
      * Declares an association between this object and a User object.
      *
      * @param                  User $v
@@ -2266,8 +1998,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         $this->active_preferences = null;
         $this->complete = null;
         $this->id = null;
-        $this->created_at = null;
-        $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -2297,9 +2027,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             if ($this->aCountry instanceof Persistent) {
               $this->aCountry->clearAllReferences($deep);
             }
-            if ($this->aOrganization instanceof Persistent) {
-              $this->aOrganization->clearAllReferences($deep);
-            }
             if ($this->aUser instanceof Persistent) {
               $this->aUser->clearAllReferences($deep);
             }
@@ -2309,7 +2036,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
 
         $this->aState = null;
         $this->aCountry = null;
-        $this->aOrganization = null;
         $this->aUser = null;
     }
 
@@ -2331,20 +2057,6 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
-    }
-
-    // timestampable behavior
-
-    /**
-     * Mark the current object so that the update date doesn't get updated during next save
-     *
-     * @return     UserProfile The current object (for fluent API support)
-     */
-    public function keepUpdateDateUnchanged()
-    {
-        $this->modifiedColumns[] = UserProfilePeer::UPDATED_AT;
-
-        return $this;
     }
 
     // event behavior

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.BranchCoverage" namespace="PGS\CoreDomainBundle\Model\BranchCoverage">
+    <table name="branch_coverage" phpName="BranchCoverage" idMethod="native">
+        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+        <column name="state_id" phpName="StateId" type="INTEGER" required="true"/>
+        <column name="region_id" phpName="RegionId" type="INTEGER" required="false"/>
+        <column name="city_id" phpName="CityId" type="INTEGER" required="false"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="state" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="state_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="region" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="region_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="city" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="city_id" foreign="id"/>
+        </foreign-key>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+</database>

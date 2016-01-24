@@ -45,8 +45,6 @@ class UserGroupTableMap extends TableMap
         // columns
         $this->addForeignPrimaryKey('fos_user_id', 'FosUserId', 'INTEGER' , 'fos_user', 'id', true, null, null);
         $this->addForeignPrimaryKey('fos_group_id', 'FosGroupId', 'INTEGER' , 'fos_group', 'id', true, null, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -68,11 +66,6 @@ class UserGroupTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
-),
             'event' =>  array (
 ),
             'extend' =>  array (

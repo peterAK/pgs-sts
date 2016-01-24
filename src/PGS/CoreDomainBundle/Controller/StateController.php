@@ -17,7 +17,7 @@ use PGS\CoreDomainBundle\Manager\CountryManager;
 use PGS\CoreDomainBundle\Manager\StateManager;
 use Symfony\Component\HttpFoundation\Response;
 
-class StateController extends AbstractCoreBaseController
+class StateController extends AbstractBaseController
 {
     /**
      * @var StateManager

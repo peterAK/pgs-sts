@@ -1,3 +1,3 @@
-pgs_principal_homepage:
+pgs_principal_dashboard:
     path:     /hello/{name}
     defaults: { _controller: PGSPrincipalBundle:Default:index }

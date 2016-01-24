@@ -47,13 +47,14 @@ class OrganizationTableMap extends TableMap
         $this->addColumn('name', 'Name', 'VARCHAR', true, 100, null);
         $this->addColumn('url', 'Url', 'VARCHAR', false, 100, null);
         $this->addColumn('goverment_license', 'GovermentLicense', 'VARCHAR', false, 30, null);
-        $this->addColumn('establish_at', 'EstablishAt', 'DATE', false, null, null);
+        $this->addColumn('join_at', 'JoinAt', 'DATE', false, null, null);
         $this->addColumn('address1', 'Address1', 'VARCHAR', true, 100, null);
         $this->addColumn('address2', 'Address2', 'VARCHAR', false, 100, null);
         $this->addColumn('city', 'City', 'VARCHAR', false, 100, null);
-        $this->addForeignKey('state_id', 'StateId', 'INTEGER', 'state', 'id', true, null, null);
         $this->addColumn('zipcode', 'Zipcode', 'VARCHAR', false, 5, null);
         $this->addForeignKey('country_id', 'CountryId', 'INTEGER', 'country', 'id', true, null, null);
+        $this->addForeignKey('state_id', 'StateId', 'INTEGER', 'state', 'id', true, null, null);
+        $this->addForeignKey('region_id', 'RegionId', 'INTEGER', 'region', 'id', false, null, null);
         $this->addColumn('phone', 'Phone', 'VARCHAR', false, 15, null);
         $this->addColumn('fax', 'Fax', 'VARCHAR', false, 15, null);
         $this->addColumn('mobile', 'Mobile', 'VARCHAR', false, 15, null);
@@ -67,6 +68,7 @@ class OrganizationTableMap extends TableMap
   2 => 'inactive',
   3 => 'banned',
 ));
+        $this->addColumn('is_principal', 'IsPrincipal', 'BOOLEAN', false, 1, false);
         $this->addColumn('confirmation', 'Confirmation', 'ENUM', false, null, 'new');
         $this->getColumn('confirmation', false)->setValueSet(array (
   0 => 'new',
@@ -87,9 +89,7 @@ class OrganizationTableMap extends TableMap
         $this->addRelation('User', 'PGS\\CoreDomainBundle\\Model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('State', 'PGS\\CoreDomainBundle\\Model\\State', RelationMap::MANY_TO_ONE, array('state_id' => 'id', ), null, null);
         $this->addRelation('Country', 'PGS\\CoreDomainBundle\\Model\\Country', RelationMap::MANY_TO_ONE, array('country_id' => 'id', ), null, null);
-        $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_MANY, array('id' => 'organization_id', ), 'SET NULL', 'CASCADE', 'UserProfiles');
-        $this->addRelation('Employee', 'PGS\\CoreDomainBundle\\Model\\Employee\\Employee', RelationMap::ONE_TO_MANY, array('id' => 'organization_id', ), 'CASCADE', 'CASCADE', 'Employees');
-        $this->addRelation('School', 'PGS\\CoreDomainBundle\\Model\\School\\School', RelationMap::ONE_TO_MANY, array('id' => 'organization_id', ), null, null, 'Schools');
+        $this->addRelation('Region', 'PGS\\CoreDomainBundle\\Model\\Region', RelationMap::MANY_TO_ONE, array('region_id' => 'id', ), 'SET NULL', 'CASCADE');
         $this->addRelation('OrganizationI18n', 'PGS\\CoreDomainBundle\\Model\\Organization\\OrganizationI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'OrganizationI18ns');
     } // buildRelations()
 

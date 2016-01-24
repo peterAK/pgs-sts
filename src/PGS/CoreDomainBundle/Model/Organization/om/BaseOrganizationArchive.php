@@ -83,10 +83,10 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     protected $goverment_license;
 
     /**
-     * The value for the establish_at field.
+     * The value for the join_at field.
      * @var        string
      */
-    protected $establish_at;
+    protected $join_at;
 
     /**
      * The value for the address1 field.
@@ -107,12 +107,6 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     protected $city;
 
     /**
-     * The value for the state_id field.
-     * @var        int
-     */
-    protected $state_id;
-
-    /**
      * The value for the zipcode field.
      * @var        string
      */
@@ -123,6 +117,18 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
      * @var        int
      */
     protected $country_id;
+
+    /**
+     * The value for the state_id field.
+     * @var        int
+     */
+    protected $state_id;
+
+    /**
+     * The value for the region_id field.
+     * @var        int
+     */
+    protected $region_id;
 
     /**
      * The value for the phone field.
@@ -166,6 +172,13 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
      * @var        int
      */
     protected $status;
+
+    /**
+     * The value for the is_principal field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $is_principal;
 
     /**
      * The value for the confirmation field.
@@ -227,6 +240,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     public function applyDefaultValues()
     {
         $this->status = 0;
+        $this->is_principal = false;
         $this->confirmation = 0;
     }
 
@@ -319,7 +333,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [optionally formatted] temporal [establish_at] column value.
+     * Get the [optionally formatted] temporal [join_at] column value.
      *
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
@@ -327,22 +341,22 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getEstablishAt($format = null)
+    public function getJoinAt($format = null)
     {
-        if ($this->establish_at === null) {
+        if ($this->join_at === null) {
             return null;
         }
 
-        if ($this->establish_at === '0000-00-00') {
+        if ($this->join_at === '0000-00-00') {
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
         }
 
         try {
-            $dt = new DateTime($this->establish_at);
+            $dt = new DateTime($this->join_at);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->establish_at, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->join_at, true), $x);
         }
 
         if ($format === null) {
@@ -392,17 +406,6 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [state_id] column value.
-     *
-     * @return int
-     */
-    public function getStateId()
-    {
-
-        return $this->state_id;
-    }
-
-    /**
      * Get the [zipcode] column value.
      *
      * @return string
@@ -422,6 +425,28 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     {
 
         return $this->country_id;
+    }
+
+    /**
+     * Get the [state_id] column value.
+     *
+     * @return int
+     */
+    public function getStateId()
+    {
+
+        return $this->state_id;
+    }
+
+    /**
+     * Get the [region_id] column value.
+     *
+     * @return int
+     */
+    public function getRegionId()
+    {
+
+        return $this->region_id;
     }
 
     /**
@@ -507,6 +532,17 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         }
 
         return $valueSet[$this->status];
+    }
+
+    /**
+     * Get the [is_principal] column value.
+     *
+     * @return boolean
+     */
+    public function getIsPrincipal()
+    {
+
+        return $this->is_principal;
     }
 
     /**
@@ -807,27 +843,27 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     } // setGovermentLicense()
 
     /**
-     * Sets the value of [establish_at] column to a normalized version of the date/time value specified.
+     * Sets the value of [join_at] column to a normalized version of the date/time value specified.
      *
      * @param mixed $v string, integer (timestamp), or DateTime value.
      *               Empty strings are treated as null.
      * @return OrganizationArchive The current object (for fluent API support)
      */
-    public function setEstablishAt($v)
+    public function setJoinAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->establish_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->establish_at !== null && $tmpDt = new DateTime($this->establish_at)) ? $tmpDt->format('Y-m-d') : null;
+        if ($this->join_at !== null || $dt !== null) {
+            $currentDateAsString = ($this->join_at !== null && $tmpDt = new DateTime($this->join_at)) ? $tmpDt->format('Y-m-d') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
             if ($currentDateAsString !== $newDateAsString) {
-                $this->establish_at = $newDateAsString;
-                $this->modifiedColumns[] = OrganizationArchivePeer::ESTABLISH_AT;
+                $this->join_at = $newDateAsString;
+                $this->modifiedColumns[] = OrganizationArchivePeer::JOIN_AT;
             }
         } // if either are not null
 
 
         return $this;
-    } // setEstablishAt()
+    } // setJoinAt()
 
     /**
      * Set the value of [address1] column.
@@ -893,27 +929,6 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     } // setCity()
 
     /**
-     * Set the value of [state_id] column.
-     *
-     * @param  int $v new value
-     * @return OrganizationArchive The current object (for fluent API support)
-     */
-    public function setStateId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->state_id !== $v) {
-            $this->state_id = $v;
-            $this->modifiedColumns[] = OrganizationArchivePeer::STATE_ID;
-        }
-
-
-        return $this;
-    } // setStateId()
-
-    /**
      * Set the value of [zipcode] column.
      *
      * @param  string $v new value
@@ -954,6 +969,48 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
 
         return $this;
     } // setCountryId()
+
+    /**
+     * Set the value of [state_id] column.
+     *
+     * @param  int $v new value
+     * @return OrganizationArchive The current object (for fluent API support)
+     */
+    public function setStateId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->state_id !== $v) {
+            $this->state_id = $v;
+            $this->modifiedColumns[] = OrganizationArchivePeer::STATE_ID;
+        }
+
+
+        return $this;
+    } // setStateId()
+
+    /**
+     * Set the value of [region_id] column.
+     *
+     * @param  int $v new value
+     * @return OrganizationArchive The current object (for fluent API support)
+     */
+    public function setRegionId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->region_id !== $v) {
+            $this->region_id = $v;
+            $this->modifiedColumns[] = OrganizationArchivePeer::REGION_ID;
+        }
+
+
+        return $this;
+    } // setRegionId()
 
     /**
      * Set the value of [phone] column.
@@ -1108,6 +1165,35 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     } // setStatus()
 
     /**
+     * Sets the value of the [is_principal] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return OrganizationArchive The current object (for fluent API support)
+     */
+    public function setIsPrincipal($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_principal !== $v) {
+            $this->is_principal = $v;
+            $this->modifiedColumns[] = OrganizationArchivePeer::IS_PRINCIPAL;
+        }
+
+
+        return $this;
+    } // setIsPrincipal()
+
+    /**
      * Set the value of [confirmation] column.
      *
      * @param  int $v new value
@@ -1237,6 +1323,10 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->is_principal !== false) {
+                return false;
+            }
+
             if ($this->confirmation !== 0) {
                 return false;
             }
@@ -1270,25 +1360,27 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->excerpt = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->goverment_license = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->establish_at = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->join_at = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->address1 = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->address2 = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->city = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->state_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
-            $this->zipcode = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->country_id = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
-            $this->phone = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->fax = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
-            $this->mobile = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
-            $this->email = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
-            $this->website = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
-            $this->logo = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
-            $this->status = ($row[$startcol + 20] !== null) ? (int) $row[$startcol + 20] : null;
-            $this->confirmation = ($row[$startcol + 21] !== null) ? (int) $row[$startcol + 21] : null;
-            $this->sortable_rank = ($row[$startcol + 22] !== null) ? (int) $row[$startcol + 22] : null;
-            $this->created_at = ($row[$startcol + 23] !== null) ? (string) $row[$startcol + 23] : null;
-            $this->updated_at = ($row[$startcol + 24] !== null) ? (string) $row[$startcol + 24] : null;
-            $this->archived_at = ($row[$startcol + 25] !== null) ? (string) $row[$startcol + 25] : null;
+            $this->zipcode = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->country_id = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
+            $this->state_id = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
+            $this->region_id = ($row[$startcol + 14] !== null) ? (int) $row[$startcol + 14] : null;
+            $this->phone = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->fax = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
+            $this->mobile = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
+            $this->email = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
+            $this->website = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
+            $this->logo = ($row[$startcol + 20] !== null) ? (string) $row[$startcol + 20] : null;
+            $this->status = ($row[$startcol + 21] !== null) ? (int) $row[$startcol + 21] : null;
+            $this->is_principal = ($row[$startcol + 22] !== null) ? (boolean) $row[$startcol + 22] : null;
+            $this->confirmation = ($row[$startcol + 23] !== null) ? (int) $row[$startcol + 23] : null;
+            $this->sortable_rank = ($row[$startcol + 24] !== null) ? (int) $row[$startcol + 24] : null;
+            $this->created_at = ($row[$startcol + 25] !== null) ? (string) $row[$startcol + 25] : null;
+            $this->updated_at = ($row[$startcol + 26] !== null) ? (string) $row[$startcol + 26] : null;
+            $this->archived_at = ($row[$startcol + 27] !== null) ? (string) $row[$startcol + 27] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1298,7 +1390,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 26; // 26 = OrganizationArchivePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 28; // 28 = OrganizationArchivePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating OrganizationArchive object", $e);
@@ -1437,21 +1529,10 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
             EventDispatcherProxy::trigger('model.save.pre', new ModelEvent($this));
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
-                // timestampable behavior
-                if (!$this->isColumnModified(OrganizationArchivePeer::CREATED_AT)) {
-                    $this->setCreatedAt(time());
-                }
-                if (!$this->isColumnModified(OrganizationArchivePeer::UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
                 // event behavior
                 EventDispatcherProxy::trigger('model.insert.pre', new ModelEvent($this));
             } else {
                 $ret = $ret && $this->preUpdate($con);
-                // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(OrganizationArchivePeer::UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
                 // event behavior
                 EventDispatcherProxy::trigger(array('update.pre', 'model.update.pre'), new ModelEvent($this));
             }
@@ -1553,8 +1634,8 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationArchivePeer::GOVERMENT_LICENSE)) {
             $modifiedColumns[':p' . $index++]  = '`goverment_license`';
         }
-        if ($this->isColumnModified(OrganizationArchivePeer::ESTABLISH_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`establish_at`';
+        if ($this->isColumnModified(OrganizationArchivePeer::JOIN_AT)) {
+            $modifiedColumns[':p' . $index++]  = '`join_at`';
         }
         if ($this->isColumnModified(OrganizationArchivePeer::ADDRESS1)) {
             $modifiedColumns[':p' . $index++]  = '`address1`';
@@ -1565,14 +1646,17 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationArchivePeer::CITY)) {
             $modifiedColumns[':p' . $index++]  = '`city`';
         }
-        if ($this->isColumnModified(OrganizationArchivePeer::STATE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`state_id`';
-        }
         if ($this->isColumnModified(OrganizationArchivePeer::ZIPCODE)) {
             $modifiedColumns[':p' . $index++]  = '`zipcode`';
         }
         if ($this->isColumnModified(OrganizationArchivePeer::COUNTRY_ID)) {
             $modifiedColumns[':p' . $index++]  = '`country_id`';
+        }
+        if ($this->isColumnModified(OrganizationArchivePeer::STATE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`state_id`';
+        }
+        if ($this->isColumnModified(OrganizationArchivePeer::REGION_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`region_id`';
         }
         if ($this->isColumnModified(OrganizationArchivePeer::PHONE)) {
             $modifiedColumns[':p' . $index++]  = '`phone`';
@@ -1594,6 +1678,9 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         }
         if ($this->isColumnModified(OrganizationArchivePeer::STATUS)) {
             $modifiedColumns[':p' . $index++]  = '`status`';
+        }
+        if ($this->isColumnModified(OrganizationArchivePeer::IS_PRINCIPAL)) {
+            $modifiedColumns[':p' . $index++]  = '`is_principal`';
         }
         if ($this->isColumnModified(OrganizationArchivePeer::CONFIRMATION)) {
             $modifiedColumns[':p' . $index++]  = '`confirmation`';
@@ -1642,8 +1729,8 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                     case '`goverment_license`':
                         $stmt->bindValue($identifier, $this->goverment_license, PDO::PARAM_STR);
                         break;
-                    case '`establish_at`':
-                        $stmt->bindValue($identifier, $this->establish_at, PDO::PARAM_STR);
+                    case '`join_at`':
+                        $stmt->bindValue($identifier, $this->join_at, PDO::PARAM_STR);
                         break;
                     case '`address1`':
                         $stmt->bindValue($identifier, $this->address1, PDO::PARAM_STR);
@@ -1654,14 +1741,17 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                     case '`city`':
                         $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
                         break;
-                    case '`state_id`':
-                        $stmt->bindValue($identifier, $this->state_id, PDO::PARAM_INT);
-                        break;
                     case '`zipcode`':
                         $stmt->bindValue($identifier, $this->zipcode, PDO::PARAM_STR);
                         break;
                     case '`country_id`':
                         $stmt->bindValue($identifier, $this->country_id, PDO::PARAM_INT);
+                        break;
+                    case '`state_id`':
+                        $stmt->bindValue($identifier, $this->state_id, PDO::PARAM_INT);
+                        break;
+                    case '`region_id`':
+                        $stmt->bindValue($identifier, $this->region_id, PDO::PARAM_INT);
                         break;
                     case '`phone`':
                         $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
@@ -1683,6 +1773,9 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                         break;
                     case '`status`':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_INT);
+                        break;
+                    case '`is_principal`':
+                        $stmt->bindValue($identifier, (int) $this->is_principal, PDO::PARAM_INT);
                         break;
                     case '`confirmation`':
                         $stmt->bindValue($identifier, $this->confirmation, PDO::PARAM_INT);
@@ -1848,7 +1941,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                 return $this->getGovermentLicense();
                 break;
             case 7:
-                return $this->getEstablishAt();
+                return $this->getJoinAt();
                 break;
             case 8:
                 return $this->getAddress1();
@@ -1860,48 +1953,54 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                 return $this->getCity();
                 break;
             case 11:
-                return $this->getStateId();
-                break;
-            case 12:
                 return $this->getZipcode();
                 break;
-            case 13:
+            case 12:
                 return $this->getCountryId();
                 break;
+            case 13:
+                return $this->getStateId();
+                break;
             case 14:
-                return $this->getPhone();
+                return $this->getRegionId();
                 break;
             case 15:
-                return $this->getFax();
+                return $this->getPhone();
                 break;
             case 16:
-                return $this->getMobile();
+                return $this->getFax();
                 break;
             case 17:
-                return $this->getEmail();
+                return $this->getMobile();
                 break;
             case 18:
-                return $this->getWebsite();
+                return $this->getEmail();
                 break;
             case 19:
-                return $this->getLogo();
+                return $this->getWebsite();
                 break;
             case 20:
-                return $this->getStatus();
+                return $this->getLogo();
                 break;
             case 21:
-                return $this->getConfirmation();
+                return $this->getStatus();
                 break;
             case 22:
-                return $this->getSortableRank();
+                return $this->getIsPrincipal();
                 break;
             case 23:
-                return $this->getCreatedAt();
+                return $this->getConfirmation();
                 break;
             case 24:
-                return $this->getUpdatedAt();
+                return $this->getSortableRank();
                 break;
             case 25:
+                return $this->getCreatedAt();
+                break;
+            case 26:
+                return $this->getUpdatedAt();
+                break;
+            case 27:
                 return $this->getArchivedAt();
                 break;
             default:
@@ -1939,25 +2038,27 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
             $keys[4] => $this->getDescription(),
             $keys[5] => $this->getExcerpt(),
             $keys[6] => $this->getGovermentLicense(),
-            $keys[7] => $this->getEstablishAt(),
+            $keys[7] => $this->getJoinAt(),
             $keys[8] => $this->getAddress1(),
             $keys[9] => $this->getAddress2(),
             $keys[10] => $this->getCity(),
-            $keys[11] => $this->getStateId(),
-            $keys[12] => $this->getZipcode(),
-            $keys[13] => $this->getCountryId(),
-            $keys[14] => $this->getPhone(),
-            $keys[15] => $this->getFax(),
-            $keys[16] => $this->getMobile(),
-            $keys[17] => $this->getEmail(),
-            $keys[18] => $this->getWebsite(),
-            $keys[19] => $this->getLogo(),
-            $keys[20] => $this->getStatus(),
-            $keys[21] => $this->getConfirmation(),
-            $keys[22] => $this->getSortableRank(),
-            $keys[23] => $this->getCreatedAt(),
-            $keys[24] => $this->getUpdatedAt(),
-            $keys[25] => $this->getArchivedAt(),
+            $keys[11] => $this->getZipcode(),
+            $keys[12] => $this->getCountryId(),
+            $keys[13] => $this->getStateId(),
+            $keys[14] => $this->getRegionId(),
+            $keys[15] => $this->getPhone(),
+            $keys[16] => $this->getFax(),
+            $keys[17] => $this->getMobile(),
+            $keys[18] => $this->getEmail(),
+            $keys[19] => $this->getWebsite(),
+            $keys[20] => $this->getLogo(),
+            $keys[21] => $this->getStatus(),
+            $keys[22] => $this->getIsPrincipal(),
+            $keys[23] => $this->getConfirmation(),
+            $keys[24] => $this->getSortableRank(),
+            $keys[25] => $this->getCreatedAt(),
+            $keys[26] => $this->getUpdatedAt(),
+            $keys[27] => $this->getArchivedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -2019,7 +2120,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                 $this->setGovermentLicense($value);
                 break;
             case 7:
-                $this->setEstablishAt($value);
+                $this->setJoinAt($value);
                 break;
             case 8:
                 $this->setAddress1($value);
@@ -2031,56 +2132,62 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
                 $this->setCity($value);
                 break;
             case 11:
-                $this->setStateId($value);
-                break;
-            case 12:
                 $this->setZipcode($value);
                 break;
-            case 13:
+            case 12:
                 $this->setCountryId($value);
                 break;
+            case 13:
+                $this->setStateId($value);
+                break;
             case 14:
-                $this->setPhone($value);
+                $this->setRegionId($value);
                 break;
             case 15:
-                $this->setFax($value);
+                $this->setPhone($value);
                 break;
             case 16:
-                $this->setMobile($value);
+                $this->setFax($value);
                 break;
             case 17:
-                $this->setEmail($value);
+                $this->setMobile($value);
                 break;
             case 18:
-                $this->setWebsite($value);
+                $this->setEmail($value);
                 break;
             case 19:
-                $this->setLogo($value);
+                $this->setWebsite($value);
                 break;
             case 20:
+                $this->setLogo($value);
+                break;
+            case 21:
                 $valueSet = OrganizationArchivePeer::getValueSet(OrganizationArchivePeer::STATUS);
                 if (isset($valueSet[$value])) {
                     $value = $valueSet[$value];
                 }
                 $this->setStatus($value);
                 break;
-            case 21:
+            case 22:
+                $this->setIsPrincipal($value);
+                break;
+            case 23:
                 $valueSet = OrganizationArchivePeer::getValueSet(OrganizationArchivePeer::CONFIRMATION);
                 if (isset($valueSet[$value])) {
                     $value = $valueSet[$value];
                 }
                 $this->setConfirmation($value);
                 break;
-            case 22:
+            case 24:
                 $this->setSortableRank($value);
                 break;
-            case 23:
+            case 25:
                 $this->setCreatedAt($value);
                 break;
-            case 24:
+            case 26:
                 $this->setUpdatedAt($value);
                 break;
-            case 25:
+            case 27:
                 $this->setArchivedAt($value);
                 break;
         } // switch()
@@ -2114,25 +2221,27 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         if (array_key_exists($keys[4], $arr)) $this->setDescription($arr[$keys[4]]);
         if (array_key_exists($keys[5], $arr)) $this->setExcerpt($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setGovermentLicense($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setEstablishAt($arr[$keys[7]]);
+        if (array_key_exists($keys[7], $arr)) $this->setJoinAt($arr[$keys[7]]);
         if (array_key_exists($keys[8], $arr)) $this->setAddress1($arr[$keys[8]]);
         if (array_key_exists($keys[9], $arr)) $this->setAddress2($arr[$keys[9]]);
         if (array_key_exists($keys[10], $arr)) $this->setCity($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setStateId($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setZipcode($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setCountryId($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setPhone($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setFax($arr[$keys[15]]);
-        if (array_key_exists($keys[16], $arr)) $this->setMobile($arr[$keys[16]]);
-        if (array_key_exists($keys[17], $arr)) $this->setEmail($arr[$keys[17]]);
-        if (array_key_exists($keys[18], $arr)) $this->setWebsite($arr[$keys[18]]);
-        if (array_key_exists($keys[19], $arr)) $this->setLogo($arr[$keys[19]]);
-        if (array_key_exists($keys[20], $arr)) $this->setStatus($arr[$keys[20]]);
-        if (array_key_exists($keys[21], $arr)) $this->setConfirmation($arr[$keys[21]]);
-        if (array_key_exists($keys[22], $arr)) $this->setSortableRank($arr[$keys[22]]);
-        if (array_key_exists($keys[23], $arr)) $this->setCreatedAt($arr[$keys[23]]);
-        if (array_key_exists($keys[24], $arr)) $this->setUpdatedAt($arr[$keys[24]]);
-        if (array_key_exists($keys[25], $arr)) $this->setArchivedAt($arr[$keys[25]]);
+        if (array_key_exists($keys[11], $arr)) $this->setZipcode($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setCountryId($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setStateId($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setRegionId($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setPhone($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setFax($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setMobile($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setEmail($arr[$keys[18]]);
+        if (array_key_exists($keys[19], $arr)) $this->setWebsite($arr[$keys[19]]);
+        if (array_key_exists($keys[20], $arr)) $this->setLogo($arr[$keys[20]]);
+        if (array_key_exists($keys[21], $arr)) $this->setStatus($arr[$keys[21]]);
+        if (array_key_exists($keys[22], $arr)) $this->setIsPrincipal($arr[$keys[22]]);
+        if (array_key_exists($keys[23], $arr)) $this->setConfirmation($arr[$keys[23]]);
+        if (array_key_exists($keys[24], $arr)) $this->setSortableRank($arr[$keys[24]]);
+        if (array_key_exists($keys[25], $arr)) $this->setCreatedAt($arr[$keys[25]]);
+        if (array_key_exists($keys[26], $arr)) $this->setUpdatedAt($arr[$keys[26]]);
+        if (array_key_exists($keys[27], $arr)) $this->setArchivedAt($arr[$keys[27]]);
     }
 
     /**
@@ -2151,13 +2260,14 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationArchivePeer::DESCRIPTION)) $criteria->add(OrganizationArchivePeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(OrganizationArchivePeer::EXCERPT)) $criteria->add(OrganizationArchivePeer::EXCERPT, $this->excerpt);
         if ($this->isColumnModified(OrganizationArchivePeer::GOVERMENT_LICENSE)) $criteria->add(OrganizationArchivePeer::GOVERMENT_LICENSE, $this->goverment_license);
-        if ($this->isColumnModified(OrganizationArchivePeer::ESTABLISH_AT)) $criteria->add(OrganizationArchivePeer::ESTABLISH_AT, $this->establish_at);
+        if ($this->isColumnModified(OrganizationArchivePeer::JOIN_AT)) $criteria->add(OrganizationArchivePeer::JOIN_AT, $this->join_at);
         if ($this->isColumnModified(OrganizationArchivePeer::ADDRESS1)) $criteria->add(OrganizationArchivePeer::ADDRESS1, $this->address1);
         if ($this->isColumnModified(OrganizationArchivePeer::ADDRESS2)) $criteria->add(OrganizationArchivePeer::ADDRESS2, $this->address2);
         if ($this->isColumnModified(OrganizationArchivePeer::CITY)) $criteria->add(OrganizationArchivePeer::CITY, $this->city);
-        if ($this->isColumnModified(OrganizationArchivePeer::STATE_ID)) $criteria->add(OrganizationArchivePeer::STATE_ID, $this->state_id);
         if ($this->isColumnModified(OrganizationArchivePeer::ZIPCODE)) $criteria->add(OrganizationArchivePeer::ZIPCODE, $this->zipcode);
         if ($this->isColumnModified(OrganizationArchivePeer::COUNTRY_ID)) $criteria->add(OrganizationArchivePeer::COUNTRY_ID, $this->country_id);
+        if ($this->isColumnModified(OrganizationArchivePeer::STATE_ID)) $criteria->add(OrganizationArchivePeer::STATE_ID, $this->state_id);
+        if ($this->isColumnModified(OrganizationArchivePeer::REGION_ID)) $criteria->add(OrganizationArchivePeer::REGION_ID, $this->region_id);
         if ($this->isColumnModified(OrganizationArchivePeer::PHONE)) $criteria->add(OrganizationArchivePeer::PHONE, $this->phone);
         if ($this->isColumnModified(OrganizationArchivePeer::FAX)) $criteria->add(OrganizationArchivePeer::FAX, $this->fax);
         if ($this->isColumnModified(OrganizationArchivePeer::MOBILE)) $criteria->add(OrganizationArchivePeer::MOBILE, $this->mobile);
@@ -2165,6 +2275,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         if ($this->isColumnModified(OrganizationArchivePeer::WEBSITE)) $criteria->add(OrganizationArchivePeer::WEBSITE, $this->website);
         if ($this->isColumnModified(OrganizationArchivePeer::LOGO)) $criteria->add(OrganizationArchivePeer::LOGO, $this->logo);
         if ($this->isColumnModified(OrganizationArchivePeer::STATUS)) $criteria->add(OrganizationArchivePeer::STATUS, $this->status);
+        if ($this->isColumnModified(OrganizationArchivePeer::IS_PRINCIPAL)) $criteria->add(OrganizationArchivePeer::IS_PRINCIPAL, $this->is_principal);
         if ($this->isColumnModified(OrganizationArchivePeer::CONFIRMATION)) $criteria->add(OrganizationArchivePeer::CONFIRMATION, $this->confirmation);
         if ($this->isColumnModified(OrganizationArchivePeer::SORTABLE_RANK)) $criteria->add(OrganizationArchivePeer::SORTABLE_RANK, $this->sortable_rank);
         if ($this->isColumnModified(OrganizationArchivePeer::CREATED_AT)) $criteria->add(OrganizationArchivePeer::CREATED_AT, $this->created_at);
@@ -2239,13 +2350,14 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         $copyObj->setDescription($this->getDescription());
         $copyObj->setExcerpt($this->getExcerpt());
         $copyObj->setGovermentLicense($this->getGovermentLicense());
-        $copyObj->setEstablishAt($this->getEstablishAt());
+        $copyObj->setJoinAt($this->getJoinAt());
         $copyObj->setAddress1($this->getAddress1());
         $copyObj->setAddress2($this->getAddress2());
         $copyObj->setCity($this->getCity());
-        $copyObj->setStateId($this->getStateId());
         $copyObj->setZipcode($this->getZipcode());
         $copyObj->setCountryId($this->getCountryId());
+        $copyObj->setStateId($this->getStateId());
+        $copyObj->setRegionId($this->getRegionId());
         $copyObj->setPhone($this->getPhone());
         $copyObj->setFax($this->getFax());
         $copyObj->setMobile($this->getMobile());
@@ -2253,6 +2365,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         $copyObj->setWebsite($this->getWebsite());
         $copyObj->setLogo($this->getLogo());
         $copyObj->setStatus($this->getStatus());
+        $copyObj->setIsPrincipal($this->getIsPrincipal());
         $copyObj->setConfirmation($this->getConfirmation());
         $copyObj->setSortableRank($this->getSortableRank());
         $copyObj->setCreatedAt($this->getCreatedAt());
@@ -2316,13 +2429,14 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         $this->description = null;
         $this->excerpt = null;
         $this->goverment_license = null;
-        $this->establish_at = null;
+        $this->join_at = null;
         $this->address1 = null;
         $this->address2 = null;
         $this->city = null;
-        $this->state_id = null;
         $this->zipcode = null;
         $this->country_id = null;
+        $this->state_id = null;
+        $this->region_id = null;
         $this->phone = null;
         $this->fax = null;
         $this->mobile = null;
@@ -2330,6 +2444,7 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
         $this->website = null;
         $this->logo = null;
         $this->status = null;
+        $this->is_principal = null;
         $this->confirmation = null;
         $this->sortable_rank = null;
         $this->created_at = null;
@@ -2382,20 +2497,6 @@ abstract class BaseOrganizationArchive extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
-    }
-
-    // timestampable behavior
-
-    /**
-     * Mark the current object so that the update date doesn't get updated during next save
-     *
-     * @return     OrganizationArchive The current object (for fluent API support)
-     */
-    public function keepUpdateDateUnchanged()
-    {
-        $this->modifiedColumns[] = OrganizationArchivePeer::UPDATED_AT;
-
-        return $this;
     }
 
     // event behavior

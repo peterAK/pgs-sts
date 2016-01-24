@@ -22,13 +22,9 @@ use PGS\CoreDomainBundle\Model\HelpQuery;
 /**
  * @method HelpQuery orderById($order = Criteria::ASC) Order by the id column
  * @method HelpQuery orderByKey($order = Criteria::ASC) Order by the key column
- * @method HelpQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method HelpQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method HelpQuery groupById() Group by the id column
  * @method HelpQuery groupByKey() Group by the key column
- * @method HelpQuery groupByCreatedAt() Group by the created_at column
- * @method HelpQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method HelpQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method HelpQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -42,13 +38,9 @@ use PGS\CoreDomainBundle\Model\HelpQuery;
  * @method Help findOneOrCreate(PropelPDO $con = null) Return the first Help matching the query, or a new Help object populated from the query conditions when no match is found
  *
  * @method Help findOneByKey(string $key) Return the first Help filtered by the key column
- * @method Help findOneByCreatedAt(string $created_at) Return the first Help filtered by the created_at column
- * @method Help findOneByUpdatedAt(string $updated_at) Return the first Help filtered by the updated_at column
  *
  * @method array findById(int $id) Return Help objects filtered by the id column
  * @method array findByKey(string $key) Return Help objects filtered by the key column
- * @method array findByCreatedAt(string $created_at) Return Help objects filtered by the created_at column
- * @method array findByUpdatedAt(string $updated_at) Return Help objects filtered by the updated_at column
  */
 abstract class BaseHelpQuery extends ModelCriteria
 {
@@ -155,7 +147,7 @@ abstract class BaseHelpQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `key`, `created_at`, `updated_at` FROM `help` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `key` FROM `help` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -314,92 +306,6 @@ abstract class BaseHelpQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(HelpPeer::KEY, $key, $comparison);
-    }
-
-    /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return HelpQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(HelpPeer::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(HelpPeer::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(HelpPeer::CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return HelpQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
-    {
-        if (is_array($updatedAt)) {
-            $useMinMax = false;
-            if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(HelpPeer::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(HelpPeer::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(HelpPeer::UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
@@ -619,71 +525,6 @@ abstract class BaseHelpQuery extends ModelCriteria
             ->useQuery($relationAlias ? $relationAlias : 'HelpI18n', 'PGS\CoreDomainBundle\Model\HelpI18nQuery');
     }
 
-    // timestampable behavior
-
-    /**
-     * Filter by the latest updated
-     *
-     * @param      int $nbDays Maximum age of the latest update in days
-     *
-     * @return     HelpQuery The current query, for fluid interface
-     */
-    public function recentlyUpdated($nbDays = 7)
-    {
-        return $this->addUsingAlias(HelpPeer::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by update date desc
-     *
-     * @return     HelpQuery The current query, for fluid interface
-     */
-    public function lastUpdatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(HelpPeer::UPDATED_AT);
-    }
-
-    /**
-     * Order by update date asc
-     *
-     * @return     HelpQuery The current query, for fluid interface
-     */
-    public function firstUpdatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(HelpPeer::UPDATED_AT);
-    }
-
-    /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     HelpQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(HelpPeer::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by create date desc
-     *
-     * @return     HelpQuery The current query, for fluid interface
-     */
-    public function lastCreatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(HelpPeer::CREATED_AT);
-    }
-
-    /**
-     * Order by create date asc
-     *
-     * @return     HelpQuery The current query, for fluid interface
-     */
-    public function firstCreatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(HelpPeer::CREATED_AT);
-    }
     // extend behavior
     public function setFormatter($formatter)
     {

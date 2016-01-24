@@ -49,13 +49,14 @@ class OrganizationArchiveTableMap extends TableMap
         $this->addColumn('description', 'Description', 'CLOB', false, null, null);
         $this->addColumn('excerpt', 'Excerpt', 'VARCHAR', false, 250, null);
         $this->addColumn('goverment_license', 'GovermentLicense', 'VARCHAR', false, 30, null);
-        $this->addColumn('establish_at', 'EstablishAt', 'DATE', false, null, null);
+        $this->addColumn('join_at', 'JoinAt', 'DATE', false, null, null);
         $this->addColumn('address1', 'Address1', 'VARCHAR', true, 100, null);
         $this->addColumn('address2', 'Address2', 'VARCHAR', false, 100, null);
         $this->addColumn('city', 'City', 'VARCHAR', false, 100, null);
-        $this->addColumn('state_id', 'StateId', 'INTEGER', true, null, null);
         $this->addColumn('zipcode', 'Zipcode', 'VARCHAR', false, 5, null);
         $this->addColumn('country_id', 'CountryId', 'INTEGER', true, null, null);
+        $this->addColumn('state_id', 'StateId', 'INTEGER', true, null, null);
+        $this->addColumn('region_id', 'RegionId', 'INTEGER', false, null, null);
         $this->addColumn('phone', 'Phone', 'VARCHAR', false, 15, null);
         $this->addColumn('fax', 'Fax', 'VARCHAR', false, 15, null);
         $this->addColumn('mobile', 'Mobile', 'VARCHAR', false, 15, null);
@@ -69,6 +70,7 @@ class OrganizationArchiveTableMap extends TableMap
   2 => 'inactive',
   3 => 'banned',
 ));
+        $this->addColumn('is_principal', 'IsPrincipal', 'BOOLEAN', false, 1, false);
         $this->addColumn('confirmation', 'Confirmation', 'ENUM', false, null, 'new');
         $this->getColumn('confirmation', false)->setValueSet(array (
   0 => 'new',
@@ -98,11 +100,6 @@ class OrganizationArchiveTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
-),
             'event' =>  array (
 ),
             'extend' =>  array (

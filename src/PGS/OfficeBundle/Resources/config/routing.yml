@@ -1,3 +1,3 @@
-pgs_office_homepage:
+pgs_office_dashboard:
     path:     /hello/{name}
     defaults: { _controller: PGSOfficeBundle:Default:index }

@@ -48,28 +48,16 @@ class AuthenticationHandler extends ContainerAware implements AuthenticationSucc
             return new RedirectResponse($this->container->get('router')->generate('pgs_admin_dashboard'));
         }
 
-        if ($securityContext->isGranted('ROLE_SCHOOL')) {
-            return new RedirectResponse($this->container->get('router')->generate('pgs_school_dashboard'));
+        if ($securityContext->isGranted('ROLE_OFFICE')) {
+            return new RedirectResponse($this->container->get('router')->generate('pgs_office_dashboard'));
         }
 
         if ($securityContext->isGranted('ROLE_PRINCIPAL')) {
             return new RedirectResponse($this->container->get('router')->generate('pgs_principal_dashboard'));
         }
 
-        if ($securityContext->isGranted('ROLE_STUDENT')) {
-            return new RedirectResponse($this->container->get('router')->generate('pgs_student_dashboard'));
-        }
-
-        if ($securityContext->isGranted('ROLE_PARENT')) {
-            return new RedirectResponse($this->container->get('router')->generate('pgs_parent_dashboard'));
-        }
-
-        if ($securityContext->isGranted('ROLE_TEACHER')) {
-            return new RedirectResponse($this->container->get('router')->generate('pgs_teacher_dashboard'));
-        }
-
-        if ($securityContext->isGranted('ROLE_COUNSELOR')) {
-            return new RedirectResponse($this->container->get('router')->generate('pgs_counselor_dashboard'));
+        if ($securityContext->isGranted('ROLE_SALES')) {
+            return new RedirectResponse($this->container->get('router')->generate('pgs_sales_dashboard'));
         }
 
         if ($securityContext->isGranted('ROLE_USER')) {

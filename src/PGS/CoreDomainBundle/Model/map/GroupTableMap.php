@@ -46,8 +46,6 @@ class GroupTableMap extends TableMap
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->getColumn('name', false)->setPrimaryString(true);
         $this->addColumn('roles', 'Roles', 'ARRAY', false, null, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -71,11 +69,6 @@ class GroupTableMap extends TableMap
         return array(
             'typehintable' =>  array (
   'roles' => 'array',
-),
-            'timestampable' =>  array (
-  'create_column' => 'created_at',
-  'update_column' => 'updated_at',
-  'disable_updated_at' => 'false',
 ),
             'event' =>  array (
 ),

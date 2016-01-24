@@ -24,14 +24,10 @@ use PGS\CoreDomainBundle\Model\UserGroup;
  * @method GroupQuery orderById($order = Criteria::ASC) Order by the id column
  * @method GroupQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method GroupQuery orderByRoles($order = Criteria::ASC) Order by the roles column
- * @method GroupQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method GroupQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method GroupQuery groupById() Group by the id column
  * @method GroupQuery groupByName() Group by the name column
  * @method GroupQuery groupByRoles() Group by the roles column
- * @method GroupQuery groupByCreatedAt() Group by the created_at column
- * @method GroupQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method GroupQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method GroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,14 +42,10 @@ use PGS\CoreDomainBundle\Model\UserGroup;
  *
  * @method Group findOneByName(string $name) Return the first Group filtered by the name column
  * @method Group findOneByRoles(array $roles) Return the first Group filtered by the roles column
- * @method Group findOneByCreatedAt(string $created_at) Return the first Group filtered by the created_at column
- * @method Group findOneByUpdatedAt(string $updated_at) Return the first Group filtered by the updated_at column
  *
  * @method array findById(int $id) Return Group objects filtered by the id column
  * @method array findByName(string $name) Return Group objects filtered by the name column
  * @method array findByRoles(array $roles) Return Group objects filtered by the roles column
- * @method array findByCreatedAt(string $created_at) Return Group objects filtered by the created_at column
- * @method array findByUpdatedAt(string $updated_at) Return Group objects filtered by the updated_at column
  */
 abstract class BaseGroupQuery extends ModelCriteria
 {
@@ -160,7 +152,7 @@ abstract class BaseGroupQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `name`, `roles`, `created_at`, `updated_at` FROM `fos_group` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `name`, `roles` FROM `fos_group` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -403,92 +395,6 @@ abstract class BaseGroupQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return GroupQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(GroupPeer::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(GroupPeer::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(GroupPeer::CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return GroupQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
-    {
-        if (is_array($updatedAt)) {
-            $useMinMax = false;
-            if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(GroupPeer::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(GroupPeer::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(GroupPeer::UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
      * Filter the query by a related UserGroup object
      *
      * @param   UserGroup|PropelObjectCollection $userGroup  the related object to use as filter
@@ -665,71 +571,6 @@ abstract class BaseGroupQuery extends ModelCriteria
         return $this->postUpdate($affectedRows, $con);
     }
 
-    // timestampable behavior
-
-    /**
-     * Filter by the latest updated
-     *
-     * @param      int $nbDays Maximum age of the latest update in days
-     *
-     * @return     GroupQuery The current query, for fluid interface
-     */
-    public function recentlyUpdated($nbDays = 7)
-    {
-        return $this->addUsingAlias(GroupPeer::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by update date desc
-     *
-     * @return     GroupQuery The current query, for fluid interface
-     */
-    public function lastUpdatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(GroupPeer::UPDATED_AT);
-    }
-
-    /**
-     * Order by update date asc
-     *
-     * @return     GroupQuery The current query, for fluid interface
-     */
-    public function firstUpdatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(GroupPeer::UPDATED_AT);
-    }
-
-    /**
-     * Filter by the latest created
-     *
-     * @param      int $nbDays Maximum age of in days
-     *
-     * @return     GroupQuery The current query, for fluid interface
-     */
-    public function recentlyCreated($nbDays = 7)
-    {
-        return $this->addUsingAlias(GroupPeer::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
-    }
-
-    /**
-     * Order by create date desc
-     *
-     * @return     GroupQuery The current query, for fluid interface
-     */
-    public function lastCreatedFirst()
-    {
-        return $this->addDescendingOrderByColumn(GroupPeer::CREATED_AT);
-    }
-
-    /**
-     * Order by create date asc
-     *
-     * @return     GroupQuery The current query, for fluid interface
-     */
-    public function firstCreatedFirst()
-    {
-        return $this->addAscendingOrderByColumn(GroupPeer::CREATED_AT);
-    }
     // extend behavior
     public function setFormatter($formatter)
     {
