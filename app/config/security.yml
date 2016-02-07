@@ -27,13 +27,14 @@ security:
     access_control:
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login_check, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/super_admin, role: ROLE_SUPER_ADMIN }
         - { path: ^/admin, role: ROLE_ADMIN }
-        - { path: ^/office, role: ROLE_SUPER_ADMIN }
-        - { path: ^/principal, role: ROLE_SCHOOL }
-        - { path: ^/sales, role: ROLE_APPLICANT }
-        - { path: ^/user/office, role: ROLE_STUDENT }
-        - { path: ^/user/principal, role: ROLE_PARENT }
-        - { path: ^/user/sales, role: ROLE_TEACHER }
+        - { path: ^/office, role: ROLE_OFFICE }
+        - { path: ^/principal, role: ROLE_PRINCIPAL }
+        - { path: ^/sales, role: ROLE_SALES }
+        - { path: ^/user/office, role: ROLE_OFFICE }
+        - { path: ^/user/principal, role: ROLE_PRINCIPAL }
+        - { path: ^/user/sales, role: ROLE_SALES }
         - { path: ^/user/, role: ROLE_USER }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }

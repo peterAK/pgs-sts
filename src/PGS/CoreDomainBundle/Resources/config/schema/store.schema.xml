@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Store" namespace="PGS\CoreDomainBundle\Model\Store">
+    <table name="store" phpName="Store">
+        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+        <column name="owner" phpName="Owner" type="VARCHAR" size="100" required="true"/>
+        <column name="addresss" phpName="Address" type="VARCHAR" size="200" required="true"/>
+        <column name="country_id" phpName="CountryId" type="INTEGER"/>
+        <column name="state_id" phpName="StateId" type="INTEGER"/>
+        <column name="region_id" phpName="RegionId" type="INTEGER"/>
+        <column name="city_id" phpName="CityId" type="INTEGER"/>
+        <column name="area_id" phpName="AreaId" type="INTEGER"/>
+        <column name="zipcode" phpName="Zipcode" type="VARCHAR" size="5" required="false"/>
+        <column name="phone" phpName="Phone" type="VARCHAR" size="15" required="false"/>
+        <column name="store_type" type="ENUM" valueSet="warung, toko, grosir, lapak" defaultValue="warung"/>
+        <column name="description" phpName="Description" type="CLOB" required="false"/>
+        <column name="is_active" type="boolean" defaultValue="true" />
+
+        <!-- Relations -->
+        <foreign-key foreignTable="country" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="country_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="state" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="state_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="region" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="region_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="city" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="city_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="area" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="area_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="sluggable">
+            <parameter name="slug_column" value="url" />
+            <parameter name="slug_pattern" value="{Name}" />
+            <parameter name="replace_pattern" value="/[^\w\/]+/u" />
+            <parameter name="replacement" value="-" />
+            <parameter name="separator" value="_" />
+            <parameter name="permanent" value="true" />
+        </behavior>
+
+        <behavior name="sortable" />
+        <behavior name="timestampable" />
+    </table>
+</database>

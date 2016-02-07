@@ -16,7 +16,10 @@ use PGS\CoreDomainBundle\Model\User;
 use PGS\CoreDomainBundle\Model\UserLogPeer;
 use PGS\CoreDomainBundle\Model\UserPeer;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
-use PGS\CoreDomainBundle\Model\Organization\OrganizationPeer;
+use PGS\CoreDomainBundle\Model\AreaAssignment\AreaAssignmentPeer;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalPeer;
+use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignmentPeer;
+use PGS\CoreDomainBundle\Model\Visitation\VisitationPeer;
 use PGS\CoreDomainBundle\Model\map\UserTableMap;
 
 abstract class BaseUserPeer
@@ -541,12 +544,21 @@ abstract class BaseUserPeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in AreaAssignmentPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        AreaAssignmentPeer::clearInstancePool();
         // Invalidate objects in UserLogPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         UserLogPeer::clearInstancePool();
-        // Invalidate objects in OrganizationPeer instance pool,
+        // Invalidate objects in PrincipalPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        OrganizationPeer::clearInstancePool();
+        PrincipalPeer::clearInstancePool();
+        // Invalidate objects in ProductAssignmentPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        ProductAssignmentPeer::clearInstancePool();
+        // Invalidate objects in VisitationPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        VisitationPeer::clearInstancePool();
         // Invalidate objects in UserProfilePeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         UserProfilePeer::clearInstancePool();

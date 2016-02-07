@@ -22,8 +22,10 @@ use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StateQuery;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
-use PGS\CoreDomainBundle\Model\Organization\OrganizationQuery;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalQuery;
+use PGS\CoreDomainBundle\Model\Store\Store;
+use PGS\CoreDomainBundle\Model\Store\StoreQuery;
 
 abstract class BaseCountry extends BaseObject implements Persistent
 {
@@ -83,10 +85,16 @@ abstract class BaseCountry extends BaseObject implements Persistent
     protected $collStatesPartial;
 
     /**
-     * @var        PropelObjectCollection|Organization[] Collection to store aggregation of Organization objects.
+     * @var        PropelObjectCollection|Principal[] Collection to store aggregation of Principal objects.
      */
-    protected $collOrganizations;
-    protected $collOrganizationsPartial;
+    protected $collPrincipals;
+    protected $collPrincipalsPartial;
+
+    /**
+     * @var        PropelObjectCollection|Store[] Collection to store aggregation of Store objects.
+     */
+    protected $collStores;
+    protected $collStoresPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -124,7 +132,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $organizationsScheduledForDeletion = null;
+    protected $principalsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $storesScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -370,7 +384,9 @@ abstract class BaseCountry extends BaseObject implements Persistent
 
             $this->collStates = null;
 
-            $this->collOrganizations = null;
+            $this->collPrincipals = null;
+
+            $this->collStores = null;
 
         } // if (deep)
     }
@@ -546,17 +562,36 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->organizationsScheduledForDeletion !== null) {
-                if (!$this->organizationsScheduledForDeletion->isEmpty()) {
-                    OrganizationQuery::create()
-                        ->filterByPrimaryKeys($this->organizationsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->organizationsScheduledForDeletion = null;
+            if ($this->principalsScheduledForDeletion !== null) {
+                if (!$this->principalsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->principalsScheduledForDeletion as $principal) {
+                        // need to save related object because we set the relation to null
+                        $principal->save($con);
+                    }
+                    $this->principalsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collOrganizations !== null) {
-                foreach ($this->collOrganizations as $referrerFK) {
+            if ($this->collPrincipals !== null) {
+                foreach ($this->collPrincipals as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->storesScheduledForDeletion !== null) {
+                if (!$this->storesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->storesScheduledForDeletion as $store) {
+                        // need to save related object because we set the relation to null
+                        $store->save($con);
+                    }
+                    $this->storesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collStores !== null) {
+                foreach ($this->collStores as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -739,8 +774,16 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     }
                 }
 
-                if ($this->collOrganizations !== null) {
-                    foreach ($this->collOrganizations as $referrerFK) {
+                if ($this->collPrincipals !== null) {
+                    foreach ($this->collPrincipals as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collStores !== null) {
+                    foreach ($this->collStores as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -840,8 +883,11 @@ abstract class BaseCountry extends BaseObject implements Persistent
             if (null !== $this->collStates) {
                 $result['States'] = $this->collStates->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collOrganizations) {
-                $result['Organizations'] = $this->collOrganizations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collPrincipals) {
+                $result['Principals'] = $this->collPrincipals->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collStores) {
+                $result['Stores'] = $this->collStores->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1018,9 +1064,15 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 }
             }
 
-            foreach ($this->getOrganizations() as $relObj) {
+            foreach ($this->getPrincipals() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addOrganization($relObj->copy($deepCopy));
+                    $copyObj->addPrincipal($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getStores() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addStore($relObj->copy($deepCopy));
                 }
             }
 
@@ -1091,8 +1143,11 @@ abstract class BaseCountry extends BaseObject implements Persistent
         if ('State' == $relationName) {
             $this->initStates();
         }
-        if ('Organization' == $relationName) {
-            $this->initOrganizations();
+        if ('Principal' == $relationName) {
+            $this->initPrincipals();
+        }
+        if ('Store' == $relationName) {
+            $this->initStores();
         }
     }
 
@@ -1597,36 +1652,36 @@ abstract class BaseCountry extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collOrganizations collection
+     * Clears out the collPrincipals collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return Country The current object (for fluent API support)
-     * @see        addOrganizations()
+     * @see        addPrincipals()
      */
-    public function clearOrganizations()
+    public function clearPrincipals()
     {
-        $this->collOrganizations = null; // important to set this to null since that means it is uninitialized
-        $this->collOrganizationsPartial = null;
+        $this->collPrincipals = null; // important to set this to null since that means it is uninitialized
+        $this->collPrincipalsPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collOrganizations collection loaded partially
+     * reset is the collPrincipals collection loaded partially
      *
      * @return void
      */
-    public function resetPartialOrganizations($v = true)
+    public function resetPartialPrincipals($v = true)
     {
-        $this->collOrganizationsPartial = $v;
+        $this->collPrincipalsPartial = $v;
     }
 
     /**
-     * Initializes the collOrganizations collection.
+     * Initializes the collPrincipals collection.
      *
-     * By default this just sets the collOrganizations collection to an empty array (like clearcollOrganizations());
+     * By default this just sets the collPrincipals collection to an empty array (like clearcollPrincipals());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1635,17 +1690,17 @@ abstract class BaseCountry extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initOrganizations($overrideExisting = true)
+    public function initPrincipals($overrideExisting = true)
     {
-        if (null !== $this->collOrganizations && !$overrideExisting) {
+        if (null !== $this->collPrincipals && !$overrideExisting) {
             return;
         }
-        $this->collOrganizations = new PropelObjectCollection();
-        $this->collOrganizations->setModel('Organization');
+        $this->collPrincipals = new PropelObjectCollection();
+        $this->collPrincipals->setModel('Principal');
     }
 
     /**
-     * Gets an array of Organization objects which contain a foreign key that references this object.
+     * Gets an array of Principal objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -1655,107 +1710,107 @@ abstract class BaseCountry extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Principal[] List of Principal objects
      * @throws PropelException
      */
-    public function getOrganizations($criteria = null, PropelPDO $con = null)
+    public function getPrincipals($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collOrganizationsPartial && !$this->isNew();
-        if (null === $this->collOrganizations || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collOrganizations) {
+        $partial = $this->collPrincipalsPartial && !$this->isNew();
+        if (null === $this->collPrincipals || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPrincipals) {
                 // return empty collection
-                $this->initOrganizations();
+                $this->initPrincipals();
             } else {
-                $collOrganizations = OrganizationQuery::create(null, $criteria)
+                $collPrincipals = PrincipalQuery::create(null, $criteria)
                     ->filterByCountry($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collOrganizationsPartial && count($collOrganizations)) {
-                      $this->initOrganizations(false);
+                    if (false !== $this->collPrincipalsPartial && count($collPrincipals)) {
+                      $this->initPrincipals(false);
 
-                      foreach ($collOrganizations as $obj) {
-                        if (false == $this->collOrganizations->contains($obj)) {
-                          $this->collOrganizations->append($obj);
+                      foreach ($collPrincipals as $obj) {
+                        if (false == $this->collPrincipals->contains($obj)) {
+                          $this->collPrincipals->append($obj);
                         }
                       }
 
-                      $this->collOrganizationsPartial = true;
+                      $this->collPrincipalsPartial = true;
                     }
 
-                    $collOrganizations->getInternalIterator()->rewind();
+                    $collPrincipals->getInternalIterator()->rewind();
 
-                    return $collOrganizations;
+                    return $collPrincipals;
                 }
 
-                if ($partial && $this->collOrganizations) {
-                    foreach ($this->collOrganizations as $obj) {
+                if ($partial && $this->collPrincipals) {
+                    foreach ($this->collPrincipals as $obj) {
                         if ($obj->isNew()) {
-                            $collOrganizations[] = $obj;
+                            $collPrincipals[] = $obj;
                         }
                     }
                 }
 
-                $this->collOrganizations = $collOrganizations;
-                $this->collOrganizationsPartial = false;
+                $this->collPrincipals = $collPrincipals;
+                $this->collPrincipalsPartial = false;
             }
         }
 
-        return $this->collOrganizations;
+        return $this->collPrincipals;
     }
 
     /**
-     * Sets a collection of Organization objects related by a one-to-many relationship
+     * Sets a collection of Principal objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $organizations A Propel collection.
+     * @param PropelCollection $principals A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return Country The current object (for fluent API support)
      */
-    public function setOrganizations(PropelCollection $organizations, PropelPDO $con = null)
+    public function setPrincipals(PropelCollection $principals, PropelPDO $con = null)
     {
-        $organizationsToDelete = $this->getOrganizations(new Criteria(), $con)->diff($organizations);
+        $principalsToDelete = $this->getPrincipals(new Criteria(), $con)->diff($principals);
 
 
-        $this->organizationsScheduledForDeletion = $organizationsToDelete;
+        $this->principalsScheduledForDeletion = $principalsToDelete;
 
-        foreach ($organizationsToDelete as $organizationRemoved) {
-            $organizationRemoved->setCountry(null);
+        foreach ($principalsToDelete as $principalRemoved) {
+            $principalRemoved->setCountry(null);
         }
 
-        $this->collOrganizations = null;
-        foreach ($organizations as $organization) {
-            $this->addOrganization($organization);
+        $this->collPrincipals = null;
+        foreach ($principals as $principal) {
+            $this->addPrincipal($principal);
         }
 
-        $this->collOrganizations = $organizations;
-        $this->collOrganizationsPartial = false;
+        $this->collPrincipals = $principals;
+        $this->collPrincipalsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Organization objects.
+     * Returns the number of related Principal objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related Organization objects.
+     * @return int             Count of related Principal objects.
      * @throws PropelException
      */
-    public function countOrganizations(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countPrincipals(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collOrganizationsPartial && !$this->isNew();
-        if (null === $this->collOrganizations || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collOrganizations) {
+        $partial = $this->collPrincipalsPartial && !$this->isNew();
+        if (null === $this->collPrincipals || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPrincipals) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getOrganizations());
+                return count($this->getPrincipals());
             }
-            $query = OrganizationQuery::create(null, $criteria);
+            $query = PrincipalQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -1765,28 +1820,28 @@ abstract class BaseCountry extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collOrganizations);
+        return count($this->collPrincipals);
     }
 
     /**
-     * Method called to associate a Organization object to this object
-     * through the Organization foreign key attribute.
+     * Method called to associate a Principal object to this object
+     * through the Principal foreign key attribute.
      *
-     * @param    Organization $l Organization
+     * @param    Principal $l Principal
      * @return Country The current object (for fluent API support)
      */
-    public function addOrganization(Organization $l)
+    public function addPrincipal(Principal $l)
     {
-        if ($this->collOrganizations === null) {
-            $this->initOrganizations();
-            $this->collOrganizationsPartial = true;
+        if ($this->collPrincipals === null) {
+            $this->initPrincipals();
+            $this->collPrincipalsPartial = true;
         }
 
-        if (!in_array($l, $this->collOrganizations->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddOrganization($l);
+        if (!in_array($l, $this->collPrincipals->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPrincipal($l);
 
-            if ($this->organizationsScheduledForDeletion and $this->organizationsScheduledForDeletion->contains($l)) {
-                $this->organizationsScheduledForDeletion->remove($this->organizationsScheduledForDeletion->search($l));
+            if ($this->principalsScheduledForDeletion and $this->principalsScheduledForDeletion->contains($l)) {
+                $this->principalsScheduledForDeletion->remove($this->principalsScheduledForDeletion->search($l));
             }
         }
 
@@ -1794,28 +1849,28 @@ abstract class BaseCountry extends BaseObject implements Persistent
     }
 
     /**
-     * @param	Organization $organization The organization object to add.
+     * @param	Principal $principal The principal object to add.
      */
-    protected function doAddOrganization($organization)
+    protected function doAddPrincipal($principal)
     {
-        $this->collOrganizations[]= $organization;
-        $organization->setCountry($this);
+        $this->collPrincipals[]= $principal;
+        $principal->setCountry($this);
     }
 
     /**
-     * @param	Organization $organization The organization object to remove.
+     * @param	Principal $principal The principal object to remove.
      * @return Country The current object (for fluent API support)
      */
-    public function removeOrganization($organization)
+    public function removePrincipal($principal)
     {
-        if ($this->getOrganizations()->contains($organization)) {
-            $this->collOrganizations->remove($this->collOrganizations->search($organization));
-            if (null === $this->organizationsScheduledForDeletion) {
-                $this->organizationsScheduledForDeletion = clone $this->collOrganizations;
-                $this->organizationsScheduledForDeletion->clear();
+        if ($this->getPrincipals()->contains($principal)) {
+            $this->collPrincipals->remove($this->collPrincipals->search($principal));
+            if (null === $this->principalsScheduledForDeletion) {
+                $this->principalsScheduledForDeletion = clone $this->collPrincipals;
+                $this->principalsScheduledForDeletion->clear();
             }
-            $this->organizationsScheduledForDeletion[]= clone $organization;
-            $organization->setCountry(null);
+            $this->principalsScheduledForDeletion[]= $principal;
+            $principal->setCountry(null);
         }
 
         return $this;
@@ -1827,7 +1882,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this Country is new, it will return
      * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Organizations from storage.
+     * been saved, it will retrieve related Principals from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1836,14 +1891,14 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Principal[] List of Principal objects
      */
-    public function getOrganizationsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getPrincipalsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = OrganizationQuery::create(null, $criteria);
+        $query = PrincipalQuery::create(null, $criteria);
         $query->joinWith('User', $join_behavior);
 
-        return $this->getOrganizations($query, $con);
+        return $this->getPrincipals($query, $con);
     }
 
 
@@ -1852,7 +1907,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this Country is new, it will return
      * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Organizations from storage.
+     * been saved, it will retrieve related Principals from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1861,14 +1916,239 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Principal[] List of Principal objects
      */
-    public function getOrganizationsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getPrincipalsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = OrganizationQuery::create(null, $criteria);
+        $query = PrincipalQuery::create(null, $criteria);
         $query->joinWith('State', $join_behavior);
 
-        return $this->getOrganizations($query, $con);
+        return $this->getPrincipals($query, $con);
+    }
+
+    /**
+     * Clears out the collStores collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Country The current object (for fluent API support)
+     * @see        addStores()
+     */
+    public function clearStores()
+    {
+        $this->collStores = null; // important to set this to null since that means it is uninitialized
+        $this->collStoresPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collStores collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialStores($v = true)
+    {
+        $this->collStoresPartial = $v;
+    }
+
+    /**
+     * Initializes the collStores collection.
+     *
+     * By default this just sets the collStores collection to an empty array (like clearcollStores());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initStores($overrideExisting = true)
+    {
+        if (null !== $this->collStores && !$overrideExisting) {
+            return;
+        }
+        $this->collStores = new PropelObjectCollection();
+        $this->collStores->setModel('Store');
+    }
+
+    /**
+     * Gets an array of Store objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Country is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Store[] List of Store objects
+     * @throws PropelException
+     */
+    public function getStores($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collStoresPartial && !$this->isNew();
+        if (null === $this->collStores || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collStores) {
+                // return empty collection
+                $this->initStores();
+            } else {
+                $collStores = StoreQuery::create(null, $criteria)
+                    ->filterByCountry($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collStoresPartial && count($collStores)) {
+                      $this->initStores(false);
+
+                      foreach ($collStores as $obj) {
+                        if (false == $this->collStores->contains($obj)) {
+                          $this->collStores->append($obj);
+                        }
+                      }
+
+                      $this->collStoresPartial = true;
+                    }
+
+                    $collStores->getInternalIterator()->rewind();
+
+                    return $collStores;
+                }
+
+                if ($partial && $this->collStores) {
+                    foreach ($this->collStores as $obj) {
+                        if ($obj->isNew()) {
+                            $collStores[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collStores = $collStores;
+                $this->collStoresPartial = false;
+            }
+        }
+
+        return $this->collStores;
+    }
+
+    /**
+     * Sets a collection of Store objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $stores A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Country The current object (for fluent API support)
+     */
+    public function setStores(PropelCollection $stores, PropelPDO $con = null)
+    {
+        $storesToDelete = $this->getStores(new Criteria(), $con)->diff($stores);
+
+
+        $this->storesScheduledForDeletion = $storesToDelete;
+
+        foreach ($storesToDelete as $storeRemoved) {
+            $storeRemoved->setCountry(null);
+        }
+
+        $this->collStores = null;
+        foreach ($stores as $store) {
+            $this->addStore($store);
+        }
+
+        $this->collStores = $stores;
+        $this->collStoresPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Store objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Store objects.
+     * @throws PropelException
+     */
+    public function countStores(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collStoresPartial && !$this->isNew();
+        if (null === $this->collStores || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStores) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getStores());
+            }
+            $query = StoreQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCountry($this)
+                ->count($con);
+        }
+
+        return count($this->collStores);
+    }
+
+    /**
+     * Method called to associate a Store object to this object
+     * through the Store foreign key attribute.
+     *
+     * @param    Store $l Store
+     * @return Country The current object (for fluent API support)
+     */
+    public function addStore(Store $l)
+    {
+        if ($this->collStores === null) {
+            $this->initStores();
+            $this->collStoresPartial = true;
+        }
+
+        if (!in_array($l, $this->collStores->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddStore($l);
+
+            if ($this->storesScheduledForDeletion and $this->storesScheduledForDeletion->contains($l)) {
+                $this->storesScheduledForDeletion->remove($this->storesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Store $store The store object to add.
+     */
+    protected function doAddStore($store)
+    {
+        $this->collStores[]= $store;
+        $store->setCountry($this);
+    }
+
+    /**
+     * @param	Store $store The store object to remove.
+     * @return Country The current object (for fluent API support)
+     */
+    public function removeStore($store)
+    {
+        if ($this->getStores()->contains($store)) {
+            $this->collStores->remove($this->collStores->search($store));
+            if (null === $this->storesScheduledForDeletion) {
+                $this->storesScheduledForDeletion = clone $this->collStores;
+                $this->storesScheduledForDeletion->clear();
+            }
+            $this->storesScheduledForDeletion[]= $store;
+            $store->setCountry(null);
+        }
+
+        return $this;
     }
 
 
@@ -1877,7 +2157,7 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this Country is new, it will return
      * an empty collection; or if this Country has previously
-     * been saved, it will retrieve related Organizations from storage.
+     * been saved, it will retrieve related Stores from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1886,14 +2166,89 @@ abstract class BaseCountry extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Store[] List of Store objects
      */
-    public function getOrganizationsJoinRegion($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getStoresJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = OrganizationQuery::create(null, $criteria);
+        $query = StoreQuery::create(null, $criteria);
+        $query->joinWith('State', $join_behavior);
+
+        return $this->getStores($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Country is new, it will return
+     * an empty collection; or if this Country has previously
+     * been saved, it will retrieve related Stores from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Country.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Store[] List of Store objects
+     */
+    public function getStoresJoinRegion($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = StoreQuery::create(null, $criteria);
         $query->joinWith('Region', $join_behavior);
 
-        return $this->getOrganizations($query, $con);
+        return $this->getStores($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Country is new, it will return
+     * an empty collection; or if this Country has previously
+     * been saved, it will retrieve related Stores from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Country.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Store[] List of Store objects
+     */
+    public function getStoresJoinCity($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = StoreQuery::create(null, $criteria);
+        $query->joinWith('City', $join_behavior);
+
+        return $this->getStores($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Country is new, it will return
+     * an empty collection; or if this Country has previously
+     * been saved, it will retrieve related Stores from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Country.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Store[] List of Store objects
+     */
+    public function getStoresJoinArea($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = StoreQuery::create(null, $criteria);
+        $query->joinWith('Area', $join_behavior);
+
+        return $this->getStores($query, $con);
     }
 
     /**
@@ -1937,8 +2292,13 @@ abstract class BaseCountry extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collOrganizations) {
-                foreach ($this->collOrganizations as $o) {
+            if ($this->collPrincipals) {
+                foreach ($this->collPrincipals as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collStores) {
+                foreach ($this->collStores as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -1954,10 +2314,14 @@ abstract class BaseCountry extends BaseObject implements Persistent
             $this->collStates->clearIterator();
         }
         $this->collStates = null;
-        if ($this->collOrganizations instanceof PropelCollection) {
-            $this->collOrganizations->clearIterator();
+        if ($this->collPrincipals instanceof PropelCollection) {
+            $this->collPrincipals->clearIterator();
         }
-        $this->collOrganizations = null;
+        $this->collPrincipals = null;
+        if ($this->collStores instanceof PropelCollection) {
+            $this->collStores->clearIterator();
+        }
+        $this->collStores = null;
     }
 
     /**

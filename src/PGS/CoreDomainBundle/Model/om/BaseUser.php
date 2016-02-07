@@ -29,8 +29,14 @@ use PGS\CoreDomainBundle\Model\UserPeer;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
 use PGS\CoreDomainBundle\Model\UserQuery;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
-use PGS\CoreDomainBundle\Model\Organization\OrganizationQuery;
+use PGS\CoreDomainBundle\Model\AreaAssignment\AreaAssignment;
+use PGS\CoreDomainBundle\Model\AreaAssignment\AreaAssignmentQuery;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalQuery;
+use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignment;
+use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignmentQuery;
+use PGS\CoreDomainBundle\Model\Visitation\Visitation;
+use PGS\CoreDomainBundle\Model\Visitation\VisitationQuery;
 
 abstract class BaseUser extends BaseObject implements Persistent
 {
@@ -193,6 +199,12 @@ abstract class BaseUser extends BaseObject implements Persistent
     protected $updated_at;
 
     /**
+     * @var        PropelObjectCollection|AreaAssignment[] Collection to store aggregation of AreaAssignment objects.
+     */
+    protected $collAreaAssignments;
+    protected $collAreaAssignmentsPartial;
+
+    /**
      * @var        PropelObjectCollection|UserGroup[] Collection to store aggregation of UserGroup objects.
      */
     protected $collUserGroups;
@@ -205,10 +217,22 @@ abstract class BaseUser extends BaseObject implements Persistent
     protected $collUserLogsPartial;
 
     /**
-     * @var        PropelObjectCollection|Organization[] Collection to store aggregation of Organization objects.
+     * @var        PropelObjectCollection|Principal[] Collection to store aggregation of Principal objects.
      */
-    protected $collOrganizations;
-    protected $collOrganizationsPartial;
+    protected $collPrincipals;
+    protected $collPrincipalsPartial;
+
+    /**
+     * @var        PropelObjectCollection|ProductAssignment[] Collection to store aggregation of ProductAssignment objects.
+     */
+    protected $collProductAssignments;
+    protected $collProductAssignmentsPartial;
+
+    /**
+     * @var        PropelObjectCollection|Visitation[] Collection to store aggregation of Visitation objects.
+     */
+    protected $collVisitations;
+    protected $collVisitationsPartial;
 
     /**
      * @var        UserProfile one-to-one related UserProfile object
@@ -250,6 +274,12 @@ abstract class BaseUser extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
+    protected $areaAssignmentsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
     protected $userGroupsScheduledForDeletion = null;
 
     /**
@@ -262,7 +292,19 @@ abstract class BaseUser extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $organizationsScheduledForDeletion = null;
+    protected $principalsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $productAssignmentsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $visitationsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -1405,11 +1447,17 @@ abstract class BaseUser extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collAreaAssignments = null;
+
             $this->collUserGroups = null;
 
             $this->collUserLogs = null;
 
-            $this->collOrganizations = null;
+            $this->collPrincipals = null;
+
+            $this->collProductAssignments = null;
+
+            $this->collVisitations = null;
 
             $this->singleUserProfile = null;
 
@@ -1590,6 +1638,24 @@ abstract class BaseUser extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->areaAssignmentsScheduledForDeletion !== null) {
+                if (!$this->areaAssignmentsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->areaAssignmentsScheduledForDeletion as $areaAssignment) {
+                        // need to save related object because we set the relation to null
+                        $areaAssignment->save($con);
+                    }
+                    $this->areaAssignmentsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collAreaAssignments !== null) {
+                foreach ($this->collAreaAssignments as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->userGroupsScheduledForDeletion !== null) {
                 if (!$this->userGroupsScheduledForDeletion->isEmpty()) {
                     UserGroupQuery::create()
@@ -1625,18 +1691,54 @@ abstract class BaseUser extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->organizationsScheduledForDeletion !== null) {
-                if (!$this->organizationsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->organizationsScheduledForDeletion as $organization) {
+            if ($this->principalsScheduledForDeletion !== null) {
+                if (!$this->principalsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->principalsScheduledForDeletion as $principal) {
                         // need to save related object because we set the relation to null
-                        $organization->save($con);
+                        $principal->save($con);
                     }
-                    $this->organizationsScheduledForDeletion = null;
+                    $this->principalsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collOrganizations !== null) {
-                foreach ($this->collOrganizations as $referrerFK) {
+            if ($this->collPrincipals !== null) {
+                foreach ($this->collPrincipals as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->productAssignmentsScheduledForDeletion !== null) {
+                if (!$this->productAssignmentsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->productAssignmentsScheduledForDeletion as $productAssignment) {
+                        // need to save related object because we set the relation to null
+                        $productAssignment->save($con);
+                    }
+                    $this->productAssignmentsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProductAssignments !== null) {
+                foreach ($this->collProductAssignments as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->visitationsScheduledForDeletion !== null) {
+                if (!$this->visitationsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->visitationsScheduledForDeletion as $visitation) {
+                        // need to save related object because we set the relation to null
+                        $visitation->save($con);
+                    }
+                    $this->visitationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVisitations !== null) {
+                foreach ($this->collVisitations as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1911,6 +2013,14 @@ abstract class BaseUser extends BaseObject implements Persistent
             }
 
 
+                if ($this->collAreaAssignments !== null) {
+                    foreach ($this->collAreaAssignments as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collUserGroups !== null) {
                     foreach ($this->collUserGroups as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1927,8 +2037,24 @@ abstract class BaseUser extends BaseObject implements Persistent
                     }
                 }
 
-                if ($this->collOrganizations !== null) {
-                    foreach ($this->collOrganizations as $referrerFK) {
+                if ($this->collPrincipals !== null) {
+                    foreach ($this->collPrincipals as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collProductAssignments !== null) {
+                    foreach ($this->collProductAssignments as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collVisitations !== null) {
+                    foreach ($this->collVisitations as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -2096,14 +2222,23 @@ abstract class BaseUser extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collAreaAssignments) {
+                $result['AreaAssignments'] = $this->collAreaAssignments->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collUserGroups) {
                 $result['UserGroups'] = $this->collUserGroups->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUserLogs) {
                 $result['UserLogs'] = $this->collUserLogs->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collOrganizations) {
-                $result['Organizations'] = $this->collOrganizations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collPrincipals) {
+                $result['Principals'] = $this->collPrincipals->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collProductAssignments) {
+                $result['ProductAssignments'] = $this->collProductAssignments->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collVisitations) {
+                $result['Visitations'] = $this->collVisitations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->singleUserProfile) {
                 $result['UserProfile'] = $this->singleUserProfile->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
@@ -2385,6 +2520,12 @@ abstract class BaseUser extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getAreaAssignments() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addAreaAssignment($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getUserGroups() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addUserGroup($relObj->copy($deepCopy));
@@ -2397,9 +2538,21 @@ abstract class BaseUser extends BaseObject implements Persistent
                 }
             }
 
-            foreach ($this->getOrganizations() as $relObj) {
+            foreach ($this->getPrincipals() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addOrganization($relObj->copy($deepCopy));
+                    $copyObj->addPrincipal($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getProductAssignments() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProductAssignment($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getVisitations() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVisitation($relObj->copy($deepCopy));
                 }
             }
 
@@ -2469,15 +2622,274 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('AreaAssignment' == $relationName) {
+            $this->initAreaAssignments();
+        }
         if ('UserGroup' == $relationName) {
             $this->initUserGroups();
         }
         if ('UserLog' == $relationName) {
             $this->initUserLogs();
         }
-        if ('Organization' == $relationName) {
-            $this->initOrganizations();
+        if ('Principal' == $relationName) {
+            $this->initPrincipals();
         }
+        if ('ProductAssignment' == $relationName) {
+            $this->initProductAssignments();
+        }
+        if ('Visitation' == $relationName) {
+            $this->initVisitations();
+        }
+    }
+
+    /**
+     * Clears out the collAreaAssignments collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addAreaAssignments()
+     */
+    public function clearAreaAssignments()
+    {
+        $this->collAreaAssignments = null; // important to set this to null since that means it is uninitialized
+        $this->collAreaAssignmentsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collAreaAssignments collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialAreaAssignments($v = true)
+    {
+        $this->collAreaAssignmentsPartial = $v;
+    }
+
+    /**
+     * Initializes the collAreaAssignments collection.
+     *
+     * By default this just sets the collAreaAssignments collection to an empty array (like clearcollAreaAssignments());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initAreaAssignments($overrideExisting = true)
+    {
+        if (null !== $this->collAreaAssignments && !$overrideExisting) {
+            return;
+        }
+        $this->collAreaAssignments = new PropelObjectCollection();
+        $this->collAreaAssignments->setModel('AreaAssignment');
+    }
+
+    /**
+     * Gets an array of AreaAssignment objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|AreaAssignment[] List of AreaAssignment objects
+     * @throws PropelException
+     */
+    public function getAreaAssignments($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collAreaAssignmentsPartial && !$this->isNew();
+        if (null === $this->collAreaAssignments || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collAreaAssignments) {
+                // return empty collection
+                $this->initAreaAssignments();
+            } else {
+                $collAreaAssignments = AreaAssignmentQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collAreaAssignmentsPartial && count($collAreaAssignments)) {
+                      $this->initAreaAssignments(false);
+
+                      foreach ($collAreaAssignments as $obj) {
+                        if (false == $this->collAreaAssignments->contains($obj)) {
+                          $this->collAreaAssignments->append($obj);
+                        }
+                      }
+
+                      $this->collAreaAssignmentsPartial = true;
+                    }
+
+                    $collAreaAssignments->getInternalIterator()->rewind();
+
+                    return $collAreaAssignments;
+                }
+
+                if ($partial && $this->collAreaAssignments) {
+                    foreach ($this->collAreaAssignments as $obj) {
+                        if ($obj->isNew()) {
+                            $collAreaAssignments[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collAreaAssignments = $collAreaAssignments;
+                $this->collAreaAssignmentsPartial = false;
+            }
+        }
+
+        return $this->collAreaAssignments;
+    }
+
+    /**
+     * Sets a collection of AreaAssignment objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $areaAssignments A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setAreaAssignments(PropelCollection $areaAssignments, PropelPDO $con = null)
+    {
+        $areaAssignmentsToDelete = $this->getAreaAssignments(new Criteria(), $con)->diff($areaAssignments);
+
+
+        $this->areaAssignmentsScheduledForDeletion = $areaAssignmentsToDelete;
+
+        foreach ($areaAssignmentsToDelete as $areaAssignmentRemoved) {
+            $areaAssignmentRemoved->setUser(null);
+        }
+
+        $this->collAreaAssignments = null;
+        foreach ($areaAssignments as $areaAssignment) {
+            $this->addAreaAssignment($areaAssignment);
+        }
+
+        $this->collAreaAssignments = $areaAssignments;
+        $this->collAreaAssignmentsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related AreaAssignment objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related AreaAssignment objects.
+     * @throws PropelException
+     */
+    public function countAreaAssignments(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collAreaAssignmentsPartial && !$this->isNew();
+        if (null === $this->collAreaAssignments || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAreaAssignments) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getAreaAssignments());
+            }
+            $query = AreaAssignmentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collAreaAssignments);
+    }
+
+    /**
+     * Method called to associate a AreaAssignment object to this object
+     * through the AreaAssignment foreign key attribute.
+     *
+     * @param    AreaAssignment $l AreaAssignment
+     * @return User The current object (for fluent API support)
+     */
+    public function addAreaAssignment(AreaAssignment $l)
+    {
+        if ($this->collAreaAssignments === null) {
+            $this->initAreaAssignments();
+            $this->collAreaAssignmentsPartial = true;
+        }
+
+        if (!in_array($l, $this->collAreaAssignments->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddAreaAssignment($l);
+
+            if ($this->areaAssignmentsScheduledForDeletion and $this->areaAssignmentsScheduledForDeletion->contains($l)) {
+                $this->areaAssignmentsScheduledForDeletion->remove($this->areaAssignmentsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	AreaAssignment $areaAssignment The areaAssignment object to add.
+     */
+    protected function doAddAreaAssignment($areaAssignment)
+    {
+        $this->collAreaAssignments[]= $areaAssignment;
+        $areaAssignment->setUser($this);
+    }
+
+    /**
+     * @param	AreaAssignment $areaAssignment The areaAssignment object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeAreaAssignment($areaAssignment)
+    {
+        if ($this->getAreaAssignments()->contains($areaAssignment)) {
+            $this->collAreaAssignments->remove($this->collAreaAssignments->search($areaAssignment));
+            if (null === $this->areaAssignmentsScheduledForDeletion) {
+                $this->areaAssignmentsScheduledForDeletion = clone $this->collAreaAssignments;
+                $this->areaAssignmentsScheduledForDeletion->clear();
+            }
+            $this->areaAssignmentsScheduledForDeletion[]= $areaAssignment;
+            $areaAssignment->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related AreaAssignments from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|AreaAssignment[] List of AreaAssignment objects
+     */
+    public function getAreaAssignmentsJoinArea($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AreaAssignmentQuery::create(null, $criteria);
+        $query->joinWith('Area', $join_behavior);
+
+        return $this->getAreaAssignments($query, $con);
     }
 
     /**
@@ -2959,36 +3371,36 @@ abstract class BaseUser extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collOrganizations collection
+     * Clears out the collPrincipals collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return User The current object (for fluent API support)
-     * @see        addOrganizations()
+     * @see        addPrincipals()
      */
-    public function clearOrganizations()
+    public function clearPrincipals()
     {
-        $this->collOrganizations = null; // important to set this to null since that means it is uninitialized
-        $this->collOrganizationsPartial = null;
+        $this->collPrincipals = null; // important to set this to null since that means it is uninitialized
+        $this->collPrincipalsPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collOrganizations collection loaded partially
+     * reset is the collPrincipals collection loaded partially
      *
      * @return void
      */
-    public function resetPartialOrganizations($v = true)
+    public function resetPartialPrincipals($v = true)
     {
-        $this->collOrganizationsPartial = $v;
+        $this->collPrincipalsPartial = $v;
     }
 
     /**
-     * Initializes the collOrganizations collection.
+     * Initializes the collPrincipals collection.
      *
-     * By default this just sets the collOrganizations collection to an empty array (like clearcollOrganizations());
+     * By default this just sets the collPrincipals collection to an empty array (like clearcollPrincipals());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2997,17 +3409,17 @@ abstract class BaseUser extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initOrganizations($overrideExisting = true)
+    public function initPrincipals($overrideExisting = true)
     {
-        if (null !== $this->collOrganizations && !$overrideExisting) {
+        if (null !== $this->collPrincipals && !$overrideExisting) {
             return;
         }
-        $this->collOrganizations = new PropelObjectCollection();
-        $this->collOrganizations->setModel('Organization');
+        $this->collPrincipals = new PropelObjectCollection();
+        $this->collPrincipals->setModel('Principal');
     }
 
     /**
-     * Gets an array of Organization objects which contain a foreign key that references this object.
+     * Gets an array of Principal objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -3017,107 +3429,107 @@ abstract class BaseUser extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Principal[] List of Principal objects
      * @throws PropelException
      */
-    public function getOrganizations($criteria = null, PropelPDO $con = null)
+    public function getPrincipals($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collOrganizationsPartial && !$this->isNew();
-        if (null === $this->collOrganizations || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collOrganizations) {
+        $partial = $this->collPrincipalsPartial && !$this->isNew();
+        if (null === $this->collPrincipals || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPrincipals) {
                 // return empty collection
-                $this->initOrganizations();
+                $this->initPrincipals();
             } else {
-                $collOrganizations = OrganizationQuery::create(null, $criteria)
+                $collPrincipals = PrincipalQuery::create(null, $criteria)
                     ->filterByUser($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collOrganizationsPartial && count($collOrganizations)) {
-                      $this->initOrganizations(false);
+                    if (false !== $this->collPrincipalsPartial && count($collPrincipals)) {
+                      $this->initPrincipals(false);
 
-                      foreach ($collOrganizations as $obj) {
-                        if (false == $this->collOrganizations->contains($obj)) {
-                          $this->collOrganizations->append($obj);
+                      foreach ($collPrincipals as $obj) {
+                        if (false == $this->collPrincipals->contains($obj)) {
+                          $this->collPrincipals->append($obj);
                         }
                       }
 
-                      $this->collOrganizationsPartial = true;
+                      $this->collPrincipalsPartial = true;
                     }
 
-                    $collOrganizations->getInternalIterator()->rewind();
+                    $collPrincipals->getInternalIterator()->rewind();
 
-                    return $collOrganizations;
+                    return $collPrincipals;
                 }
 
-                if ($partial && $this->collOrganizations) {
-                    foreach ($this->collOrganizations as $obj) {
+                if ($partial && $this->collPrincipals) {
+                    foreach ($this->collPrincipals as $obj) {
                         if ($obj->isNew()) {
-                            $collOrganizations[] = $obj;
+                            $collPrincipals[] = $obj;
                         }
                     }
                 }
 
-                $this->collOrganizations = $collOrganizations;
-                $this->collOrganizationsPartial = false;
+                $this->collPrincipals = $collPrincipals;
+                $this->collPrincipalsPartial = false;
             }
         }
 
-        return $this->collOrganizations;
+        return $this->collPrincipals;
     }
 
     /**
-     * Sets a collection of Organization objects related by a one-to-many relationship
+     * Sets a collection of Principal objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $organizations A Propel collection.
+     * @param PropelCollection $principals A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return User The current object (for fluent API support)
      */
-    public function setOrganizations(PropelCollection $organizations, PropelPDO $con = null)
+    public function setPrincipals(PropelCollection $principals, PropelPDO $con = null)
     {
-        $organizationsToDelete = $this->getOrganizations(new Criteria(), $con)->diff($organizations);
+        $principalsToDelete = $this->getPrincipals(new Criteria(), $con)->diff($principals);
 
 
-        $this->organizationsScheduledForDeletion = $organizationsToDelete;
+        $this->principalsScheduledForDeletion = $principalsToDelete;
 
-        foreach ($organizationsToDelete as $organizationRemoved) {
-            $organizationRemoved->setUser(null);
+        foreach ($principalsToDelete as $principalRemoved) {
+            $principalRemoved->setUser(null);
         }
 
-        $this->collOrganizations = null;
-        foreach ($organizations as $organization) {
-            $this->addOrganization($organization);
+        $this->collPrincipals = null;
+        foreach ($principals as $principal) {
+            $this->addPrincipal($principal);
         }
 
-        $this->collOrganizations = $organizations;
-        $this->collOrganizationsPartial = false;
+        $this->collPrincipals = $principals;
+        $this->collPrincipalsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Organization objects.
+     * Returns the number of related Principal objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related Organization objects.
+     * @return int             Count of related Principal objects.
      * @throws PropelException
      */
-    public function countOrganizations(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countPrincipals(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collOrganizationsPartial && !$this->isNew();
-        if (null === $this->collOrganizations || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collOrganizations) {
+        $partial = $this->collPrincipalsPartial && !$this->isNew();
+        if (null === $this->collPrincipals || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPrincipals) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getOrganizations());
+                return count($this->getPrincipals());
             }
-            $query = OrganizationQuery::create(null, $criteria);
+            $query = PrincipalQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -3127,28 +3539,28 @@ abstract class BaseUser extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collOrganizations);
+        return count($this->collPrincipals);
     }
 
     /**
-     * Method called to associate a Organization object to this object
-     * through the Organization foreign key attribute.
+     * Method called to associate a Principal object to this object
+     * through the Principal foreign key attribute.
      *
-     * @param    Organization $l Organization
+     * @param    Principal $l Principal
      * @return User The current object (for fluent API support)
      */
-    public function addOrganization(Organization $l)
+    public function addPrincipal(Principal $l)
     {
-        if ($this->collOrganizations === null) {
-            $this->initOrganizations();
-            $this->collOrganizationsPartial = true;
+        if ($this->collPrincipals === null) {
+            $this->initPrincipals();
+            $this->collPrincipalsPartial = true;
         }
 
-        if (!in_array($l, $this->collOrganizations->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddOrganization($l);
+        if (!in_array($l, $this->collPrincipals->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPrincipal($l);
 
-            if ($this->organizationsScheduledForDeletion and $this->organizationsScheduledForDeletion->contains($l)) {
-                $this->organizationsScheduledForDeletion->remove($this->organizationsScheduledForDeletion->search($l));
+            if ($this->principalsScheduledForDeletion and $this->principalsScheduledForDeletion->contains($l)) {
+                $this->principalsScheduledForDeletion->remove($this->principalsScheduledForDeletion->search($l));
             }
         }
 
@@ -3156,28 +3568,28 @@ abstract class BaseUser extends BaseObject implements Persistent
     }
 
     /**
-     * @param	Organization $organization The organization object to add.
+     * @param	Principal $principal The principal object to add.
      */
-    protected function doAddOrganization($organization)
+    protected function doAddPrincipal($principal)
     {
-        $this->collOrganizations[]= $organization;
-        $organization->setUser($this);
+        $this->collPrincipals[]= $principal;
+        $principal->setUser($this);
     }
 
     /**
-     * @param	Organization $organization The organization object to remove.
+     * @param	Principal $principal The principal object to remove.
      * @return User The current object (for fluent API support)
      */
-    public function removeOrganization($organization)
+    public function removePrincipal($principal)
     {
-        if ($this->getOrganizations()->contains($organization)) {
-            $this->collOrganizations->remove($this->collOrganizations->search($organization));
-            if (null === $this->organizationsScheduledForDeletion) {
-                $this->organizationsScheduledForDeletion = clone $this->collOrganizations;
-                $this->organizationsScheduledForDeletion->clear();
+        if ($this->getPrincipals()->contains($principal)) {
+            $this->collPrincipals->remove($this->collPrincipals->search($principal));
+            if (null === $this->principalsScheduledForDeletion) {
+                $this->principalsScheduledForDeletion = clone $this->collPrincipals;
+                $this->principalsScheduledForDeletion->clear();
             }
-            $this->organizationsScheduledForDeletion[]= $organization;
-            $organization->setUser(null);
+            $this->principalsScheduledForDeletion[]= $principal;
+            $principal->setUser(null);
         }
 
         return $this;
@@ -3189,7 +3601,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this User is new, it will return
      * an empty collection; or if this User has previously
-     * been saved, it will retrieve related Organizations from storage.
+     * been saved, it will retrieve related Principals from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -3198,14 +3610,14 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Principal[] List of Principal objects
      */
-    public function getOrganizationsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getPrincipalsJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = OrganizationQuery::create(null, $criteria);
+        $query = PrincipalQuery::create(null, $criteria);
         $query->joinWith('State', $join_behavior);
 
-        return $this->getOrganizations($query, $con);
+        return $this->getPrincipals($query, $con);
     }
 
 
@@ -3214,7 +3626,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this User is new, it will return
      * an empty collection; or if this User has previously
-     * been saved, it will retrieve related Organizations from storage.
+     * been saved, it will retrieve related Principals from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -3223,14 +3635,239 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|Principal[] List of Principal objects
      */
-    public function getOrganizationsJoinCountry($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getPrincipalsJoinCountry($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = OrganizationQuery::create(null, $criteria);
+        $query = PrincipalQuery::create(null, $criteria);
         $query->joinWith('Country', $join_behavior);
 
-        return $this->getOrganizations($query, $con);
+        return $this->getPrincipals($query, $con);
+    }
+
+    /**
+     * Clears out the collProductAssignments collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addProductAssignments()
+     */
+    public function clearProductAssignments()
+    {
+        $this->collProductAssignments = null; // important to set this to null since that means it is uninitialized
+        $this->collProductAssignmentsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collProductAssignments collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialProductAssignments($v = true)
+    {
+        $this->collProductAssignmentsPartial = $v;
+    }
+
+    /**
+     * Initializes the collProductAssignments collection.
+     *
+     * By default this just sets the collProductAssignments collection to an empty array (like clearcollProductAssignments());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProductAssignments($overrideExisting = true)
+    {
+        if (null !== $this->collProductAssignments && !$overrideExisting) {
+            return;
+        }
+        $this->collProductAssignments = new PropelObjectCollection();
+        $this->collProductAssignments->setModel('ProductAssignment');
+    }
+
+    /**
+     * Gets an array of ProductAssignment objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|ProductAssignment[] List of ProductAssignment objects
+     * @throws PropelException
+     */
+    public function getProductAssignments($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collProductAssignmentsPartial && !$this->isNew();
+        if (null === $this->collProductAssignments || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProductAssignments) {
+                // return empty collection
+                $this->initProductAssignments();
+            } else {
+                $collProductAssignments = ProductAssignmentQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collProductAssignmentsPartial && count($collProductAssignments)) {
+                      $this->initProductAssignments(false);
+
+                      foreach ($collProductAssignments as $obj) {
+                        if (false == $this->collProductAssignments->contains($obj)) {
+                          $this->collProductAssignments->append($obj);
+                        }
+                      }
+
+                      $this->collProductAssignmentsPartial = true;
+                    }
+
+                    $collProductAssignments->getInternalIterator()->rewind();
+
+                    return $collProductAssignments;
+                }
+
+                if ($partial && $this->collProductAssignments) {
+                    foreach ($this->collProductAssignments as $obj) {
+                        if ($obj->isNew()) {
+                            $collProductAssignments[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProductAssignments = $collProductAssignments;
+                $this->collProductAssignmentsPartial = false;
+            }
+        }
+
+        return $this->collProductAssignments;
+    }
+
+    /**
+     * Sets a collection of ProductAssignment objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $productAssignments A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setProductAssignments(PropelCollection $productAssignments, PropelPDO $con = null)
+    {
+        $productAssignmentsToDelete = $this->getProductAssignments(new Criteria(), $con)->diff($productAssignments);
+
+
+        $this->productAssignmentsScheduledForDeletion = $productAssignmentsToDelete;
+
+        foreach ($productAssignmentsToDelete as $productAssignmentRemoved) {
+            $productAssignmentRemoved->setUser(null);
+        }
+
+        $this->collProductAssignments = null;
+        foreach ($productAssignments as $productAssignment) {
+            $this->addProductAssignment($productAssignment);
+        }
+
+        $this->collProductAssignments = $productAssignments;
+        $this->collProductAssignmentsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ProductAssignment objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related ProductAssignment objects.
+     * @throws PropelException
+     */
+    public function countProductAssignments(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collProductAssignmentsPartial && !$this->isNew();
+        if (null === $this->collProductAssignments || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProductAssignments) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProductAssignments());
+            }
+            $query = ProductAssignmentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collProductAssignments);
+    }
+
+    /**
+     * Method called to associate a ProductAssignment object to this object
+     * through the ProductAssignment foreign key attribute.
+     *
+     * @param    ProductAssignment $l ProductAssignment
+     * @return User The current object (for fluent API support)
+     */
+    public function addProductAssignment(ProductAssignment $l)
+    {
+        if ($this->collProductAssignments === null) {
+            $this->initProductAssignments();
+            $this->collProductAssignmentsPartial = true;
+        }
+
+        if (!in_array($l, $this->collProductAssignments->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddProductAssignment($l);
+
+            if ($this->productAssignmentsScheduledForDeletion and $this->productAssignmentsScheduledForDeletion->contains($l)) {
+                $this->productAssignmentsScheduledForDeletion->remove($this->productAssignmentsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ProductAssignment $productAssignment The productAssignment object to add.
+     */
+    protected function doAddProductAssignment($productAssignment)
+    {
+        $this->collProductAssignments[]= $productAssignment;
+        $productAssignment->setUser($this);
+    }
+
+    /**
+     * @param	ProductAssignment $productAssignment The productAssignment object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeProductAssignment($productAssignment)
+    {
+        if ($this->getProductAssignments()->contains($productAssignment)) {
+            $this->collProductAssignments->remove($this->collProductAssignments->search($productAssignment));
+            if (null === $this->productAssignmentsScheduledForDeletion) {
+                $this->productAssignmentsScheduledForDeletion = clone $this->collProductAssignments;
+                $this->productAssignmentsScheduledForDeletion->clear();
+            }
+            $this->productAssignmentsScheduledForDeletion[]= $productAssignment;
+            $productAssignment->setUser(null);
+        }
+
+        return $this;
     }
 
 
@@ -3239,7 +3876,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      * an identical criteria, it returns the collection.
      * Otherwise if this User is new, it will return
      * an empty collection; or if this User has previously
-     * been saved, it will retrieve related Organizations from storage.
+     * been saved, it will retrieve related ProductAssignments from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -3248,14 +3885,264 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Organization[] List of Organization objects
+     * @return PropelObjectCollection|ProductAssignment[] List of ProductAssignment objects
      */
-    public function getOrganizationsJoinRegion($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getProductAssignmentsJoinProduct($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
-        $query = OrganizationQuery::create(null, $criteria);
-        $query->joinWith('Region', $join_behavior);
+        $query = ProductAssignmentQuery::create(null, $criteria);
+        $query->joinWith('Product', $join_behavior);
 
-        return $this->getOrganizations($query, $con);
+        return $this->getProductAssignments($query, $con);
+    }
+
+    /**
+     * Clears out the collVisitations collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addVisitations()
+     */
+    public function clearVisitations()
+    {
+        $this->collVisitations = null; // important to set this to null since that means it is uninitialized
+        $this->collVisitationsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collVisitations collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialVisitations($v = true)
+    {
+        $this->collVisitationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collVisitations collection.
+     *
+     * By default this just sets the collVisitations collection to an empty array (like clearcollVisitations());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVisitations($overrideExisting = true)
+    {
+        if (null !== $this->collVisitations && !$overrideExisting) {
+            return;
+        }
+        $this->collVisitations = new PropelObjectCollection();
+        $this->collVisitations->setModel('Visitation');
+    }
+
+    /**
+     * Gets an array of Visitation objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Visitation[] List of Visitation objects
+     * @throws PropelException
+     */
+    public function getVisitations($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collVisitationsPartial && !$this->isNew();
+        if (null === $this->collVisitations || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collVisitations) {
+                // return empty collection
+                $this->initVisitations();
+            } else {
+                $collVisitations = VisitationQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collVisitationsPartial && count($collVisitations)) {
+                      $this->initVisitations(false);
+
+                      foreach ($collVisitations as $obj) {
+                        if (false == $this->collVisitations->contains($obj)) {
+                          $this->collVisitations->append($obj);
+                        }
+                      }
+
+                      $this->collVisitationsPartial = true;
+                    }
+
+                    $collVisitations->getInternalIterator()->rewind();
+
+                    return $collVisitations;
+                }
+
+                if ($partial && $this->collVisitations) {
+                    foreach ($this->collVisitations as $obj) {
+                        if ($obj->isNew()) {
+                            $collVisitations[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVisitations = $collVisitations;
+                $this->collVisitationsPartial = false;
+            }
+        }
+
+        return $this->collVisitations;
+    }
+
+    /**
+     * Sets a collection of Visitation objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $visitations A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setVisitations(PropelCollection $visitations, PropelPDO $con = null)
+    {
+        $visitationsToDelete = $this->getVisitations(new Criteria(), $con)->diff($visitations);
+
+
+        $this->visitationsScheduledForDeletion = $visitationsToDelete;
+
+        foreach ($visitationsToDelete as $visitationRemoved) {
+            $visitationRemoved->setUser(null);
+        }
+
+        $this->collVisitations = null;
+        foreach ($visitations as $visitation) {
+            $this->addVisitation($visitation);
+        }
+
+        $this->collVisitations = $visitations;
+        $this->collVisitationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Visitation objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Visitation objects.
+     * @throws PropelException
+     */
+    public function countVisitations(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collVisitationsPartial && !$this->isNew();
+        if (null === $this->collVisitations || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVisitations) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVisitations());
+            }
+            $query = VisitationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collVisitations);
+    }
+
+    /**
+     * Method called to associate a Visitation object to this object
+     * through the Visitation foreign key attribute.
+     *
+     * @param    Visitation $l Visitation
+     * @return User The current object (for fluent API support)
+     */
+    public function addVisitation(Visitation $l)
+    {
+        if ($this->collVisitations === null) {
+            $this->initVisitations();
+            $this->collVisitationsPartial = true;
+        }
+
+        if (!in_array($l, $this->collVisitations->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddVisitation($l);
+
+            if ($this->visitationsScheduledForDeletion and $this->visitationsScheduledForDeletion->contains($l)) {
+                $this->visitationsScheduledForDeletion->remove($this->visitationsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Visitation $visitation The visitation object to add.
+     */
+    protected function doAddVisitation($visitation)
+    {
+        $this->collVisitations[]= $visitation;
+        $visitation->setUser($this);
+    }
+
+    /**
+     * @param	Visitation $visitation The visitation object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeVisitation($visitation)
+    {
+        if ($this->getVisitations()->contains($visitation)) {
+            $this->collVisitations->remove($this->collVisitations->search($visitation));
+            if (null === $this->visitationsScheduledForDeletion) {
+                $this->visitationsScheduledForDeletion = clone $this->collVisitations;
+                $this->visitationsScheduledForDeletion->clear();
+            }
+            $this->visitationsScheduledForDeletion[]= $visitation;
+            $visitation->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Visitations from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Visitation[] List of Visitation objects
+     */
+    public function getVisitationsJoinStore($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = VisitationQuery::create(null, $criteria);
+        $query->joinWith('Store', $join_behavior);
+
+        return $this->getVisitations($query, $con);
     }
 
     /**
@@ -3531,6 +4418,11 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collAreaAssignments) {
+                foreach ($this->collAreaAssignments as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collUserGroups) {
                 foreach ($this->collUserGroups as $o) {
                     $o->clearAllReferences($deep);
@@ -3541,8 +4433,18 @@ abstract class BaseUser extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collOrganizations) {
-                foreach ($this->collOrganizations as $o) {
+            if ($this->collPrincipals) {
+                foreach ($this->collPrincipals as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collProductAssignments) {
+                foreach ($this->collProductAssignments as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collVisitations) {
+                foreach ($this->collVisitations as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3558,6 +4460,10 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collAreaAssignments instanceof PropelCollection) {
+            $this->collAreaAssignments->clearIterator();
+        }
+        $this->collAreaAssignments = null;
         if ($this->collUserGroups instanceof PropelCollection) {
             $this->collUserGroups->clearIterator();
         }
@@ -3566,10 +4472,18 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->collUserLogs->clearIterator();
         }
         $this->collUserLogs = null;
-        if ($this->collOrganizations instanceof PropelCollection) {
-            $this->collOrganizations->clearIterator();
+        if ($this->collPrincipals instanceof PropelCollection) {
+            $this->collPrincipals->clearIterator();
         }
-        $this->collOrganizations = null;
+        $this->collPrincipals = null;
+        if ($this->collProductAssignments instanceof PropelCollection) {
+            $this->collProductAssignments->clearIterator();
+        }
+        $this->collProductAssignments = null;
+        if ($this->collVisitations instanceof PropelCollection) {
+            $this->collVisitations->clearIterator();
+        }
+        $this->collVisitations = null;
         if ($this->singleUserProfile instanceof PropelCollection) {
             $this->singleUserProfile->clearIterator();
         }

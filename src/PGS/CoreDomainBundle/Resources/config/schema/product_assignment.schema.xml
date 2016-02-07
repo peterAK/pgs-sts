@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.ProductAssignment" namespace="PGS\CoreDomainBundle\Model\ProductAssignment">
+    <table name="product_assignment" phpName="ProductAssignment">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="user_id" type="INTEGER"/>
+        <column name="product_id" type="INTEGER"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="product" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="product_id" foreign="id" />
+        </foreign-key>
+    </table>
+</database>

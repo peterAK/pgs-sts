@@ -59,7 +59,8 @@ class StateTableMap extends TableMap
         $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'UserProfiles');
         $this->addRelation('City', 'PGS\\CoreDomainBundle\\Model\\City', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), 'SET NULL', 'CASCADE', 'Cities');
         $this->addRelation('Area', 'PGS\\CoreDomainBundle\\Model\\Area', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), 'SET NULL', 'CASCADE', 'Areas');
-        $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), null, null, 'Organizations');
+        $this->addRelation('Principal', 'PGS\\CoreDomainBundle\\Model\\Principal\\Principal', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), 'SET NULL', 'CASCADE', 'Principals');
+        $this->addRelation('Store', 'PGS\\CoreDomainBundle\\Model\\Store\\Store', RelationMap::ONE_TO_MANY, array('id' => 'state_id', ), 'SET NULL', 'CASCADE', 'Stores');
     } // buildRelations()
 
     /**

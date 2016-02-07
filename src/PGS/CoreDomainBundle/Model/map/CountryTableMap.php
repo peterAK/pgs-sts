@@ -56,7 +56,8 @@ class CountryTableMap extends TableMap
     {
         $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), null, null, 'UserProfiles');
         $this->addRelation('State', 'PGS\\CoreDomainBundle\\Model\\State', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), 'SET NULL', 'CASCADE', 'States');
-        $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), null, null, 'Organizations');
+        $this->addRelation('Principal', 'PGS\\CoreDomainBundle\\Model\\Principal\\Principal', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), 'SET NULL', 'CASCADE', 'Principals');
+        $this->addRelation('Store', 'PGS\\CoreDomainBundle\\Model\\Store\\Store', RelationMap::ONE_TO_MANY, array('id' => 'country_id', ), 'SET NULL', 'CASCADE', 'Stores');
     } // buildRelations()
 
     /**

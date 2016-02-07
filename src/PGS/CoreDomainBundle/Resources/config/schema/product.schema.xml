@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Product" namespace="PGS\CoreDomainBundle\Model\Product">
+    <table name="product" phpName="Product">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="principal_id" phpName="PrincipalId" type="INTEGER"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+        <column name="name_slug" type="VARCHAR" size="100" />
+        <column name="category" phpName="Category" type="VARCHAR" size="100"/>
+        <column name="unit" type="ENUM" valueSet="piece, kaleng, kotak, renceng, karton" defaultValue="renceng"/>
+        <column name="price" type="DECIMAL" size="12" scale="2" required="false" defaultValue="0" />
+        <column name="description" phpName="Description" type="CLOB" required="false"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="principal" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="principal_id" foreign="id" />
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="sluggable">
+            <parameter name="slug_column" value="name_slug" />
+            <parameter name="slug_pattern" value="{Name}" />
+            <parameter name="replace_pattern" value="/[^\w\/]+/u" />
+            <parameter name="replacement" value="-" />
+            <parameter name="separator" value="_" />
+            <parameter name="permanent" value="true" />
+        </behavior>
+        <behavior name="sortable" />
+        <behavior name="timestampable" />
+        <behavior name="archivable" />
+    </table>
+</database>

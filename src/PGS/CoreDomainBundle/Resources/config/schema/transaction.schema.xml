@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Transaction" namespace="PGS\CoreDomainBundle\Model\Transaction">
+    <table name="transaction" phpName="Transaction">
+        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="visitation_id" type="INTEGER" required="true" />
+        <column name="product_id" type="INTEGER" required="true" />
+        <column name="quantity" type="INTEGER" required="true" defaultValue="1"/>
+        <column name="price" type="DECIMAL" size="12" scale="2" required="false" defaultValue="0" />
+        <column name="subtotal" type="DECIMAL" size="12" scale="2" required="false" defaultValue="0" />
+
+        <!-- Relations -->
+        <foreign-key foreignTable="visitation" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference local="visitation_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="product" onDelete="RESTRICT" onUpdate="CASCADE">
+            <reference local="product_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="timestampable" />
+    </table>
+</database>

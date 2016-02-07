@@ -135,6 +135,10 @@
         <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
         <column name="desscription" phpName="Description" type="VARCHAR" size="100" required="true"/>
 
+        <unique>
+            <unique-column name="code" />
+        </unique>
+
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
@@ -151,20 +155,14 @@
             <reference local="country_id" foreign="id"/>
         </foreign-key>
 
+        <unique>
+            <unique-column name="code" />
+        </unique>
+
         <!-- Behavior-->
         <behavior name="delegate">
             <parameter name="to" value="country" />
         </behavior>
-
-        <vendor type="mysql">
-            <parameter name="Engine" value="InnoDB"/>
-        </vendor>
-    </table>
-
-    <table name="region" phpName="Region" idMethod="native">
-        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
-        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
 
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
@@ -182,10 +180,28 @@
             <reference local="state_id" foreign="id"/>
         </foreign-key>
 
+        <unique>
+            <unique-column name="code" />
+        </unique>
+
         <!-- Behavior-->
         <behavior name="delegate">
             <parameter name="to" value="state" />
         </behavior>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="region" phpName="Region" idMethod="native">
+        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+
+        <unique>
+            <unique-column name="code" />
+        </unique>
 
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
@@ -199,6 +215,10 @@
         <column name="name" phpName="Name" type="VARCHAR" size="100" required="true"/>
         <column name="state_id" phpName="StateId" type="INTEGER"/>
         <column name="city_id" phpName="CityId" type="INTEGER"/>
+
+        <unique>
+            <unique-column name="code" />
+        </unique>
 
         <!-- Relations -->
         <foreign-key foreignTable="state" onDelete="SETNULL" onUpdate="CASCADE">

@@ -17,6 +17,8 @@ use PGS\CoreDomainBundle\Model\CityPeer;
 use PGS\CoreDomainBundle\Model\CountryPeer;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StatePeer;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalPeer;
+use PGS\CoreDomainBundle\Model\Store\StorePeer;
 use PGS\CoreDomainBundle\Model\map\StateTableMap;
 
 abstract class BaseStatePeer
@@ -387,6 +389,12 @@ abstract class BaseStatePeer
         // Invalidate objects in AreaPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         AreaPeer::clearInstancePool();
+        // Invalidate objects in PrincipalPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        PrincipalPeer::clearInstancePool();
+        // Invalidate objects in StorePeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        StorePeer::clearInstancePool();
     }
 
     /**

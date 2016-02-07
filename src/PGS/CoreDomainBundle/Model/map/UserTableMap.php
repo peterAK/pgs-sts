@@ -85,9 +85,12 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('AreaAssignment', 'PGS\\CoreDomainBundle\\Model\\AreaAssignment\\AreaAssignment', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'AreaAssignments');
         $this->addRelation('UserGroup', 'PGS\\CoreDomainBundle\\Model\\UserGroup', RelationMap::ONE_TO_MANY, array('id' => 'fos_user_id', ), null, null, 'UserGroups');
         $this->addRelation('UserLog', 'PGS\\CoreDomainBundle\\Model\\UserLog', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'UserLogs');
-        $this->addRelation('Organization', 'PGS\\CoreDomainBundle\\Model\\Organization\\Organization', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', null, 'Organizations');
+        $this->addRelation('Principal', 'PGS\\CoreDomainBundle\\Model\\Principal\\Principal', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', null, 'Principals');
+        $this->addRelation('ProductAssignment', 'PGS\\CoreDomainBundle\\Model\\ProductAssignment\\ProductAssignment', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'SET NULL', 'CASCADE', 'ProductAssignments');
+        $this->addRelation('Visitation', 'PGS\\CoreDomainBundle\\Model\\Visitation\\Visitation', RelationMap::ONE_TO_MANY, array('id' => 'employee_id', ), 'SET NULL', 'CASCADE', 'Visitations');
         $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Group', 'PGS\\CoreDomainBundle\\Model\\Group', RelationMap::MANY_TO_MANY, array(), null, null, 'Groups');
     } // buildRelations()

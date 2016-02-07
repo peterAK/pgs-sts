@@ -19,7 +19,8 @@ use PGS\CoreDomainBundle\Model\CountryPeer;
 use PGS\CoreDomainBundle\Model\CountryQuery;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\UserProfile;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
+use PGS\CoreDomainBundle\Model\Store\Store;
 
 /**
  * @method CountryQuery orderById($order = Criteria::ASC) Order by the id column
@@ -44,9 +45,13 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method CountryQuery rightJoinState($relationAlias = null) Adds a RIGHT JOIN clause to the query using the State relation
  * @method CountryQuery innerJoinState($relationAlias = null) Adds a INNER JOIN clause to the query using the State relation
  *
- * @method CountryQuery leftJoinOrganization($relationAlias = null) Adds a LEFT JOIN clause to the query using the Organization relation
- * @method CountryQuery rightJoinOrganization($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Organization relation
- * @method CountryQuery innerJoinOrganization($relationAlias = null) Adds a INNER JOIN clause to the query using the Organization relation
+ * @method CountryQuery leftJoinPrincipal($relationAlias = null) Adds a LEFT JOIN clause to the query using the Principal relation
+ * @method CountryQuery rightJoinPrincipal($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Principal relation
+ * @method CountryQuery innerJoinPrincipal($relationAlias = null) Adds a INNER JOIN clause to the query using the Principal relation
+ *
+ * @method CountryQuery leftJoinStore($relationAlias = null) Adds a LEFT JOIN clause to the query using the Store relation
+ * @method CountryQuery rightJoinStore($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Store relation
+ * @method CountryQuery innerJoinStore($relationAlias = null) Adds a INNER JOIN clause to the query using the Store relation
  *
  * @method Country findOne(PropelPDO $con = null) Return the first Country matching the query
  * @method Country findOneOrCreate(PropelPDO $con = null) Return the first Country matching the query, or a new Country object populated from the query conditions when no match is found
@@ -533,41 +538,41 @@ abstract class BaseCountryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related Organization object
+     * Filter the query by a related Principal object
      *
-     * @param   Organization|PropelObjectCollection $organization  the related object to use as filter
+     * @param   Principal|PropelObjectCollection $principal  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 CountryQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByOrganization($organization, $comparison = null)
+    public function filterByPrincipal($principal, $comparison = null)
     {
-        if ($organization instanceof Organization) {
+        if ($principal instanceof Principal) {
             return $this
-                ->addUsingAlias(CountryPeer::ID, $organization->getCountryId(), $comparison);
-        } elseif ($organization instanceof PropelObjectCollection) {
+                ->addUsingAlias(CountryPeer::ID, $principal->getCountryId(), $comparison);
+        } elseif ($principal instanceof PropelObjectCollection) {
             return $this
-                ->useOrganizationQuery()
-                ->filterByPrimaryKeys($organization->getPrimaryKeys())
+                ->usePrincipalQuery()
+                ->filterByPrimaryKeys($principal->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByOrganization() only accepts arguments of type Organization or PropelCollection');
+            throw new PropelException('filterByPrincipal() only accepts arguments of type Principal or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Organization relation
+     * Adds a JOIN clause to the query using the Principal relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return CountryQuery The current query, for fluid interface
      */
-    public function joinOrganization($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinPrincipal($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Organization');
+        $relationMap = $tableMap->getRelation('Principal');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -582,14 +587,14 @@ abstract class BaseCountryQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Organization');
+            $this->addJoinObject($join, 'Principal');
         }
 
         return $this;
     }
 
     /**
-     * Use the Organization relation Organization object
+     * Use the Principal relation Principal object
      *
      * @see       useQuery()
      *
@@ -597,13 +602,87 @@ abstract class BaseCountryQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \PGS\CoreDomainBundle\Model\Organization\OrganizationQuery A secondary query class using the current class as primary query
+     * @return   \PGS\CoreDomainBundle\Model\Principal\PrincipalQuery A secondary query class using the current class as primary query
      */
-    public function useOrganizationQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function usePrincipalQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinOrganization($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Organization', '\PGS\CoreDomainBundle\Model\Organization\OrganizationQuery');
+            ->joinPrincipal($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Principal', '\PGS\CoreDomainBundle\Model\Principal\PrincipalQuery');
+    }
+
+    /**
+     * Filter the query by a related Store object
+     *
+     * @param   Store|PropelObjectCollection $store  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CountryQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByStore($store, $comparison = null)
+    {
+        if ($store instanceof Store) {
+            return $this
+                ->addUsingAlias(CountryPeer::ID, $store->getCountryId(), $comparison);
+        } elseif ($store instanceof PropelObjectCollection) {
+            return $this
+                ->useStoreQuery()
+                ->filterByPrimaryKeys($store->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByStore() only accepts arguments of type Store or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Store relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CountryQuery The current query, for fluid interface
+     */
+    public function joinStore($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Store');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Store');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Store relation Store object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\Store\StoreQuery A secondary query class using the current class as primary query
+     */
+    public function useStoreQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinStore($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Store', '\PGS\CoreDomainBundle\Model\Store\StoreQuery');
     }
 
     /**

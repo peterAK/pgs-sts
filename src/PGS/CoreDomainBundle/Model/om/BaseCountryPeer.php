@@ -15,6 +15,8 @@ use Glorpen\Propel\PropelBundle\Events\PeerEvent;
 use PGS\CoreDomainBundle\Model\Country;
 use PGS\CoreDomainBundle\Model\CountryPeer;
 use PGS\CoreDomainBundle\Model\StatePeer;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalPeer;
+use PGS\CoreDomainBundle\Model\Store\StorePeer;
 use PGS\CoreDomainBundle\Model\map\CountryTableMap;
 
 abstract class BaseCountryPeer
@@ -382,6 +384,12 @@ abstract class BaseCountryPeer
         // Invalidate objects in StatePeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         StatePeer::clearInstancePool();
+        // Invalidate objects in PrincipalPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        PrincipalPeer::clearInstancePool();
+        // Invalidate objects in StorePeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        StorePeer::clearInstancePool();
     }
 
     /**

@@ -21,7 +21,10 @@ use PGS\CoreDomainBundle\Model\UserLog;
 use PGS\CoreDomainBundle\Model\UserPeer;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserQuery;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
+use PGS\CoreDomainBundle\Model\AreaAssignment\AreaAssignment;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
+use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignment;
+use PGS\CoreDomainBundle\Model\Visitation\Visitation;
 
 /**
  * @method UserQuery orderById($order = Criteria::ASC) Order by the id column
@@ -72,6 +75,10 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method UserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method UserQuery leftJoinAreaAssignment($relationAlias = null) Adds a LEFT JOIN clause to the query using the AreaAssignment relation
+ * @method UserQuery rightJoinAreaAssignment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AreaAssignment relation
+ * @method UserQuery innerJoinAreaAssignment($relationAlias = null) Adds a INNER JOIN clause to the query using the AreaAssignment relation
+ *
  * @method UserQuery leftJoinUserGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserGroup relation
  * @method UserQuery rightJoinUserGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserGroup relation
  * @method UserQuery innerJoinUserGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the UserGroup relation
@@ -80,9 +87,17 @@ use PGS\CoreDomainBundle\Model\Organization\Organization;
  * @method UserQuery rightJoinUserLog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserLog relation
  * @method UserQuery innerJoinUserLog($relationAlias = null) Adds a INNER JOIN clause to the query using the UserLog relation
  *
- * @method UserQuery leftJoinOrganization($relationAlias = null) Adds a LEFT JOIN clause to the query using the Organization relation
- * @method UserQuery rightJoinOrganization($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Organization relation
- * @method UserQuery innerJoinOrganization($relationAlias = null) Adds a INNER JOIN clause to the query using the Organization relation
+ * @method UserQuery leftJoinPrincipal($relationAlias = null) Adds a LEFT JOIN clause to the query using the Principal relation
+ * @method UserQuery rightJoinPrincipal($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Principal relation
+ * @method UserQuery innerJoinPrincipal($relationAlias = null) Adds a INNER JOIN clause to the query using the Principal relation
+ *
+ * @method UserQuery leftJoinProductAssignment($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductAssignment relation
+ * @method UserQuery rightJoinProductAssignment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductAssignment relation
+ * @method UserQuery innerJoinProductAssignment($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductAssignment relation
+ *
+ * @method UserQuery leftJoinVisitation($relationAlias = null) Adds a LEFT JOIN clause to the query using the Visitation relation
+ * @method UserQuery rightJoinVisitation($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Visitation relation
+ * @method UserQuery innerJoinVisitation($relationAlias = null) Adds a INNER JOIN clause to the query using the Visitation relation
  *
  * @method UserQuery leftJoinUserProfile($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserProfile relation
  * @method UserQuery rightJoinUserProfile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserProfile relation
@@ -1076,6 +1091,80 @@ abstract class BaseUserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related AreaAssignment object
+     *
+     * @param   AreaAssignment|PropelObjectCollection $areaAssignment  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByAreaAssignment($areaAssignment, $comparison = null)
+    {
+        if ($areaAssignment instanceof AreaAssignment) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $areaAssignment->getUserId(), $comparison);
+        } elseif ($areaAssignment instanceof PropelObjectCollection) {
+            return $this
+                ->useAreaAssignmentQuery()
+                ->filterByPrimaryKeys($areaAssignment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByAreaAssignment() only accepts arguments of type AreaAssignment or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the AreaAssignment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinAreaAssignment($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('AreaAssignment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'AreaAssignment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the AreaAssignment relation AreaAssignment object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\AreaAssignment\AreaAssignmentQuery A secondary query class using the current class as primary query
+     */
+    public function useAreaAssignmentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinAreaAssignment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'AreaAssignment', '\PGS\CoreDomainBundle\Model\AreaAssignment\AreaAssignmentQuery');
+    }
+
+    /**
      * Filter the query by a related UserGroup object
      *
      * @param   UserGroup|PropelObjectCollection $userGroup  the related object to use as filter
@@ -1224,41 +1313,41 @@ abstract class BaseUserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related Organization object
+     * Filter the query by a related Principal object
      *
-     * @param   Organization|PropelObjectCollection $organization  the related object to use as filter
+     * @param   Principal|PropelObjectCollection $principal  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 UserQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByOrganization($organization, $comparison = null)
+    public function filterByPrincipal($principal, $comparison = null)
     {
-        if ($organization instanceof Organization) {
+        if ($principal instanceof Principal) {
             return $this
-                ->addUsingAlias(UserPeer::ID, $organization->getUserId(), $comparison);
-        } elseif ($organization instanceof PropelObjectCollection) {
+                ->addUsingAlias(UserPeer::ID, $principal->getUserId(), $comparison);
+        } elseif ($principal instanceof PropelObjectCollection) {
             return $this
-                ->useOrganizationQuery()
-                ->filterByPrimaryKeys($organization->getPrimaryKeys())
+                ->usePrincipalQuery()
+                ->filterByPrimaryKeys($principal->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByOrganization() only accepts arguments of type Organization or PropelCollection');
+            throw new PropelException('filterByPrincipal() only accepts arguments of type Principal or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Organization relation
+     * Adds a JOIN clause to the query using the Principal relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return UserQuery The current query, for fluid interface
      */
-    public function joinOrganization($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinPrincipal($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Organization');
+        $relationMap = $tableMap->getRelation('Principal');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -1273,14 +1362,14 @@ abstract class BaseUserQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Organization');
+            $this->addJoinObject($join, 'Principal');
         }
 
         return $this;
     }
 
     /**
-     * Use the Organization relation Organization object
+     * Use the Principal relation Principal object
      *
      * @see       useQuery()
      *
@@ -1288,13 +1377,161 @@ abstract class BaseUserQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \PGS\CoreDomainBundle\Model\Organization\OrganizationQuery A secondary query class using the current class as primary query
+     * @return   \PGS\CoreDomainBundle\Model\Principal\PrincipalQuery A secondary query class using the current class as primary query
      */
-    public function useOrganizationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function usePrincipalQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinOrganization($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Organization', '\PGS\CoreDomainBundle\Model\Organization\OrganizationQuery');
+            ->joinPrincipal($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Principal', '\PGS\CoreDomainBundle\Model\Principal\PrincipalQuery');
+    }
+
+    /**
+     * Filter the query by a related ProductAssignment object
+     *
+     * @param   ProductAssignment|PropelObjectCollection $productAssignment  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByProductAssignment($productAssignment, $comparison = null)
+    {
+        if ($productAssignment instanceof ProductAssignment) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $productAssignment->getUserId(), $comparison);
+        } elseif ($productAssignment instanceof PropelObjectCollection) {
+            return $this
+                ->useProductAssignmentQuery()
+                ->filterByPrimaryKeys($productAssignment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByProductAssignment() only accepts arguments of type ProductAssignment or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProductAssignment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinProductAssignment($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProductAssignment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProductAssignment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProductAssignment relation ProductAssignment object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignmentQuery A secondary query class using the current class as primary query
+     */
+    public function useProductAssignmentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinProductAssignment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductAssignment', '\PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignmentQuery');
+    }
+
+    /**
+     * Filter the query by a related Visitation object
+     *
+     * @param   Visitation|PropelObjectCollection $visitation  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByVisitation($visitation, $comparison = null)
+    {
+        if ($visitation instanceof Visitation) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $visitation->getEmployeeId(), $comparison);
+        } elseif ($visitation instanceof PropelObjectCollection) {
+            return $this
+                ->useVisitationQuery()
+                ->filterByPrimaryKeys($visitation->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByVisitation() only accepts arguments of type Visitation or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Visitation relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinVisitation($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Visitation');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Visitation');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Visitation relation Visitation object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\Visitation\VisitationQuery A secondary query class using the current class as primary query
+     */
+    public function useVisitationQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinVisitation($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Visitation', '\PGS\CoreDomainBundle\Model\Visitation\VisitationQuery');
     }
 
     /**

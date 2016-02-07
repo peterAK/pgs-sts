@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="default" package="src.PGS.CoreDomainBundle.Model.Visitation" namespace="PGS\CoreDomainBundle\Model\Visitation">
+    <table name="visitation" phpName="Visitation">
+        <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="employee_id" phpName="EmployeeId" type="INTEGER"/>
+        <column name="store_id" type="INTEGER" required="false" />
+        <column name="remark" type="LONGVARCHAR" required="false"/>
+        <column name="status" type="ENUM" valueSet="new, partial, paid, closed, cancelled" defaultValue="new"/>
+        <column name="total" type="DECIMAL" size="12" scale="2" required="false" defaultValue="0" />
+        <column name="photo" type="LONGVARCHAR"/>
+
+        <!-- Relations -->
+        <foreign-key foreignTable="fos_user" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="employee_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="store" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="store_id" foreign="id"/>
+        </foreign-key>
+
+        <!-- Behavior-->
+        <behavior name="timestampable" />
+
+        <!-- Behavior-->
+        <behavior name="aggregate_column">
+            <parameter name="name" value="total" />
+            <parameter name="foreign_table" value="transaction" />
+            <parameter name="expression" value="SUM(subtotal)" />
+        </behavior>
+    </table>
+</database>
