@@ -43,9 +43,9 @@ abstract class Authorizer implements AuthorizerInterface
     /**
      * @return bool
      */
-    public function isSchoolAdmin()
+    public function isOffice()
     {
-        return $this->activePreference->isSchoolAdmin();
+        return $this->activePreference->isOffice();
     }
 
     /**
@@ -59,41 +59,9 @@ abstract class Authorizer implements AuthorizerInterface
     /**
      * @return bool
      */
-    public function isCounselor()
+    public function isSales()
     {
-        return $this->activePreference->isCounselor();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTeacher()
-    {
-        return $this->activePreference->isTeacher();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isParent()
-    {
-        return $this->activePreference->isParent();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStudent()
-    {
-        return $this->activePreference->isStudent();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isApplicant()
-    {
-        return $this->activePreference->isApplicant();
+        return $this->activePreference->isSales();
     }
 
     /**
@@ -117,7 +85,7 @@ abstract class Authorizer implements AuthorizerInterface
      */
     public function isMemberOfOrganization()
     {
-        if ($this->isSchoolAdmin() || $this->isPrincipal() || $this->isCounselor() || $this->isTeacher() || $this->isStudent()) {
+        if ($this->isOffice() || $this->isPrincipal() || $this->isSales()) {
             return true;
         }
 
@@ -165,19 +133,19 @@ abstract class Authorizer implements AuthorizerInterface
     }
 
     /**
-     * @return \PGS\CoreDomainBundle\Model\Organization\Organization
+     * @return \PGS\CoreDomainBundle\Model\Principal\Principal
      */
-    public function getMyOrganization()
+    public function getMyPrincipal()
     {
-        return $this->activePreference->getMyOrganization();
+        return $this->activePreference->getMyPrincipal();
     }
 
     /**
      * @return int
      */
-    public function getMyOrganizationId()
+    public function getMyPrincipalId()
     {
-        return $this->activePreference->getMyOrganizationId();
+        return $this->activePreference->getMyPrincipalId();
     }
 
     /**

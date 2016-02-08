@@ -26,6 +26,8 @@ use PGS\CoreDomainBundle\Model\Product\ProductPeer;
 use PGS\CoreDomainBundle\Model\Product\ProductQuery;
 use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignment;
 use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignmentQuery;
+use PGS\CoreDomainBundle\Model\ProductSurvey\ProductSurvey;
+use PGS\CoreDomainBundle\Model\ProductSurvey\ProductSurveyQuery;
 use PGS\CoreDomainBundle\Model\Transaction\Transaction;
 use PGS\CoreDomainBundle\Model\Transaction\TransactionQuery;
 
@@ -130,6 +132,12 @@ abstract class BaseProduct extends BaseObject implements Persistent
     protected $collProductAssignmentsPartial;
 
     /**
+     * @var        PropelObjectCollection|ProductSurvey[] Collection to store aggregation of ProductSurvey objects.
+     */
+    protected $collProductSurveys;
+    protected $collProductSurveysPartial;
+
+    /**
      * @var        PropelObjectCollection|Transaction[] Collection to store aggregation of Transaction objects.
      */
     protected $collTransactions;
@@ -171,6 +179,12 @@ abstract class BaseProduct extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $productAssignmentsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $productSurveysScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -760,6 +774,8 @@ abstract class BaseProduct extends BaseObject implements Persistent
             $this->aPrincipal = null;
             $this->collProductAssignments = null;
 
+            $this->collProductSurveys = null;
+
             $this->collTransactions = null;
 
         } // if (deep)
@@ -965,6 +981,24 @@ abstract class BaseProduct extends BaseObject implements Persistent
 
             if ($this->collProductAssignments !== null) {
                 foreach ($this->collProductAssignments as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->productSurveysScheduledForDeletion !== null) {
+                if (!$this->productSurveysScheduledForDeletion->isEmpty()) {
+                    foreach ($this->productSurveysScheduledForDeletion as $productSurvey) {
+                        // need to save related object because we set the relation to null
+                        $productSurvey->save($con);
+                    }
+                    $this->productSurveysScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProductSurveys !== null) {
+                foreach ($this->collProductSurveys as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1210,6 +1244,14 @@ abstract class BaseProduct extends BaseObject implements Persistent
                     }
                 }
 
+                if ($this->collProductSurveys !== null) {
+                    foreach ($this->collProductSurveys as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collTransactions !== null) {
                     foreach ($this->collTransactions as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1338,6 +1380,9 @@ abstract class BaseProduct extends BaseObject implements Persistent
             }
             if (null !== $this->collProductAssignments) {
                 $result['ProductAssignments'] = $this->collProductAssignments->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collProductSurveys) {
+                $result['ProductSurveys'] = $this->collProductSurveys->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collTransactions) {
                 $result['Transactions'] = $this->collTransactions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1557,6 +1602,12 @@ abstract class BaseProduct extends BaseObject implements Persistent
                 }
             }
 
+            foreach ($this->getProductSurveys() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProductSurvey($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getTransactions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addTransaction($relObj->copy($deepCopy));
@@ -1678,6 +1729,9 @@ abstract class BaseProduct extends BaseObject implements Persistent
     {
         if ('ProductAssignment' == $relationName) {
             $this->initProductAssignments();
+        }
+        if ('ProductSurvey' == $relationName) {
+            $this->initProductSurveys();
         }
         if ('Transaction' == $relationName) {
             $this->initTransactions();
@@ -1932,6 +1986,231 @@ abstract class BaseProduct extends BaseObject implements Persistent
         $query->joinWith('User', $join_behavior);
 
         return $this->getProductAssignments($query, $con);
+    }
+
+    /**
+     * Clears out the collProductSurveys collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Product The current object (for fluent API support)
+     * @see        addProductSurveys()
+     */
+    public function clearProductSurveys()
+    {
+        $this->collProductSurveys = null; // important to set this to null since that means it is uninitialized
+        $this->collProductSurveysPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collProductSurveys collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialProductSurveys($v = true)
+    {
+        $this->collProductSurveysPartial = $v;
+    }
+
+    /**
+     * Initializes the collProductSurveys collection.
+     *
+     * By default this just sets the collProductSurveys collection to an empty array (like clearcollProductSurveys());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProductSurveys($overrideExisting = true)
+    {
+        if (null !== $this->collProductSurveys && !$overrideExisting) {
+            return;
+        }
+        $this->collProductSurveys = new PropelObjectCollection();
+        $this->collProductSurveys->setModel('ProductSurvey');
+    }
+
+    /**
+     * Gets an array of ProductSurvey objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Product is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|ProductSurvey[] List of ProductSurvey objects
+     * @throws PropelException
+     */
+    public function getProductSurveys($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collProductSurveysPartial && !$this->isNew();
+        if (null === $this->collProductSurveys || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collProductSurveys) {
+                // return empty collection
+                $this->initProductSurveys();
+            } else {
+                $collProductSurveys = ProductSurveyQuery::create(null, $criteria)
+                    ->filterByProduct($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collProductSurveysPartial && count($collProductSurveys)) {
+                      $this->initProductSurveys(false);
+
+                      foreach ($collProductSurveys as $obj) {
+                        if (false == $this->collProductSurveys->contains($obj)) {
+                          $this->collProductSurveys->append($obj);
+                        }
+                      }
+
+                      $this->collProductSurveysPartial = true;
+                    }
+
+                    $collProductSurveys->getInternalIterator()->rewind();
+
+                    return $collProductSurveys;
+                }
+
+                if ($partial && $this->collProductSurveys) {
+                    foreach ($this->collProductSurveys as $obj) {
+                        if ($obj->isNew()) {
+                            $collProductSurveys[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProductSurveys = $collProductSurveys;
+                $this->collProductSurveysPartial = false;
+            }
+        }
+
+        return $this->collProductSurveys;
+    }
+
+    /**
+     * Sets a collection of ProductSurvey objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $productSurveys A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Product The current object (for fluent API support)
+     */
+    public function setProductSurveys(PropelCollection $productSurveys, PropelPDO $con = null)
+    {
+        $productSurveysToDelete = $this->getProductSurveys(new Criteria(), $con)->diff($productSurveys);
+
+
+        $this->productSurveysScheduledForDeletion = $productSurveysToDelete;
+
+        foreach ($productSurveysToDelete as $productSurveyRemoved) {
+            $productSurveyRemoved->setProduct(null);
+        }
+
+        $this->collProductSurveys = null;
+        foreach ($productSurveys as $productSurvey) {
+            $this->addProductSurvey($productSurvey);
+        }
+
+        $this->collProductSurveys = $productSurveys;
+        $this->collProductSurveysPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ProductSurvey objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related ProductSurvey objects.
+     * @throws PropelException
+     */
+    public function countProductSurveys(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collProductSurveysPartial && !$this->isNew();
+        if (null === $this->collProductSurveys || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProductSurveys) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProductSurveys());
+            }
+            $query = ProductSurveyQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByProduct($this)
+                ->count($con);
+        }
+
+        return count($this->collProductSurveys);
+    }
+
+    /**
+     * Method called to associate a ProductSurvey object to this object
+     * through the ProductSurvey foreign key attribute.
+     *
+     * @param    ProductSurvey $l ProductSurvey
+     * @return Product The current object (for fluent API support)
+     */
+    public function addProductSurvey(ProductSurvey $l)
+    {
+        if ($this->collProductSurveys === null) {
+            $this->initProductSurveys();
+            $this->collProductSurveysPartial = true;
+        }
+
+        if (!in_array($l, $this->collProductSurveys->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddProductSurvey($l);
+
+            if ($this->productSurveysScheduledForDeletion and $this->productSurveysScheduledForDeletion->contains($l)) {
+                $this->productSurveysScheduledForDeletion->remove($this->productSurveysScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ProductSurvey $productSurvey The productSurvey object to add.
+     */
+    protected function doAddProductSurvey($productSurvey)
+    {
+        $this->collProductSurveys[]= $productSurvey;
+        $productSurvey->setProduct($this);
+    }
+
+    /**
+     * @param	ProductSurvey $productSurvey The productSurvey object to remove.
+     * @return Product The current object (for fluent API support)
+     */
+    public function removeProductSurvey($productSurvey)
+    {
+        if ($this->getProductSurveys()->contains($productSurvey)) {
+            $this->collProductSurveys->remove($this->collProductSurveys->search($productSurvey));
+            if (null === $this->productSurveysScheduledForDeletion) {
+                $this->productSurveysScheduledForDeletion = clone $this->collProductSurveys;
+                $this->productSurveysScheduledForDeletion->clear();
+            }
+            $this->productSurveysScheduledForDeletion[]= $productSurvey;
+            $productSurvey->setProduct(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -2228,6 +2507,11 @@ abstract class BaseProduct extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collProductSurveys) {
+                foreach ($this->collProductSurveys as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collTransactions) {
                 foreach ($this->collTransactions as $o) {
                     $o->clearAllReferences($deep);
@@ -2244,6 +2528,10 @@ abstract class BaseProduct extends BaseObject implements Persistent
             $this->collProductAssignments->clearIterator();
         }
         $this->collProductAssignments = null;
+        if ($this->collProductSurveys instanceof PropelCollection) {
+            $this->collProductSurveys->clearIterator();
+        }
+        $this->collProductSurveys = null;
         if ($this->collTransactions instanceof PropelCollection) {
             $this->collTransactions->clearIterator();
         }

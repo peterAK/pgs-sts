@@ -15,6 +15,7 @@ use Glorpen\Propel\PropelBundle\Events\PeerEvent;
 use PGS\CoreDomainBundle\Model\CountryPeer;
 use PGS\CoreDomainBundle\Model\StatePeer;
 use PGS\CoreDomainBundle\Model\UserPeer;
+use PGS\CoreDomainBundle\Model\UserProfilePeer;
 use PGS\CoreDomainBundle\Model\Principal\Principal;
 use PGS\CoreDomainBundle\Model\Principal\PrincipalI18nPeer;
 use PGS\CoreDomainBundle\Model\Principal\PrincipalPeer;
@@ -569,6 +570,9 @@ abstract class BasePrincipalPeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in UserProfilePeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        UserProfilePeer::clearInstancePool();
         // Invalidate objects in ProductPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         ProductPeer::clearInstancePool();

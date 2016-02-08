@@ -19,6 +19,7 @@ use PGS\CoreDomainBundle\Model\Product\Product;
 use PGS\CoreDomainBundle\Model\Product\ProductPeer;
 use PGS\CoreDomainBundle\Model\Product\ProductQuery;
 use PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignment;
+use PGS\CoreDomainBundle\Model\ProductSurvey\ProductSurvey;
 use PGS\CoreDomainBundle\Model\Transaction\Transaction;
 
 /**
@@ -57,6 +58,10 @@ use PGS\CoreDomainBundle\Model\Transaction\Transaction;
  * @method ProductQuery leftJoinProductAssignment($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductAssignment relation
  * @method ProductQuery rightJoinProductAssignment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductAssignment relation
  * @method ProductQuery innerJoinProductAssignment($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductAssignment relation
+ *
+ * @method ProductQuery leftJoinProductSurvey($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductSurvey relation
+ * @method ProductQuery rightJoinProductSurvey($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductSurvey relation
+ * @method ProductQuery innerJoinProductSurvey($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductSurvey relation
  *
  * @method ProductQuery leftJoinTransaction($relationAlias = null) Adds a LEFT JOIN clause to the query using the Transaction relation
  * @method ProductQuery rightJoinTransaction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Transaction relation
@@ -833,6 +838,80 @@ abstract class BaseProductQuery extends ModelCriteria
         return $this
             ->joinProductAssignment($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'ProductAssignment', '\PGS\CoreDomainBundle\Model\ProductAssignment\ProductAssignmentQuery');
+    }
+
+    /**
+     * Filter the query by a related ProductSurvey object
+     *
+     * @param   ProductSurvey|PropelObjectCollection $productSurvey  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ProductQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByProductSurvey($productSurvey, $comparison = null)
+    {
+        if ($productSurvey instanceof ProductSurvey) {
+            return $this
+                ->addUsingAlias(ProductPeer::ID, $productSurvey->getProductId(), $comparison);
+        } elseif ($productSurvey instanceof PropelObjectCollection) {
+            return $this
+                ->useProductSurveyQuery()
+                ->filterByPrimaryKeys($productSurvey->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByProductSurvey() only accepts arguments of type ProductSurvey or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProductSurvey relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ProductQuery The current query, for fluid interface
+     */
+    public function joinProductSurvey($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProductSurvey');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProductSurvey');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProductSurvey relation ProductSurvey object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\ProductSurvey\ProductSurveyQuery A secondary query class using the current class as primary query
+     */
+    public function useProductSurveyQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinProductSurvey($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductSurvey', '\PGS\CoreDomainBundle\Model\ProductSurvey\ProductSurveyQuery');
     }
 
     /**

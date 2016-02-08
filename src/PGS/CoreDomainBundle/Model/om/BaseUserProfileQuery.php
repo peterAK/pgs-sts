@@ -20,10 +20,11 @@ use PGS\CoreDomainBundle\Model\User;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
 
 /**
  * @method UserProfileQuery orderByPrefix($order = Criteria::ASC) Order by the prefix column
- * @method UserProfileQuery orderByOrganizationId($order = Criteria::ASC) Order by the organization_id column
+ * @method UserProfileQuery orderByPrincipalId($order = Criteria::ASC) Order by the principal_id column
  * @method UserProfileQuery orderByNickName($order = Criteria::ASC) Order by the nick_name column
  * @method UserProfileQuery orderByFirstName($order = Criteria::ASC) Order by the first_name column
  * @method UserProfileQuery orderByMiddleName($order = Criteria::ASC) Order by the middle_name column
@@ -42,7 +43,7 @@ use PGS\CoreDomainBundle\Model\UserProfileQuery;
  * @method UserProfileQuery orderById($order = Criteria::ASC) Order by the id column
  *
  * @method UserProfileQuery groupByPrefix() Group by the prefix column
- * @method UserProfileQuery groupByOrganizationId() Group by the organization_id column
+ * @method UserProfileQuery groupByPrincipalId() Group by the principal_id column
  * @method UserProfileQuery groupByNickName() Group by the nick_name column
  * @method UserProfileQuery groupByFirstName() Group by the first_name column
  * @method UserProfileQuery groupByMiddleName() Group by the middle_name column
@@ -72,6 +73,10 @@ use PGS\CoreDomainBundle\Model\UserProfileQuery;
  * @method UserProfileQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method UserProfileQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
  *
+ * @method UserProfileQuery leftJoinPrincipal($relationAlias = null) Adds a LEFT JOIN clause to the query using the Principal relation
+ * @method UserProfileQuery rightJoinPrincipal($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Principal relation
+ * @method UserProfileQuery innerJoinPrincipal($relationAlias = null) Adds a INNER JOIN clause to the query using the Principal relation
+ *
  * @method UserProfileQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
  * @method UserProfileQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
  * @method UserProfileQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
@@ -80,7 +85,7 @@ use PGS\CoreDomainBundle\Model\UserProfileQuery;
  * @method UserProfile findOneOrCreate(PropelPDO $con = null) Return the first UserProfile matching the query, or a new UserProfile object populated from the query conditions when no match is found
  *
  * @method UserProfile findOneByPrefix(string $prefix) Return the first UserProfile filtered by the prefix column
- * @method UserProfile findOneByOrganizationId(int $organization_id) Return the first UserProfile filtered by the organization_id column
+ * @method UserProfile findOneByPrincipalId(int $principal_id) Return the first UserProfile filtered by the principal_id column
  * @method UserProfile findOneByNickName(string $nick_name) Return the first UserProfile filtered by the nick_name column
  * @method UserProfile findOneByFirstName(string $first_name) Return the first UserProfile filtered by the first_name column
  * @method UserProfile findOneByMiddleName(string $middle_name) Return the first UserProfile filtered by the middle_name column
@@ -98,7 +103,7 @@ use PGS\CoreDomainBundle\Model\UserProfileQuery;
  * @method UserProfile findOneByComplete(boolean $complete) Return the first UserProfile filtered by the complete column
  *
  * @method array findByPrefix(string $prefix) Return UserProfile objects filtered by the prefix column
- * @method array findByOrganizationId(int $organization_id) Return UserProfile objects filtered by the organization_id column
+ * @method array findByPrincipalId(int $principal_id) Return UserProfile objects filtered by the principal_id column
  * @method array findByNickName(string $nick_name) Return UserProfile objects filtered by the nick_name column
  * @method array findByFirstName(string $first_name) Return UserProfile objects filtered by the first_name column
  * @method array findByMiddleName(string $middle_name) Return UserProfile objects filtered by the middle_name column
@@ -221,7 +226,7 @@ abstract class BaseUserProfileQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `prefix`, `organization_id`, `nick_name`, `first_name`, `middle_name`, `last_name`, `phone`, `mobile`, `address`, `business_address`, `occupation`, `city`, `state_id`, `zip`, `country_id`, `active_preferences`, `complete`, `id` FROM `user_profile` WHERE `id` = :p0';
+        $sql = 'SELECT `prefix`, `principal_id`, `nick_name`, `first_name`, `middle_name`, `last_name`, `phone`, `mobile`, `address`, `business_address`, `occupation`, `city`, `state_id`, `zip`, `country_id`, `active_preferences`, `complete`, `id` FROM `user_profile` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -341,17 +346,19 @@ abstract class BaseUserProfileQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the organization_id column
+     * Filter the query on the principal_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByOrganizationId(1234); // WHERE organization_id = 1234
-     * $query->filterByOrganizationId(array(12, 34)); // WHERE organization_id IN (12, 34)
-     * $query->filterByOrganizationId(array('min' => 12)); // WHERE organization_id >= 12
-     * $query->filterByOrganizationId(array('max' => 12)); // WHERE organization_id <= 12
+     * $query->filterByPrincipalId(1234); // WHERE principal_id = 1234
+     * $query->filterByPrincipalId(array(12, 34)); // WHERE principal_id IN (12, 34)
+     * $query->filterByPrincipalId(array('min' => 12)); // WHERE principal_id >= 12
+     * $query->filterByPrincipalId(array('max' => 12)); // WHERE principal_id <= 12
      * </code>
      *
-     * @param     mixed $organizationId The value to use as filter.
+     * @see       filterByPrincipal()
+     *
+     * @param     mixed $principalId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -359,16 +366,16 @@ abstract class BaseUserProfileQuery extends ModelCriteria
      *
      * @return UserProfileQuery The current query, for fluid interface
      */
-    public function filterByOrganizationId($organizationId = null, $comparison = null)
+    public function filterByPrincipalId($principalId = null, $comparison = null)
     {
-        if (is_array($organizationId)) {
+        if (is_array($principalId)) {
             $useMinMax = false;
-            if (isset($organizationId['min'])) {
-                $this->addUsingAlias(UserProfilePeer::ORGANIZATION_ID, $organizationId['min'], Criteria::GREATER_EQUAL);
+            if (isset($principalId['min'])) {
+                $this->addUsingAlias(UserProfilePeer::PRINCIPAL_ID, $principalId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($organizationId['max'])) {
-                $this->addUsingAlias(UserProfilePeer::ORGANIZATION_ID, $organizationId['max'], Criteria::LESS_EQUAL);
+            if (isset($principalId['max'])) {
+                $this->addUsingAlias(UserProfilePeer::PRINCIPAL_ID, $principalId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -379,7 +386,7 @@ abstract class BaseUserProfileQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserProfilePeer::ORGANIZATION_ID, $organizationId, $comparison);
+        return $this->addUsingAlias(UserProfilePeer::PRINCIPAL_ID, $principalId, $comparison);
     }
 
     /**
@@ -1039,6 +1046,82 @@ abstract class BaseUserProfileQuery extends ModelCriteria
         return $this
             ->joinCountry($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Country', '\PGS\CoreDomainBundle\Model\CountryQuery');
+    }
+
+    /**
+     * Filter the query by a related Principal object
+     *
+     * @param   Principal|PropelObjectCollection $principal The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserProfileQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPrincipal($principal, $comparison = null)
+    {
+        if ($principal instanceof Principal) {
+            return $this
+                ->addUsingAlias(UserProfilePeer::PRINCIPAL_ID, $principal->getId(), $comparison);
+        } elseif ($principal instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(UserProfilePeer::PRINCIPAL_ID, $principal->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByPrincipal() only accepts arguments of type Principal or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Principal relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserProfileQuery The current query, for fluid interface
+     */
+    public function joinPrincipal($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Principal');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Principal');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Principal relation Principal object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\Principal\PrincipalQuery A secondary query class using the current class as primary query
+     */
+    public function usePrincipalQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPrincipal($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Principal', '\PGS\CoreDomainBundle\Model\Principal\PrincipalQuery');
     }
 
     /**

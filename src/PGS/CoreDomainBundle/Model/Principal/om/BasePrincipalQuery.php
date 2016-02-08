@@ -17,6 +17,7 @@ use Glorpen\Propel\PropelBundle\Events\QueryEvent;
 use PGS\CoreDomainBundle\Model\Country;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\User;
+use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\Principal\Principal;
 use PGS\CoreDomainBundle\Model\Principal\PrincipalI18n;
 use PGS\CoreDomainBundle\Model\Principal\PrincipalPeer;
@@ -89,6 +90,10 @@ use PGS\CoreDomainBundle\Model\Product\Product;
  * @method PrincipalQuery leftJoinCountry($relationAlias = null) Adds a LEFT JOIN clause to the query using the Country relation
  * @method PrincipalQuery rightJoinCountry($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Country relation
  * @method PrincipalQuery innerJoinCountry($relationAlias = null) Adds a INNER JOIN clause to the query using the Country relation
+ *
+ * @method PrincipalQuery leftJoinUserProfile($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserProfile relation
+ * @method PrincipalQuery rightJoinUserProfile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserProfile relation
+ * @method PrincipalQuery innerJoinUserProfile($relationAlias = null) Adds a INNER JOIN clause to the query using the UserProfile relation
  *
  * @method PrincipalQuery leftJoinProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the Product relation
  * @method PrincipalQuery rightJoinProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Product relation
@@ -1377,6 +1382,80 @@ abstract class BasePrincipalQuery extends ModelCriteria
         return $this
             ->joinCountry($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Country', '\PGS\CoreDomainBundle\Model\CountryQuery');
+    }
+
+    /**
+     * Filter the query by a related UserProfile object
+     *
+     * @param   UserProfile|PropelObjectCollection $userProfile  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PrincipalQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByUserProfile($userProfile, $comparison = null)
+    {
+        if ($userProfile instanceof UserProfile) {
+            return $this
+                ->addUsingAlias(PrincipalPeer::ID, $userProfile->getPrincipalId(), $comparison);
+        } elseif ($userProfile instanceof PropelObjectCollection) {
+            return $this
+                ->useUserProfileQuery()
+                ->filterByPrimaryKeys($userProfile->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByUserProfile() only accepts arguments of type UserProfile or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the UserProfile relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PrincipalQuery The current query, for fluid interface
+     */
+    public function joinUserProfile($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('UserProfile');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'UserProfile');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the UserProfile relation UserProfile object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \PGS\CoreDomainBundle\Model\UserProfileQuery A secondary query class using the current class as primary query
+     */
+    public function useUserProfileQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinUserProfile($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserProfile', '\PGS\CoreDomainBundle\Model\UserProfileQuery');
     }
 
     /**

@@ -32,10 +32,8 @@
             <div class="col-md-6 col-sm-6">
                 {% if is_granted('ROLE_ADMIN') %}
                     <!-- BEGIN TOP NAVIGATION MENU -->
-                    {% include "PGSCoreDomainBundle:Widget:organization_selector.html.twig" %}
-                    {% include "PGSCoreDomainBundle:Widget:school_selector.html.twig" %}
-                    {% include "PGSCoreDomainBundle:Widget:school_year_selector.html.twig" %}
-                {% else %}
+                    {#{% include "PGSCoreDomainBundle:Widget:principal_selector.html.twig" %}#}
+                {#{% else %}#}
                     <h5 style="color: white">
                         {{ active_organization_preference().name|title }} /
                         {{ active_school_preference().name|title }}

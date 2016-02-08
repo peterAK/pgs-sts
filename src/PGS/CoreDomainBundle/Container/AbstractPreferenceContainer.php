@@ -100,9 +100,9 @@ abstract class AbstractPreferenceContainer
     /**
      * @return bool
      */
-    public function isSchoolAdmin()
+    public function isOffice()
     {
-        return $this->securityContext->isGranted('ROLE_SCHOOL');
+        return $this->securityContext->isGranted('ROLE_OFFICE');
     }
 
     /**
@@ -116,41 +116,9 @@ abstract class AbstractPreferenceContainer
     /**
      * @return bool
      */
-    public function isCounselor()
+    public function isSales()
     {
-        return $this->securityContext->isGranted('ROLE_COUNSELOR');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTeacher()
-    {
-        return $this->securityContext->isGranted('ROLE_TEACHER');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isParent()
-    {
-        return $this->securityContext->isGranted('ROLE_PARENT');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStudent()
-    {
-        return $this->securityContext->isGranted('ROLE_STUDENT');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isApplicant()
-    {
-        return $this->securityContext->isGranted('ROLE_APPLICANT');
+        return $this->securityContext->isGranted('ROLE_SALES');
     }
 
     /**

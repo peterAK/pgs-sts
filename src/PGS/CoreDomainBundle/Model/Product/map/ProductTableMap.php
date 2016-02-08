@@ -70,6 +70,7 @@ class ProductTableMap extends TableMap
     {
         $this->addRelation('Principal', 'PGS\\CoreDomainBundle\\Model\\Principal\\Principal', RelationMap::MANY_TO_ONE, array('principal_id' => 'id', ), 'SET NULL', 'CASCADE');
         $this->addRelation('ProductAssignment', 'PGS\\CoreDomainBundle\\Model\\ProductAssignment\\ProductAssignment', RelationMap::ONE_TO_MANY, array('id' => 'product_id', ), 'SET NULL', 'CASCADE', 'ProductAssignments');
+        $this->addRelation('ProductSurvey', 'PGS\\CoreDomainBundle\\Model\\ProductSurvey\\ProductSurvey', RelationMap::ONE_TO_MANY, array('id' => 'product_id', ), 'SET NULL', 'CASCADE', 'ProductSurveys');
         $this->addRelation('Transaction', 'PGS\\CoreDomainBundle\\Model\\Transaction\\Transaction', RelationMap::ONE_TO_MANY, array('id' => 'product_id', ), null, 'CASCADE', 'Transactions');
     } // buildRelations()
 

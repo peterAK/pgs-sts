@@ -22,6 +22,8 @@ use PGS\CoreDomainBundle\Model\CountryQuery;
 use PGS\CoreDomainBundle\Model\State;
 use PGS\CoreDomainBundle\Model\StateQuery;
 use PGS\CoreDomainBundle\Model\User;
+use PGS\CoreDomainBundle\Model\UserProfile;
+use PGS\CoreDomainBundle\Model\UserProfileQuery;
 use PGS\CoreDomainBundle\Model\UserQuery;
 use PGS\CoreDomainBundle\Model\Principal\Principal;
 use PGS\CoreDomainBundle\Model\Principal\PrincipalArchive;
@@ -217,6 +219,12 @@ abstract class BasePrincipal extends BaseObject implements Persistent
     protected $aCountry;
 
     /**
+     * @var        PropelObjectCollection|UserProfile[] Collection to store aggregation of UserProfile objects.
+     */
+    protected $collUserProfiles;
+    protected $collUserProfilesPartial;
+
+    /**
      * @var        PropelObjectCollection|Product[] Collection to store aggregation of Product objects.
      */
     protected $collProducts;
@@ -272,6 +280,12 @@ abstract class BasePrincipal extends BaseObject implements Persistent
 
     // archivable behavior
     protected $archiveOnDelete = true;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $userProfilesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -1367,6 +1381,8 @@ abstract class BasePrincipal extends BaseObject implements Persistent
             $this->aUser = null;
             $this->aState = null;
             $this->aCountry = null;
+            $this->collUserProfiles = null;
+
             $this->collProducts = null;
 
             $this->collPrincipalI18ns = null;
@@ -1574,6 +1590,24 @@ abstract class BasePrincipal extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->userProfilesScheduledForDeletion !== null) {
+                if (!$this->userProfilesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->userProfilesScheduledForDeletion as $userProfile) {
+                        // need to save related object because we set the relation to null
+                        $userProfile->save($con);
+                    }
+                    $this->userProfilesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collUserProfiles !== null) {
+                foreach ($this->collUserProfiles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->productsScheduledForDeletion !== null) {
@@ -1915,6 +1949,14 @@ abstract class BasePrincipal extends BaseObject implements Persistent
             }
 
 
+                if ($this->collUserProfiles !== null) {
+                    foreach ($this->collUserProfiles as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collProducts !== null) {
                     foreach ($this->collProducts as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -2106,6 +2148,9 @@ abstract class BasePrincipal extends BaseObject implements Persistent
             }
             if (null !== $this->aCountry) {
                 $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collUserProfiles) {
+                $result['UserProfiles'] = $this->collUserProfiles->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collProducts) {
                 $result['Products'] = $this->collProducts->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -2404,6 +2449,12 @@ abstract class BasePrincipal extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getUserProfiles() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addUserProfile($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getProducts() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addProduct($relObj->copy($deepCopy));
@@ -2633,12 +2684,315 @@ abstract class BasePrincipal extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('UserProfile' == $relationName) {
+            $this->initUserProfiles();
+        }
         if ('Product' == $relationName) {
             $this->initProducts();
         }
         if ('PrincipalI18n' == $relationName) {
             $this->initPrincipalI18ns();
         }
+    }
+
+    /**
+     * Clears out the collUserProfiles collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Principal The current object (for fluent API support)
+     * @see        addUserProfiles()
+     */
+    public function clearUserProfiles()
+    {
+        $this->collUserProfiles = null; // important to set this to null since that means it is uninitialized
+        $this->collUserProfilesPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collUserProfiles collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialUserProfiles($v = true)
+    {
+        $this->collUserProfilesPartial = $v;
+    }
+
+    /**
+     * Initializes the collUserProfiles collection.
+     *
+     * By default this just sets the collUserProfiles collection to an empty array (like clearcollUserProfiles());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initUserProfiles($overrideExisting = true)
+    {
+        if (null !== $this->collUserProfiles && !$overrideExisting) {
+            return;
+        }
+        $this->collUserProfiles = new PropelObjectCollection();
+        $this->collUserProfiles->setModel('UserProfile');
+    }
+
+    /**
+     * Gets an array of UserProfile objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Principal is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
+     * @throws PropelException
+     */
+    public function getUserProfiles($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collUserProfilesPartial && !$this->isNew();
+        if (null === $this->collUserProfiles || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUserProfiles) {
+                // return empty collection
+                $this->initUserProfiles();
+            } else {
+                $collUserProfiles = UserProfileQuery::create(null, $criteria)
+                    ->filterByPrincipal($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collUserProfilesPartial && count($collUserProfiles)) {
+                      $this->initUserProfiles(false);
+
+                      foreach ($collUserProfiles as $obj) {
+                        if (false == $this->collUserProfiles->contains($obj)) {
+                          $this->collUserProfiles->append($obj);
+                        }
+                      }
+
+                      $this->collUserProfilesPartial = true;
+                    }
+
+                    $collUserProfiles->getInternalIterator()->rewind();
+
+                    return $collUserProfiles;
+                }
+
+                if ($partial && $this->collUserProfiles) {
+                    foreach ($this->collUserProfiles as $obj) {
+                        if ($obj->isNew()) {
+                            $collUserProfiles[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collUserProfiles = $collUserProfiles;
+                $this->collUserProfilesPartial = false;
+            }
+        }
+
+        return $this->collUserProfiles;
+    }
+
+    /**
+     * Sets a collection of UserProfile objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $userProfiles A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Principal The current object (for fluent API support)
+     */
+    public function setUserProfiles(PropelCollection $userProfiles, PropelPDO $con = null)
+    {
+        $userProfilesToDelete = $this->getUserProfiles(new Criteria(), $con)->diff($userProfiles);
+
+
+        $this->userProfilesScheduledForDeletion = $userProfilesToDelete;
+
+        foreach ($userProfilesToDelete as $userProfileRemoved) {
+            $userProfileRemoved->setPrincipal(null);
+        }
+
+        $this->collUserProfiles = null;
+        foreach ($userProfiles as $userProfile) {
+            $this->addUserProfile($userProfile);
+        }
+
+        $this->collUserProfiles = $userProfiles;
+        $this->collUserProfilesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related UserProfile objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related UserProfile objects.
+     * @throws PropelException
+     */
+    public function countUserProfiles(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collUserProfilesPartial && !$this->isNew();
+        if (null === $this->collUserProfiles || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUserProfiles) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getUserProfiles());
+            }
+            $query = UserProfileQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPrincipal($this)
+                ->count($con);
+        }
+
+        return count($this->collUserProfiles);
+    }
+
+    /**
+     * Method called to associate a UserProfile object to this object
+     * through the UserProfile foreign key attribute.
+     *
+     * @param    UserProfile $l UserProfile
+     * @return Principal The current object (for fluent API support)
+     */
+    public function addUserProfile(UserProfile $l)
+    {
+        if ($this->collUserProfiles === null) {
+            $this->initUserProfiles();
+            $this->collUserProfilesPartial = true;
+        }
+
+        if (!in_array($l, $this->collUserProfiles->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddUserProfile($l);
+
+            if ($this->userProfilesScheduledForDeletion and $this->userProfilesScheduledForDeletion->contains($l)) {
+                $this->userProfilesScheduledForDeletion->remove($this->userProfilesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	UserProfile $userProfile The userProfile object to add.
+     */
+    protected function doAddUserProfile($userProfile)
+    {
+        $this->collUserProfiles[]= $userProfile;
+        $userProfile->setPrincipal($this);
+    }
+
+    /**
+     * @param	UserProfile $userProfile The userProfile object to remove.
+     * @return Principal The current object (for fluent API support)
+     */
+    public function removeUserProfile($userProfile)
+    {
+        if ($this->getUserProfiles()->contains($userProfile)) {
+            $this->collUserProfiles->remove($this->collUserProfiles->search($userProfile));
+            if (null === $this->userProfilesScheduledForDeletion) {
+                $this->userProfilesScheduledForDeletion = clone $this->collUserProfiles;
+                $this->userProfilesScheduledForDeletion->clear();
+            }
+            $this->userProfilesScheduledForDeletion[]= $userProfile;
+            $userProfile->setPrincipal(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Principal is new, it will return
+     * an empty collection; or if this Principal has previously
+     * been saved, it will retrieve related UserProfiles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Principal.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
+     */
+    public function getUserProfilesJoinState($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = UserProfileQuery::create(null, $criteria);
+        $query->joinWith('State', $join_behavior);
+
+        return $this->getUserProfiles($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Principal is new, it will return
+     * an empty collection; or if this Principal has previously
+     * been saved, it will retrieve related UserProfiles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Principal.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
+     */
+    public function getUserProfilesJoinCountry($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = UserProfileQuery::create(null, $criteria);
+        $query->joinWith('Country', $join_behavior);
+
+        return $this->getUserProfiles($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Principal is new, it will return
+     * an empty collection; or if this Principal has previously
+     * been saved, it will retrieve related UserProfiles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Principal.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|UserProfile[] List of UserProfile objects
+     */
+    public function getUserProfilesJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = UserProfileQuery::create(null, $criteria);
+        $query->joinWith('User', $join_behavior);
+
+        return $this->getUserProfiles($query, $con);
     }
 
     /**
@@ -3150,6 +3504,11 @@ abstract class BasePrincipal extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collUserProfiles) {
+                foreach ($this->collUserProfiles as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collProducts) {
                 foreach ($this->collProducts as $o) {
                     $o->clearAllReferences($deep);
@@ -3177,6 +3536,10 @@ abstract class BasePrincipal extends BaseObject implements Persistent
         $this->currentLocale = 'en_US';
         $this->currentTranslations = null;
 
+        if ($this->collUserProfiles instanceof PropelCollection) {
+            $this->collUserProfiles->clearIterator();
+        }
+        $this->collUserProfiles = null;
         if ($this->collProducts instanceof PropelCollection) {
             $this->collProducts->clearIterator();
         }

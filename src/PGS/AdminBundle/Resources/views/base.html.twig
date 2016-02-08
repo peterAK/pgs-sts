@@ -53,7 +53,7 @@
     {% block container %}
         <!-- BEGIN CONTAINER -->
         <div class="page-container">
-            {% block sidebar %}{% include('PGSCoreDomainBundle:Sidebar:sidebar.html.twig') %}{% endblock sidebar %}
+            {#{% block sidebar %}{% include('PGSCoreDomainBundle:Sidebar:sidebar.html.twig') %}{% endblock sidebar %}#}
 
             <!-- BEGIN CONTENT -->
             <div class="page-content-wrapper">
@@ -67,7 +67,7 @@
     {% endblock container %}
 
     {% block footer %}
-        {% include "PGSAdminBundle:Widget:footer.html.twig" %}
+        {#{% include "PGSAdminBundle:Widget:footer.html.twig" %}#}
     {% endblock footer %}
 
     {% block javascripts %}

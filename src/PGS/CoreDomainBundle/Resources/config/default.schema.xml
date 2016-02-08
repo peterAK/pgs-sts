@@ -50,7 +50,7 @@
 
     <table name="user_profile" phpName="UserProfile">
         <column name="prefix" phpName="Prefix" type="VARCHAR" size="10" required="false"/>
-        <column name="organization_id" type="INTEGER" required="false"/>
+        <column name="principal_id" type="INTEGER" required="false"/>
         <column name="nick_name" phpName="NickName" type="VARCHAR" size="30" required="false"/>
         <column name="first_name" phpName="FirstName" type="VARCHAR" size="30" required="true"/>
         <column name="middle_name" phpName="MiddleName" type="VARCHAR" size="30" required="false"/>
@@ -73,6 +73,9 @@
         </foreign-key>
         <foreign-key foreignTable="country" onDelete="RESTRICT" onUpdate="RESTRICT">
             <reference local="country_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="principal" onDelete="SETNULL" onUpdate="CASCADE">
+            <reference local="principal_id" foreign="id"/>
         </foreign-key>
     </table>
 

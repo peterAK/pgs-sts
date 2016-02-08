@@ -43,7 +43,7 @@ class UserProfileTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addColumn('prefix', 'Prefix', 'VARCHAR', false, 10, null);
-        $this->addColumn('organization_id', 'OrganizationId', 'INTEGER', false, null, null);
+        $this->addForeignKey('principal_id', 'PrincipalId', 'INTEGER', 'principal', 'id', false, null, null);
         $this->addColumn('nick_name', 'NickName', 'VARCHAR', false, 30, null);
         $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 30, null);
         $this->addColumn('middle_name', 'MiddleName', 'VARCHAR', false, 30, null);
@@ -70,6 +70,7 @@ class UserProfileTableMap extends TableMap
     {
         $this->addRelation('State', 'PGS\\CoreDomainBundle\\Model\\State', RelationMap::MANY_TO_ONE, array('state_id' => 'id', ), null, null);
         $this->addRelation('Country', 'PGS\\CoreDomainBundle\\Model\\Country', RelationMap::MANY_TO_ONE, array('country_id' => 'id', ), null, null);
+        $this->addRelation('Principal', 'PGS\\CoreDomainBundle\\Model\\Principal\\Principal', RelationMap::MANY_TO_ONE, array('principal_id' => 'id', ), 'SET NULL', 'CASCADE');
         $this->addRelation('User', 'PGS\\CoreDomainBundle\\Model\\User', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 

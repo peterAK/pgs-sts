@@ -17,6 +17,7 @@ use PGS\CoreDomainBundle\Model\StatePeer;
 use PGS\CoreDomainBundle\Model\UserPeer;
 use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalPeer;
 use PGS\CoreDomainBundle\Model\map\UserProfileTableMap;
 
 abstract class BaseUserProfilePeer
@@ -46,8 +47,8 @@ abstract class BaseUserProfilePeer
     /** the column name for the prefix field */
     const PREFIX = 'user_profile.prefix';
 
-    /** the column name for the organization_id field */
-    const ORGANIZATION_ID = 'user_profile.organization_id';
+    /** the column name for the principal_id field */
+    const PRINCIPAL_ID = 'user_profile.principal_id';
 
     /** the column name for the nick_name field */
     const NICK_NAME = 'user_profile.nick_name';
@@ -116,11 +117,11 @@ abstract class BaseUserProfilePeer
      * e.g. UserProfilePeer::$fieldNames[UserProfilePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Prefix', 'OrganizationId', 'NickName', 'FirstName', 'MiddleName', 'LastName', 'Phone', 'Mobile', 'Address', 'BusinessAddress', 'Occupation', 'City', 'StateId', 'Zip', 'CountryId', 'ActivePreferences', 'Complete', 'Id', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('prefix', 'organizationId', 'nickName', 'firstName', 'middleName', 'lastName', 'phone', 'mobile', 'address', 'businessAddress', 'occupation', 'city', 'stateId', 'zip', 'countryId', 'activePreferences', 'complete', 'id', ),
-        BasePeer::TYPE_COLNAME => array (UserProfilePeer::PREFIX, UserProfilePeer::ORGANIZATION_ID, UserProfilePeer::NICK_NAME, UserProfilePeer::FIRST_NAME, UserProfilePeer::MIDDLE_NAME, UserProfilePeer::LAST_NAME, UserProfilePeer::PHONE, UserProfilePeer::MOBILE, UserProfilePeer::ADDRESS, UserProfilePeer::BUSINESS_ADDRESS, UserProfilePeer::OCCUPATION, UserProfilePeer::CITY, UserProfilePeer::STATE_ID, UserProfilePeer::ZIP, UserProfilePeer::COUNTRY_ID, UserProfilePeer::ACTIVE_PREFERENCES, UserProfilePeer::COMPLETE, UserProfilePeer::ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('PREFIX', 'ORGANIZATION_ID', 'NICK_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'LAST_NAME', 'PHONE', 'MOBILE', 'ADDRESS', 'BUSINESS_ADDRESS', 'OCCUPATION', 'CITY', 'STATE_ID', 'ZIP', 'COUNTRY_ID', 'ACTIVE_PREFERENCES', 'COMPLETE', 'ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('prefix', 'organization_id', 'nick_name', 'first_name', 'middle_name', 'last_name', 'phone', 'mobile', 'address', 'business_address', 'occupation', 'city', 'state_id', 'zip', 'country_id', 'active_preferences', 'complete', 'id', ),
+        BasePeer::TYPE_PHPNAME => array ('Prefix', 'PrincipalId', 'NickName', 'FirstName', 'MiddleName', 'LastName', 'Phone', 'Mobile', 'Address', 'BusinessAddress', 'Occupation', 'City', 'StateId', 'Zip', 'CountryId', 'ActivePreferences', 'Complete', 'Id', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('prefix', 'principalId', 'nickName', 'firstName', 'middleName', 'lastName', 'phone', 'mobile', 'address', 'businessAddress', 'occupation', 'city', 'stateId', 'zip', 'countryId', 'activePreferences', 'complete', 'id', ),
+        BasePeer::TYPE_COLNAME => array (UserProfilePeer::PREFIX, UserProfilePeer::PRINCIPAL_ID, UserProfilePeer::NICK_NAME, UserProfilePeer::FIRST_NAME, UserProfilePeer::MIDDLE_NAME, UserProfilePeer::LAST_NAME, UserProfilePeer::PHONE, UserProfilePeer::MOBILE, UserProfilePeer::ADDRESS, UserProfilePeer::BUSINESS_ADDRESS, UserProfilePeer::OCCUPATION, UserProfilePeer::CITY, UserProfilePeer::STATE_ID, UserProfilePeer::ZIP, UserProfilePeer::COUNTRY_ID, UserProfilePeer::ACTIVE_PREFERENCES, UserProfilePeer::COMPLETE, UserProfilePeer::ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('PREFIX', 'PRINCIPAL_ID', 'NICK_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'LAST_NAME', 'PHONE', 'MOBILE', 'ADDRESS', 'BUSINESS_ADDRESS', 'OCCUPATION', 'CITY', 'STATE_ID', 'ZIP', 'COUNTRY_ID', 'ACTIVE_PREFERENCES', 'COMPLETE', 'ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('prefix', 'principal_id', 'nick_name', 'first_name', 'middle_name', 'last_name', 'phone', 'mobile', 'address', 'business_address', 'occupation', 'city', 'state_id', 'zip', 'country_id', 'active_preferences', 'complete', 'id', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
     );
 
@@ -131,11 +132,11 @@ abstract class BaseUserProfilePeer
      * e.g. UserProfilePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Prefix' => 0, 'OrganizationId' => 1, 'NickName' => 2, 'FirstName' => 3, 'MiddleName' => 4, 'LastName' => 5, 'Phone' => 6, 'Mobile' => 7, 'Address' => 8, 'BusinessAddress' => 9, 'Occupation' => 10, 'City' => 11, 'StateId' => 12, 'Zip' => 13, 'CountryId' => 14, 'ActivePreferences' => 15, 'Complete' => 16, 'Id' => 17, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('prefix' => 0, 'organizationId' => 1, 'nickName' => 2, 'firstName' => 3, 'middleName' => 4, 'lastName' => 5, 'phone' => 6, 'mobile' => 7, 'address' => 8, 'businessAddress' => 9, 'occupation' => 10, 'city' => 11, 'stateId' => 12, 'zip' => 13, 'countryId' => 14, 'activePreferences' => 15, 'complete' => 16, 'id' => 17, ),
-        BasePeer::TYPE_COLNAME => array (UserProfilePeer::PREFIX => 0, UserProfilePeer::ORGANIZATION_ID => 1, UserProfilePeer::NICK_NAME => 2, UserProfilePeer::FIRST_NAME => 3, UserProfilePeer::MIDDLE_NAME => 4, UserProfilePeer::LAST_NAME => 5, UserProfilePeer::PHONE => 6, UserProfilePeer::MOBILE => 7, UserProfilePeer::ADDRESS => 8, UserProfilePeer::BUSINESS_ADDRESS => 9, UserProfilePeer::OCCUPATION => 10, UserProfilePeer::CITY => 11, UserProfilePeer::STATE_ID => 12, UserProfilePeer::ZIP => 13, UserProfilePeer::COUNTRY_ID => 14, UserProfilePeer::ACTIVE_PREFERENCES => 15, UserProfilePeer::COMPLETE => 16, UserProfilePeer::ID => 17, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('PREFIX' => 0, 'ORGANIZATION_ID' => 1, 'NICK_NAME' => 2, 'FIRST_NAME' => 3, 'MIDDLE_NAME' => 4, 'LAST_NAME' => 5, 'PHONE' => 6, 'MOBILE' => 7, 'ADDRESS' => 8, 'BUSINESS_ADDRESS' => 9, 'OCCUPATION' => 10, 'CITY' => 11, 'STATE_ID' => 12, 'ZIP' => 13, 'COUNTRY_ID' => 14, 'ACTIVE_PREFERENCES' => 15, 'COMPLETE' => 16, 'ID' => 17, ),
-        BasePeer::TYPE_FIELDNAME => array ('prefix' => 0, 'organization_id' => 1, 'nick_name' => 2, 'first_name' => 3, 'middle_name' => 4, 'last_name' => 5, 'phone' => 6, 'mobile' => 7, 'address' => 8, 'business_address' => 9, 'occupation' => 10, 'city' => 11, 'state_id' => 12, 'zip' => 13, 'country_id' => 14, 'active_preferences' => 15, 'complete' => 16, 'id' => 17, ),
+        BasePeer::TYPE_PHPNAME => array ('Prefix' => 0, 'PrincipalId' => 1, 'NickName' => 2, 'FirstName' => 3, 'MiddleName' => 4, 'LastName' => 5, 'Phone' => 6, 'Mobile' => 7, 'Address' => 8, 'BusinessAddress' => 9, 'Occupation' => 10, 'City' => 11, 'StateId' => 12, 'Zip' => 13, 'CountryId' => 14, 'ActivePreferences' => 15, 'Complete' => 16, 'Id' => 17, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('prefix' => 0, 'principalId' => 1, 'nickName' => 2, 'firstName' => 3, 'middleName' => 4, 'lastName' => 5, 'phone' => 6, 'mobile' => 7, 'address' => 8, 'businessAddress' => 9, 'occupation' => 10, 'city' => 11, 'stateId' => 12, 'zip' => 13, 'countryId' => 14, 'activePreferences' => 15, 'complete' => 16, 'id' => 17, ),
+        BasePeer::TYPE_COLNAME => array (UserProfilePeer::PREFIX => 0, UserProfilePeer::PRINCIPAL_ID => 1, UserProfilePeer::NICK_NAME => 2, UserProfilePeer::FIRST_NAME => 3, UserProfilePeer::MIDDLE_NAME => 4, UserProfilePeer::LAST_NAME => 5, UserProfilePeer::PHONE => 6, UserProfilePeer::MOBILE => 7, UserProfilePeer::ADDRESS => 8, UserProfilePeer::BUSINESS_ADDRESS => 9, UserProfilePeer::OCCUPATION => 10, UserProfilePeer::CITY => 11, UserProfilePeer::STATE_ID => 12, UserProfilePeer::ZIP => 13, UserProfilePeer::COUNTRY_ID => 14, UserProfilePeer::ACTIVE_PREFERENCES => 15, UserProfilePeer::COMPLETE => 16, UserProfilePeer::ID => 17, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('PREFIX' => 0, 'PRINCIPAL_ID' => 1, 'NICK_NAME' => 2, 'FIRST_NAME' => 3, 'MIDDLE_NAME' => 4, 'LAST_NAME' => 5, 'PHONE' => 6, 'MOBILE' => 7, 'ADDRESS' => 8, 'BUSINESS_ADDRESS' => 9, 'OCCUPATION' => 10, 'CITY' => 11, 'STATE_ID' => 12, 'ZIP' => 13, 'COUNTRY_ID' => 14, 'ACTIVE_PREFERENCES' => 15, 'COMPLETE' => 16, 'ID' => 17, ),
+        BasePeer::TYPE_FIELDNAME => array ('prefix' => 0, 'principal_id' => 1, 'nick_name' => 2, 'first_name' => 3, 'middle_name' => 4, 'last_name' => 5, 'phone' => 6, 'mobile' => 7, 'address' => 8, 'business_address' => 9, 'occupation' => 10, 'city' => 11, 'state_id' => 12, 'zip' => 13, 'country_id' => 14, 'active_preferences' => 15, 'complete' => 16, 'id' => 17, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
     );
 
@@ -211,7 +212,7 @@ abstract class BaseUserProfilePeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(UserProfilePeer::PREFIX);
-            $criteria->addSelectColumn(UserProfilePeer::ORGANIZATION_ID);
+            $criteria->addSelectColumn(UserProfilePeer::PRINCIPAL_ID);
             $criteria->addSelectColumn(UserProfilePeer::NICK_NAME);
             $criteria->addSelectColumn(UserProfilePeer::FIRST_NAME);
             $criteria->addSelectColumn(UserProfilePeer::MIDDLE_NAME);
@@ -230,7 +231,7 @@ abstract class BaseUserProfilePeer
             $criteria->addSelectColumn(UserProfilePeer::ID);
         } else {
             $criteria->addSelectColumn($alias . '.prefix');
-            $criteria->addSelectColumn($alias . '.organization_id');
+            $criteria->addSelectColumn($alias . '.principal_id');
             $criteria->addSelectColumn($alias . '.nick_name');
             $criteria->addSelectColumn($alias . '.first_name');
             $criteria->addSelectColumn($alias . '.middle_name');
@@ -651,6 +652,57 @@ abstract class BaseUserProfilePeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related Principal table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinPrincipal(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(UserProfilePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            UserProfilePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(UserProfilePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(UserProfilePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining the related User table
      *
      * @param      Criteria $criteria
@@ -836,6 +888,73 @@ abstract class BaseUserProfilePeer
 
 
     /**
+     * Selects a collection of UserProfile objects pre-filled with their Principal objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of UserProfile objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinPrincipal(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(UserProfilePeer::DATABASE_NAME);
+        }
+
+        UserProfilePeer::addSelectColumns($criteria);
+        $startcol = UserProfilePeer::NUM_HYDRATE_COLUMNS;
+        PrincipalPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = UserProfilePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = UserProfilePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = UserProfilePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                UserProfilePeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = PrincipalPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = PrincipalPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = PrincipalPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    PrincipalPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (UserProfile) to $obj2 (Principal)
+                $obj2->addUserProfile($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
      * Selects a collection of UserProfile objects pre-filled with their User objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -943,6 +1062,8 @@ abstract class BaseUserProfilePeer
 
         $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
 
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
+
         $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
@@ -985,12 +1106,17 @@ abstract class BaseUserProfilePeer
         CountryPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CountryPeer::NUM_HYDRATE_COLUMNS;
 
+        PrincipalPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + PrincipalPeer::NUM_HYDRATE_COLUMNS;
+
         UserPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + UserPeer::NUM_HYDRATE_COLUMNS;
+        $startcol6 = $startcol5 + UserPeer::NUM_HYDRATE_COLUMNS;
 
         $criteria->addJoin(UserProfilePeer::STATE_ID, StatePeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
@@ -1047,22 +1173,40 @@ abstract class BaseUserProfilePeer
                 $obj3->addUserProfile($obj1);
             } // if joined row not null
 
-            // Add objects for joined User rows
+            // Add objects for joined Principal rows
 
-            $key4 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            $key4 = PrincipalPeer::getPrimaryKeyHashFromRow($row, $startcol4);
             if ($key4 !== null) {
-                $obj4 = UserPeer::getInstanceFromPool($key4);
+                $obj4 = PrincipalPeer::getInstanceFromPool($key4);
                 if (!$obj4) {
 
-                    $cls = UserPeer::getOMClass();
+                    $cls = PrincipalPeer::getOMClass();
 
                     $obj4 = new $cls();
                     $obj4->hydrate($row, $startcol4);
-                    UserPeer::addInstanceToPool($obj4, $key4);
+                    PrincipalPeer::addInstanceToPool($obj4, $key4);
                 } // if obj4 loaded
 
-                // Add the $obj1 (UserProfile) to the collection in $obj4 (User)
-                $obj1->setUser($obj4);
+                // Add the $obj1 (UserProfile) to the collection in $obj4 (Principal)
+                $obj4->addUserProfile($obj1);
+            } // if joined row not null
+
+            // Add objects for joined User rows
+
+            $key5 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+            if ($key5 !== null) {
+                $obj5 = UserPeer::getInstanceFromPool($key5);
+                if (!$obj5) {
+
+                    $cls = UserPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    UserPeer::addInstanceToPool($obj5, $key5);
+                } // if obj5 loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj5 (User)
+                $obj1->setUser($obj5);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -1110,6 +1254,8 @@ abstract class BaseUserProfilePeer
         }
 
         $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
@@ -1163,6 +1309,63 @@ abstract class BaseUserProfilePeer
         }
 
         $criteria->addJoin(UserProfilePeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Principal table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptPrincipal(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(UserProfilePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            UserProfilePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(UserProfilePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(UserProfilePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(UserProfilePeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
@@ -1219,6 +1422,8 @@ abstract class BaseUserProfilePeer
 
         $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
 
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -1259,10 +1464,15 @@ abstract class BaseUserProfilePeer
         CountryPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CountryPeer::NUM_HYDRATE_COLUMNS;
 
+        PrincipalPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + PrincipalPeer::NUM_HYDRATE_COLUMNS;
+
         UserPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + UserPeer::NUM_HYDRATE_COLUMNS;
+        $startcol5 = $startcol4 + UserPeer::NUM_HYDRATE_COLUMNS;
 
         $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
@@ -1303,22 +1513,41 @@ abstract class BaseUserProfilePeer
 
             } // if joined row is not null
 
-                // Add objects for joined User rows
+                // Add objects for joined Principal rows
 
-                $key3 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                $key3 = PrincipalPeer::getPrimaryKeyHashFromRow($row, $startcol3);
                 if ($key3 !== null) {
-                    $obj3 = UserPeer::getInstanceFromPool($key3);
+                    $obj3 = PrincipalPeer::getInstanceFromPool($key3);
                     if (!$obj3) {
 
-                        $cls = UserPeer::getOMClass();
+                        $cls = PrincipalPeer::getOMClass();
 
                     $obj3 = new $cls();
                     $obj3->hydrate($row, $startcol3);
-                    UserPeer::addInstanceToPool($obj3, $key3);
+                    PrincipalPeer::addInstanceToPool($obj3, $key3);
                 } // if $obj3 already loaded
 
-                // Add the $obj1 (UserProfile) to the collection in $obj3 (User)
-                $obj1->setUser($obj3);
+                // Add the $obj1 (UserProfile) to the collection in $obj3 (Principal)
+                $obj3->addUserProfile($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined User rows
+
+                $key4 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = UserPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = UserPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    UserPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj4 (User)
+                $obj1->setUser($obj4);
 
             } // if joined row is not null
 
@@ -1357,10 +1586,15 @@ abstract class BaseUserProfilePeer
         StatePeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + StatePeer::NUM_HYDRATE_COLUMNS;
 
+        PrincipalPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + PrincipalPeer::NUM_HYDRATE_COLUMNS;
+
         UserPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + UserPeer::NUM_HYDRATE_COLUMNS;
+        $startcol5 = $startcol4 + UserPeer::NUM_HYDRATE_COLUMNS;
 
         $criteria->addJoin(UserProfilePeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
@@ -1401,22 +1635,41 @@ abstract class BaseUserProfilePeer
 
             } // if joined row is not null
 
-                // Add objects for joined User rows
+                // Add objects for joined Principal rows
 
-                $key3 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                $key3 = PrincipalPeer::getPrimaryKeyHashFromRow($row, $startcol3);
                 if ($key3 !== null) {
-                    $obj3 = UserPeer::getInstanceFromPool($key3);
+                    $obj3 = PrincipalPeer::getInstanceFromPool($key3);
                     if (!$obj3) {
 
-                        $cls = UserPeer::getOMClass();
+                        $cls = PrincipalPeer::getOMClass();
 
                     $obj3 = new $cls();
                     $obj3->hydrate($row, $startcol3);
-                    UserPeer::addInstanceToPool($obj3, $key3);
+                    PrincipalPeer::addInstanceToPool($obj3, $key3);
                 } // if $obj3 already loaded
 
-                // Add the $obj1 (UserProfile) to the collection in $obj3 (User)
-                $obj1->setUser($obj3);
+                // Add the $obj1 (UserProfile) to the collection in $obj3 (Principal)
+                $obj3->addUserProfile($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined User rows
+
+                $key4 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = UserPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = UserPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    UserPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj4 (User)
+                $obj1->setUser($obj4);
 
             } // if joined row is not null
 
@@ -1429,7 +1682,7 @@ abstract class BaseUserProfilePeer
 
 
     /**
-     * Selects a collection of UserProfile objects pre-filled with all related objects except User.
+     * Selects a collection of UserProfile objects pre-filled with all related objects except Principal.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -1438,7 +1691,7 @@ abstract class BaseUserProfilePeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinAllExceptUser(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinAllExceptPrincipal(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
@@ -1458,9 +1711,14 @@ abstract class BaseUserProfilePeer
         CountryPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CountryPeer::NUM_HYDRATE_COLUMNS;
 
+        UserPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + UserPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(UserProfilePeer::STATE_ID, StatePeer::ID, $join_behavior);
 
         $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::ID, UserPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1515,6 +1773,147 @@ abstract class BaseUserProfilePeer
 
                 // Add the $obj1 (UserProfile) to the collection in $obj3 (Country)
                 $obj3->addUserProfile($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined User rows
+
+                $key4 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = UserPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = UserPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    UserPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj4 (User)
+                $obj1->setUser($obj4);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of UserProfile objects pre-filled with all related objects except User.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of UserProfile objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptUser(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(UserProfilePeer::DATABASE_NAME);
+        }
+
+        UserProfilePeer::addSelectColumns($criteria);
+        $startcol2 = UserProfilePeer::NUM_HYDRATE_COLUMNS;
+
+        StatePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + StatePeer::NUM_HYDRATE_COLUMNS;
+
+        CountryPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + CountryPeer::NUM_HYDRATE_COLUMNS;
+
+        PrincipalPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + PrincipalPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(UserProfilePeer::STATE_ID, StatePeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::COUNTRY_ID, CountryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(UserProfilePeer::PRINCIPAL_ID, PrincipalPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = UserProfilePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = UserProfilePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = UserProfilePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                UserProfilePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined State rows
+
+                $key2 = StatePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = StatePeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = StatePeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    StatePeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj2 (State)
+                $obj2->addUserProfile($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Country rows
+
+                $key3 = CountryPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = CountryPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = CountryPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    CountryPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj3 (Country)
+                $obj3->addUserProfile($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Principal rows
+
+                $key4 = PrincipalPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = PrincipalPeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = PrincipalPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    PrincipalPeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (UserProfile) to the collection in $obj4 (Principal)
+                $obj4->addUserProfile($obj1);
 
             } // if joined row is not null
 

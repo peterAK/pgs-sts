@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="default" package="src.PGS.CoreDomainBundle.Model.ProductSurvey" namespace="PGS\CoreDomainBundle\Model\ProductSurvey">
-    <table name="product_assignment" phpName="ProductAssignment">
+    <table name="product_survey" phpName="ProductSurvey">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
         <column name="product_id" type="INTEGER"/>
         <column name="question" phpName="Question" type="CLOB" required="true"/>

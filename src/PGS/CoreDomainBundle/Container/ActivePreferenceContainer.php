@@ -14,28 +14,17 @@
 namespace PGS\CoreDomainBundle\Container;
 
 use JMS\DiExtraBundle\Annotation\Service;
-use PGS\CoreDomainBundle\Manager\OrganizationManager;
-use PGS\CoreDomainBundle\Manager\SchoolManager;
-use PGS\CoreDomainBundle\Manager\SchoolYearManager;
-use PGS\CoreDomainBundle\Manager\ApplicationManager;
+use PGS\CoreDomainBundle\Manager\PrincipalManager;
 use PGS\CoreDomainBundle\Model\UserProfile;
-use PGS\CoreDomainBundle\Model\Organization\Organization;
-use PGS\CoreDomainBundle\Model\School\School;
-use PGS\CoreDomainBundle\Model\SchoolYear\SchoolYear;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
 
 /**
  * @Service("pgs.core.container.active_preference")
  */
 class ActivePreferenceContainer extends AbstractPreferenceContainer
 {
-    /** @var OrganizationManager */
-    protected $organizationManager;
-
-    /** @var SchoolManager */
-    protected $schoolManager;
-
-    /** @var SchoolYearManager */
-    protected $schoolYearManager;
+    /** @var PrincipalManager */
+    protected $principalManager;
 
     /**
      * @param object      $manager
@@ -180,197 +169,83 @@ class ActivePreferenceContainer extends AbstractPreferenceContainer
     }
 
     /**
+     * @return PrincipalManager
+     */
+    protected function getPrincipalManager()
+    {
+        if (!$this->principalManager instanceof PrincipalManager)
+        {
+            $this->principalManager = $this->container->get('pgs.core.manager.principal');
+        }
+
+        return $this->principalManager;
+    }
+
+    /**
      * @return int
      */
-    public function getMyOrganizationId()
+    public function getMyPrincipalId()
     {
-        return $this->getMyOrganization()->getId();
-    }
-
-    public function getMyOrganization()
-    {
-        if ( $this->isAdmin() || $this->isSchoolAdmin() || $this->isPrincipal() ||
-            $this->isCounselor() || $this->isTeacher() || $this->isStudent() ) {
-            return $this->getCurrentUserProfile()->getOrganization();
-        }
-
-        return new Organization;
+        return $this->getMyPrincipal()->getId();
     }
 
     /**
-     * @return null|Organization
+     * @return Principal
      */
-    public function getOrganizationPreference()
+    public function getMyPrincipal()
+    {
+        if ( $this->isAdmin() || $this->isOffice() || $this->isPrincipal() || $this->isSales() ) {
+            return $this->getCurrentUserProfile()->getPrincipal();
+        }
+
+        return new Principal;
+    }
+
+    /**
+     * @return null|Principal
+     */
+    public function getPrincipalPreference()
     {
         $userProfile = $this->getCurrentUserProfile();
 
-        /** @var Organization $organization */
-        if ( !$organization = $this->getEntity($this->getOrganizationManager(), $userProfile, 'organization', null)) {
+        /** @var Principal $principal*/
+        if ( !$principal = $this->getEntity($this->getPrincipalManager(), $userProfile, 'principal', null)) {
             return null;
         }
 
-        if ($organization->isNew()) {
+        if ($principal->isNew()) {
             return null;
         }
 
-        return $organization;
+        return $principal;
     }
 
     /**
-     * @param int $organizationId
+     * @param int $principalId
      */
-    public function setOrganizationPreference($organizationId)
+    public function setPrincipalPreference($principalId)
     {
         $userProfile  = $this->getCurrentUserProfile();
 
-        $manager = $this->getOrganizationManager();
+        $manager = $this->getPrincipalManager();
 
-        if ($organization = $manager->findOneById($organizationId)) {
-            $this->setEntity($manager, $userProfile, 'organization', $organization);
-            $this->unsetEntity($userProfile, 'school');
-            $this->unsetEntity($userProfile, 'schoolYear');
+        if ($principal = $manager->findOneById($principalId)) {
+            $this->setEntity($manager, $userProfile, 'principal', $principal);
         }
     }
 
     /**
-     * @return Organization
+     * @return Principal
      */
-    protected function getDefaultOrganization()
+    protected function getDefaultPrincipal()
     {
         $userProfile  = $this->getCurrentUserProfile();
-        $organization = $this->getOrganizationManager()->getDefault();
+        $principal = $this->getPrincipalManager()->getDefault();
 
-        if ($organization === null) {
-            $organization = new Organization();
+        if ($principal === null) {
+            $principal = new Principal();
         }
 
-        return $organization;
-    }
-
-    /**
-     * @return OrganizationManager
-     */
-    protected function getOrganizationManager()
-    {
-        if (!$this->organizationManager instanceof OrganizationManager)
-        {
-            $this->organizationManager = $this->container->get('pgs.core.manager.organization');
-        }
-
-        return $this->organizationManager;
-    }
-
-    /**
-     * @return null|School
-     */
-    public function getSchoolPreference()
-    {
-        $userProfile = $this->getCurrentUserProfile();
-
-        /** @var School $school */
-        if ( !$school = $this->getEntity($this->getSchoolManager(), $userProfile, 'school', null)) {
-            return null;
-        }
-
-        if ($school->isNew()) {
-            return null;
-        }
-
-        return $school;
-    }
-
-    /**
-     * @param int $schoolId
-     */
-    public function setSchoolPreference($schoolId)
-    {
-        $userProfile  = $this->getCurrentUserProfile();
-        $manager      = $this->getSchoolManager();
-
-        if ($school = $manager->findOne($schoolId)) {
-            $this->setEntity($manager, $userProfile, 'school', $school);
-            $this->unsetEntity($userProfile, 'schoolYear');
-        }
-    }
-
-    /**
-     * @return School
-     */
-    protected function getDefaultSchool()
-    {
-        $organization = $this->getOrganizationPreference();
-        $school       = $this->getSchoolManager()->findOneByOrganization($organization);
-
-        if($organization instanceof Organization){
-            if ($school === null) {
-                $school = new School();
-            }
-            return $school;
-        }
-        return $school;
-    }
-
-    /**
-     * @return SchoolManager
-     */
-    protected function getSchoolManager()
-    {
-        if (!$this->schoolManager instanceof SchoolManager)
-        {
-            $this->schoolManager = $this->container->get('pgs.core.manager.school');
-        }
-
-        return $this->schoolManager;
-    }
-
-    /**
-     * @return null|SchoolYear
-     */
-    public function getSchoolYearPreference()
-    {
-        $userProfile = $this->getCurrentUserProfile();
-
-        /** @var SchoolYear $schoolYear */
-        if ( !$schoolYear = $this->getEntity($this->getSchoolYearManager(), $userProfile, 'schoolYear', null)) {
-            return null;
-        }
-
-        if ($schoolYear->isNew()) {
-            return null;
-        }
-
-        return $schoolYear;
-    }
-
-    /**
-     * @return SchoolYear
-     */
-    protected function getDefaultSchoolYear()
-    {
-        $school       = $this->getSchoolPreference();
-
-        if ($school && !$school->isNew()) {
-            return $this->getSchoolYearManager()->findLatestActiveBySchool($school);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @return SchoolYearManager
-     */
-    protected function getSchoolYearManager()
-    {
-        if (!$this->schoolYearManager instanceof SchoolYearManager)
-        {
-            $this->schoolYearManager = $this->container->get('pgs.core.manager.school_year');
-        }
-
-        return $this->schoolYearManager;
-    }
-
-    public function getAcademicYearPreference()
-    {
-        return true;
+        return $principal;
     }
 }

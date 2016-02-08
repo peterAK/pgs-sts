@@ -22,6 +22,8 @@ use PGS\CoreDomainBundle\Model\UserProfile;
 use PGS\CoreDomainBundle\Model\UserProfilePeer;
 use PGS\CoreDomainBundle\Model\UserProfileQuery;
 use PGS\CoreDomainBundle\Model\UserQuery;
+use PGS\CoreDomainBundle\Model\Principal\Principal;
+use PGS\CoreDomainBundle\Model\Principal\PrincipalQuery;
 
 abstract class BaseUserProfile extends BaseObject implements Persistent
 {
@@ -51,10 +53,10 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     protected $prefix;
 
     /**
-     * The value for the organization_id field.
+     * The value for the principal_id field.
      * @var        int
      */
-    protected $organization_id;
+    protected $principal_id;
 
     /**
      * The value for the nick_name field.
@@ -165,6 +167,11 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     protected $aCountry;
 
     /**
+     * @var        Principal
+     */
+    protected $aPrincipal;
+
+    /**
      * @var        User
      */
     protected $aUser;
@@ -224,14 +231,14 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [organization_id] column value.
+     * Get the [principal_id] column value.
      *
      * @return int
      */
-    public function getOrganizationId()
+    public function getPrincipalId()
     {
 
-        return $this->organization_id;
+        return $this->principal_id;
     }
 
     /**
@@ -432,25 +439,29 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     } // setPrefix()
 
     /**
-     * Set the value of [organization_id] column.
+     * Set the value of [principal_id] column.
      *
      * @param  int $v new value
      * @return UserProfile The current object (for fluent API support)
      */
-    public function setOrganizationId($v)
+    public function setPrincipalId($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
-        if ($this->organization_id !== $v) {
-            $this->organization_id = $v;
-            $this->modifiedColumns[] = UserProfilePeer::ORGANIZATION_ID;
+        if ($this->principal_id !== $v) {
+            $this->principal_id = $v;
+            $this->modifiedColumns[] = UserProfilePeer::PRINCIPAL_ID;
+        }
+
+        if ($this->aPrincipal !== null && $this->aPrincipal->getId() !== $v) {
+            $this->aPrincipal = null;
         }
 
 
         return $this;
-    } // setOrganizationId()
+    } // setPrincipalId()
 
     /**
      * Set the value of [nick_name] column.
@@ -849,7 +860,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         try {
 
             $this->prefix = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
-            $this->organization_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->principal_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->nick_name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->first_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->middle_name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
@@ -898,6 +909,9 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aPrincipal !== null && $this->principal_id !== $this->aPrincipal->getId()) {
+            $this->aPrincipal = null;
+        }
         if ($this->aState !== null && $this->state_id !== $this->aState->getId()) {
             $this->aState = null;
         }
@@ -948,6 +962,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
 
             $this->aState = null;
             $this->aCountry = null;
+            $this->aPrincipal = null;
             $this->aUser = null;
         } // if (deep)
     }
@@ -1096,6 +1111,13 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                 $this->setCountry($this->aCountry);
             }
 
+            if ($this->aPrincipal !== null) {
+                if ($this->aPrincipal->isModified() || $this->aPrincipal->isNew()) {
+                    $affectedRows += $this->aPrincipal->save($con);
+                }
+                $this->setPrincipal($this->aPrincipal);
+            }
+
             if ($this->aUser !== null) {
                 if ($this->aUser->isModified() || $this->aUser->isNew()) {
                     $affectedRows += $this->aUser->save($con);
@@ -1139,8 +1161,8 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         if ($this->isColumnModified(UserProfilePeer::PREFIX)) {
             $modifiedColumns[':p' . $index++]  = '`prefix`';
         }
-        if ($this->isColumnModified(UserProfilePeer::ORGANIZATION_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`organization_id`';
+        if ($this->isColumnModified(UserProfilePeer::PRINCIPAL_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`principal_id`';
         }
         if ($this->isColumnModified(UserProfilePeer::NICK_NAME)) {
             $modifiedColumns[':p' . $index++]  = '`nick_name`';
@@ -1204,8 +1226,8 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                     case '`prefix`':
                         $stmt->bindValue($identifier, $this->prefix, PDO::PARAM_STR);
                         break;
-                    case '`organization_id`':
-                        $stmt->bindValue($identifier, $this->organization_id, PDO::PARAM_INT);
+                    case '`principal_id`':
+                        $stmt->bindValue($identifier, $this->principal_id, PDO::PARAM_INT);
                         break;
                     case '`nick_name`':
                         $stmt->bindValue($identifier, $this->nick_name, PDO::PARAM_STR);
@@ -1359,6 +1381,12 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->aPrincipal !== null) {
+                if (!$this->aPrincipal->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aPrincipal->getValidationFailures());
+                }
+            }
+
             if ($this->aUser !== null) {
                 if (!$this->aUser->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
@@ -1410,7 +1438,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                 return $this->getPrefix();
                 break;
             case 1:
-                return $this->getOrganizationId();
+                return $this->getPrincipalId();
                 break;
             case 2:
                 return $this->getNickName();
@@ -1490,7 +1518,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         $keys = UserProfilePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getPrefix(),
-            $keys[1] => $this->getOrganizationId(),
+            $keys[1] => $this->getPrincipalId(),
             $keys[2] => $this->getNickName(),
             $keys[3] => $this->getFirstName(),
             $keys[4] => $this->getMiddleName(),
@@ -1519,6 +1547,9 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             }
             if (null !== $this->aCountry) {
                 $result['Country'] = $this->aCountry->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aPrincipal) {
+                $result['Principal'] = $this->aPrincipal->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUser) {
                 $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1561,7 +1592,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
                 $this->setPrefix($value);
                 break;
             case 1:
-                $this->setOrganizationId($value);
+                $this->setPrincipalId($value);
                 break;
             case 2:
                 $this->setNickName($value);
@@ -1636,7 +1667,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         $keys = UserProfilePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setPrefix($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setOrganizationId($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setPrincipalId($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setNickName($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setFirstName($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setMiddleName($arr[$keys[4]]);
@@ -1665,7 +1696,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
         $criteria = new Criteria(UserProfilePeer::DATABASE_NAME);
 
         if ($this->isColumnModified(UserProfilePeer::PREFIX)) $criteria->add(UserProfilePeer::PREFIX, $this->prefix);
-        if ($this->isColumnModified(UserProfilePeer::ORGANIZATION_ID)) $criteria->add(UserProfilePeer::ORGANIZATION_ID, $this->organization_id);
+        if ($this->isColumnModified(UserProfilePeer::PRINCIPAL_ID)) $criteria->add(UserProfilePeer::PRINCIPAL_ID, $this->principal_id);
         if ($this->isColumnModified(UserProfilePeer::NICK_NAME)) $criteria->add(UserProfilePeer::NICK_NAME, $this->nick_name);
         if ($this->isColumnModified(UserProfilePeer::FIRST_NAME)) $criteria->add(UserProfilePeer::FIRST_NAME, $this->first_name);
         if ($this->isColumnModified(UserProfilePeer::MIDDLE_NAME)) $criteria->add(UserProfilePeer::MIDDLE_NAME, $this->middle_name);
@@ -1746,7 +1777,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setPrefix($this->getPrefix());
-        $copyObj->setOrganizationId($this->getOrganizationId());
+        $copyObj->setPrincipalId($this->getPrincipalId());
         $copyObj->setNickName($this->getNickName());
         $copyObj->setFirstName($this->getFirstName());
         $copyObj->setMiddleName($this->getMiddleName());
@@ -1930,6 +1961,58 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     }
 
     /**
+     * Declares an association between this object and a Principal object.
+     *
+     * @param                  Principal $v
+     * @return UserProfile The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPrincipal(Principal $v = null)
+    {
+        if ($v === null) {
+            $this->setPrincipalId(NULL);
+        } else {
+            $this->setPrincipalId($v->getId());
+        }
+
+        $this->aPrincipal = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Principal object, it will not be re-added.
+        if ($v !== null) {
+            $v->addUserProfile($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Principal object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Principal The associated Principal object.
+     * @throws PropelException
+     */
+    public function getPrincipal(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aPrincipal === null && ($this->principal_id !== null) && $doQuery) {
+            $this->aPrincipal = PrincipalQuery::create()->findPk($this->principal_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPrincipal->addUserProfiles($this);
+             */
+        }
+
+        return $this->aPrincipal;
+    }
+
+    /**
      * Declares an association between this object and a User object.
      *
      * @param                  User $v
@@ -1981,7 +2064,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
     public function clear()
     {
         $this->prefix = null;
-        $this->organization_id = null;
+        $this->principal_id = null;
         $this->nick_name = null;
         $this->first_name = null;
         $this->middle_name = null;
@@ -2027,6 +2110,9 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
             if ($this->aCountry instanceof Persistent) {
               $this->aCountry->clearAllReferences($deep);
             }
+            if ($this->aPrincipal instanceof Persistent) {
+              $this->aPrincipal->clearAllReferences($deep);
+            }
             if ($this->aUser instanceof Persistent) {
               $this->aUser->clearAllReferences($deep);
             }
@@ -2036,6 +2122,7 @@ abstract class BaseUserProfile extends BaseObject implements Persistent
 
         $this->aState = null;
         $this->aCountry = null;
+        $this->aPrincipal = null;
         $this->aUser = null;
     }
 

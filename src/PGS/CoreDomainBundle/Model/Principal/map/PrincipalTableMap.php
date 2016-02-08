@@ -88,6 +88,7 @@ class PrincipalTableMap extends TableMap
         $this->addRelation('User', 'PGS\\CoreDomainBundle\\Model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('State', 'PGS\\CoreDomainBundle\\Model\\State', RelationMap::MANY_TO_ONE, array('state_id' => 'id', ), 'SET NULL', 'CASCADE');
         $this->addRelation('Country', 'PGS\\CoreDomainBundle\\Model\\Country', RelationMap::MANY_TO_ONE, array('country_id' => 'id', ), 'SET NULL', 'CASCADE');
+        $this->addRelation('UserProfile', 'PGS\\CoreDomainBundle\\Model\\UserProfile', RelationMap::ONE_TO_MANY, array('id' => 'principal_id', ), 'SET NULL', 'CASCADE', 'UserProfiles');
         $this->addRelation('Product', 'PGS\\CoreDomainBundle\\Model\\Product\\Product', RelationMap::ONE_TO_MANY, array('id' => 'principal_id', ), 'SET NULL', 'CASCADE', 'Products');
         $this->addRelation('PrincipalI18n', 'PGS\\CoreDomainBundle\\Model\\Principal\\PrincipalI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'PrincipalI18ns');
     } // buildRelations()
